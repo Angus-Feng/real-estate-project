@@ -18,9 +18,9 @@ $log->pushProcessor(function ($record) {
     return $record;
 });
 
-DB::$dbName = "day06slimauction";
-DB::$user = "day06slimauction";
-DB::$password = "7RBDf7-bu1JGC62D";
+DB::$dbName = "phprealestateproject";
+DB::$user = "phprealestateproject";
+DB::$password = "ErqxYbYHaoV7tDPa";
 DB::$host = 'localhost';
 DB::$port = 3333;
 
