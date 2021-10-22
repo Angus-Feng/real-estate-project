@@ -8,12 +8,10 @@ require_once 'utils.php';
 require_once 'admin.php';
 
 
-// Define app routes
+// Testing
 $app->get('/hello/{name}', function ($request, $response, $args) {
-    return $response->write("Hello " . $args['name']);
+    return $response->write("Hello " . $args['name'] . " from phprealestateproject.");
 });
-
-
 
 // Run app
 $app->run();
