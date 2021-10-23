@@ -13,5 +13,10 @@ $app->get('/hello/{name}', function ($request, $response, $args) {
     return $response->write("Hello " . $args['name'] . " from phprealestateproject.");
 });
 
+// Test index page + master.html.twig
+$app->get('/', function ($request, $response, $args) {
+    return $this->view->render($response, 'master.html.twig');
+});
+
 // Run app
 $app->run();
