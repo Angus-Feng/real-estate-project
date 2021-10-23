@@ -1,3 +1,4 @@
 vendor
 tmplcache
 logs
+composer.lock
