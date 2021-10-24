@@ -1,0 +1,42 @@
+{% extends "master.html.twig" %}
+
+{% block header %}
+    <h1>Add a property</h1>
+{% endblock %}
+
+{% block content %}
+    <form action="POST">
+        <div class="form-row">
+            <label for="">Title</label>
+            <input type="text" name="title" value="" />
+        </div>
+        <div class="form-group">
+            <label for="">Price</label>
+            <input type="number" name="price" step="0.01" value="" />
+            <label for="">Bedrooms</label>
+            <input type="number" name="bedrooms" value="" />
+            <label for="">Bathrooms</label>
+            <input type="number" name="bathrooms" value="" />
+            <label for="">Year built</label>
+            <input type="number" name="buildingYear" value="" />
+            <label for="">Lot area (sqft)</label>
+            <input type="number" name="lotArea" value="" />
+        </div>
+        <div class="form-row">
+            <label for="">Description</label>
+            <textarea name="description" cols="30" rows="10"></textarea>
+        </div>
+        <label for="">Location</label>
+        {# TODO: dropdown disply for province & city? #}
+        <div class="form-group">
+            <label for="">Stree address</label>
+            <input type="text" name="streetAddress" value="" />
+            <label for="">City</label>
+            <input type="text" name="city" value="" />
+            <label for="">Province</label>
+            <input type="text" name="province" value="" />
+            <label for="">Postal code</label>
+            <input type="text" name="postalCode" value="" />
+        </div>
+    </form>
+{% endblock %}
