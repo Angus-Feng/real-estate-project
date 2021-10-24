@@ -26,7 +26,7 @@ $app->post('/register', function ($request, $response, $args) use($log) {
     $brokerFirstName = $request->getParam('brokerFirstName');
     $brokerLastName = $request->getParam('brokerLastName');
     $licenseNo = $request->getParam('licenseNo');
-    $errors = array('email' => "", 'checkEmail' => "", 'password'=> "", 'pwRepeat' => "", 
+    $errors = array('email' => "", 'password'=> "", 'pwRepeat' => "", 
                     'brokerFirstName' => "", 'brokerLastName' => "", 'LicenseNo' => "");
     
     // verification
@@ -36,9 +36,9 @@ $app->post('/register', function ($request, $response, $args) use($log) {
     } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = "Please enter a valid email";
     } else {
-        $checkEmail = DB::query("SELECT email FROM users WHERE email = $email");
+        $checkEmail = DB::query("SELECT email FROM users WHERE email = '$email'");
         if ($checkEmail) {
-            $errors['checkEmail'] = "This email is already registered.";
+            $errors['email'] = "This email is already registered.";
         }
     }
 
@@ -70,8 +70,18 @@ $app->post('/register', function ($request, $response, $args) use($log) {
 
     
     if ($isBroker) {
-        if (!preg_match('/^[A-Z]{3}[0-9]{6}[A-Z]{2}/', $licenseNo)) {
+        if (!$licenseNo || !preg_match('/[A-Z]{3}[0-9]{6}[A-Z]{3}/', $licenseNo)) {
             $errors['licenseNo'] = "Please enter a valid license number";
+        }
+        $checkLicense = DB::query("SELECT licenseNo FROM users WHERE licenseNo = '$licenseNo'");
+        if ($checkLicense) {
+            $errors['licenseNo'] = "This license is already registered in our website.";
+        }
+        if (!$brokerFirstName) {
+            $errors['brokerFirstName'] = "Please enter your first name that matches your license.";
+        }
+        if (!$brokerLastName) {
+            $errors['brokerLastName'] = "Please enter your last name that matches your license.";
         }
     }
 
@@ -86,16 +96,19 @@ $app->post('/register', function ($request, $response, $args) use($log) {
             $valueList['password'] = $password;
             $valueList['role'] = "buyer";
             DB::insert('users', $valueList);
+            $log->debug(sprintf("new user created with id=%s", DB::insertID()));
         } else {
             $password = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
             $valueList['password'] = $password;
             $valueList['role'] = "broker-check"; //FIXIT add check page to mannually approve broker registration request.
             DB::insert('users', $valueList);
+            $log->debug(sprintf("new user created with id=%s", DB::insertID()));
+            DB::insert('brokerpendinglist', ['userId' => DB::insertID(), 'licenseNo' => $licenseNo, 
+                    'firstName' => $brokerFirstName, 'lastName' => $brokerLastName]);
         }
         unset($valueList['password']);
         unset($valueList['licenseNo']);
         $_SESSION['user'] = $valueList;
-        $log->debug(sprintf("new user created with id=%s", DB::insertID()));
         return $response->withRedirect($this->router->pathFor('index')); //FIXIT add path name to index router
     }
 
@@ -110,15 +123,15 @@ $app->post('/login', function ($request, $response, $args) use($log) {
     $email = $request->getParam('email');
     $password = $request->getParam('password');
     $error = "";
-    $result = DB::queryFirstRow("SELECT id, email, `password`, `role`, firstName, lastName FROM users WHERE email = $email");
+    $result = DB::queryFirstRow("SELECT id, email, `password`, `role`, firstName, lastName FROM users WHERE email = '$email'");
     $loginCheck = ($result != NULL) && (password_verify($password, $result['password']));
     if ($loginCheck) {
         unset($result['password']);
         $_SESSION['user'] = $result;
-        $log->debug(sprintf("user login with id=%s", $_SESSION['blogUser']['id']));
+        $log->debug(sprintf("user login with id=%s", $_SESSION['user']['id']));
         return $response->withRedirect($this->router->pathFor('index'));
     } else {
-        $error = "Invalid username or password";
+        $error = "Invalid email address or password";
         return $this->view->render($response, 'login.html.twig', ['er' => $error]);
     }
 });
@@ -134,5 +147,5 @@ $app->get('/profile', function ($request, $response, $args) {
 });
 
 $app->post('/profile', function ($request, $response, $args) {
-
+    
 });
