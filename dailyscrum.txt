@@ -22,3 +22,34 @@ Feng
 - start to work with register and login page
 3. Need assistance / figure things out
 - find a solution to pass variables from one handler to another in slim framework
+----------------------------------------------------------------------------------------------
+2021/10/25 
+
+Nari
+1. Done / not done since last scrum:
+- base HTML and bootstrap setup
+- broker: create property PHP logic and the view 
+- search free free neighbourhood statistic api - not exists
+2. To do until next Scrum:
+- make wireframe
+- finish broker reads property (view their property listing)
+3. Need assistance / figure things out
+- plug in broker id to broker routes
+
+Chris
+1. Done / not done since last scrum:
+- Basic user CRUD as admin
+2. To do until next Scrum:
+- Continue working on properties CRUD as admin
+- Fix consistency issues users/properties (and verification)
+3. Need assistance / figure things out
+- Nothing for now
+
+Feng
+1. Done / not done since last scrum:
+- register and login pages are functional
+2. To do until next Scrum:
+- check and modify verification functions in util and implement into register and login pages
+- finish profile page
+3. Need assistance / figure things out
+- nothing for now

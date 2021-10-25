@@ -17,7 +17,7 @@ $app->get('/hello/{name}', function ($request, $response, $args) {
 // Test index page + master.html.twig
 $app->get('/', function ($request, $response, $args) {
     return $this->view->render($response, 'master.html.twig');
-});
+})->setName('index');
 
 // Run app
 $app->run();
