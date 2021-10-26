@@ -75,37 +75,69 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         if ($verifyLicenseNo !== TRUE) {
             $errorList[] = $verifyPhone;
         }
-        $verifyCompany = verifyCompany($company);
-        if ($verifyCompany !== TRUE) {
-            $errorList[] = $verifyCompany;
+        if ($company !== "") {
+            $verifyCompany = verifyCompany($company);
+            if ($verifyCompany !== TRUE) {
+                $errorList[] = $verifyCompany;
+            }
+        } else {
+            $company = NULL;
         }
-        $verifyJobTitle = verifyJobTitle($jobTitle);
-        if ($verifyJobTitle !== TRUE) {
-            $errorList[] = $verifyJobTitle;
+        if ($jobTitle !== "") {
+            $verifyJobTitle = verifyJobTitle($jobTitle);
+            if ($verifyJobTitle !== TRUE) {
+                $errorList[] = $verifyJobTitle;
+            }
+        } else {
+            $jobTitle = NULL;
         }
+        if ($appartmentNo !== "") {
         $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
-        if ($verifyAppartmentNo !== TRUE) {
-            $errorList[] = $verifyAppartmentNo;
+            if ($verifyAppartmentNo !== TRUE) {
+                $errorList[] = $verifyAppartmentNo;
+            }
+        } else {
+            $appartmentNo = NULL;
         }
-        $verifyStreetNo = verifyStreetNo($streetNo);
-        if ($verifyStreetNo !== TRUE) {
-            $errorList[] = $verifyStreetNo;
+        if ($streetNo !== "") {
+            $verifyStreetNo = verifyStreetNo($streetNo);
+            if ($verifyStreetNo !== TRUE) {
+                $errorList[] = $verifyStreetNo;
+            }
+        } else {
+            $streetNo = NULL;
         }
-        $verifyStreetName = verifyStreetName($streetName);
-        if ($verifyStreetName !== TRUE) {
-            $errorList[] = $verifyStreetName;
+        if ($streetName !== "") {
+            $verifyStreetName = verifyStreetName($streetName);
+            if ($verifyStreetName !== TRUE) {
+                $errorList[] = $verifyStreetName;
+            }
+        } else {
+            $streetName = NULL;
         }
-        $verifyCityName = verifyCityName($city);
-        if ($verifyCityName !== TRUE) {
-            $errorList[] = $verifyCityName;
+        if ($city !== "") {
+            $verifyCityName = verifyCityName($city);
+            if ($verifyCityName !== TRUE) {
+                $errorList[] = $verifyCityName;
+            }
+        } else {
+            $city = NULL;
         }
-        $verifyProvince = verifyProvince($province);
-        if ($verifyProvince !== TRUE) {
-            $errorList[] = $verifyProvince;
+        if ($province !== "") {
+            $verifyProvince = verifyProvince($province);
+            if ($verifyProvince !== TRUE) {
+                $errorList[] = $verifyProvince;
+            }
+        } else {
+            $province = NULL;
         }
-        $verifyPostalCode = verifyPostalCode($postalCode);
-        if ($verifyPostalCode !== TRUE) {
-            $errorList[] = $verifyPostalCode;
+        if ($postalCode !== "") {
+            $verifyPostalCode = verifyPostalCode($postalCode);
+            if ($verifyPostalCode !== TRUE) {
+                $errorList[] = $verifyPostalCode;
+            }
+        } else {
+            $postalCode = NULL;
         }
     }
 
