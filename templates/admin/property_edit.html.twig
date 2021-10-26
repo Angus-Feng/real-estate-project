@@ -1,0 +1,34 @@
+{% extends "admin/master_admin.html.twig" %}
+
+{% block title %}Edit Property{% endblock %}
+
+{% block content %}
+
+    {% if errorList %}
+        <ul>
+        {% for error in errorList %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    {# Form for adding a property #}
+    <form method="post" enctype="multipart/form-data">
+        Broker License: <input name="licenseNo" type="text" value="{{broker.licenseNo}}"><br>
+        Price: <input name="price" type="number" min="0" step=".01" value="{{property.price}}"><br>
+        Title: <input name="title" type="text" value="{{property.title}}"><br>
+        Bedrooms: <input name="bedrooms" type="number" min="0" value="{{property.bedrooms}}"><br>
+        Bathrooms: <input name="bathrooms" type="number" min="0" value="{{property.bathrooms}}"><br>
+        Building Year: <input name="buildingYear" type="number" min="0" value="{{property.buildingYear}}"><br>
+        Lot Area: <input name="lotArea" type="number" min="0" step=".01" value="{{property.lotArea}}"><br>
+        House Description: <textarea name="description" cols="60" row="10">{{property.description}}</textarea><br>
+        Appartment Number: <input name="appartmentNo" type="number" value="{{property.appartmentNo}}"><br>
+        Street Address: <input name="streetAddress" type="text" value="{{property.streetAddress}}"><br>
+        City: <input name="city" type="text" value="{{property.city}}"><br>
+        Province: <input name="province" type="text" value="{{property.province}}"><br>
+        Postal Code: <input name="postalCode" type="text" value="{{property.postalCode}}"><br>
+        Upload Images: <input type="file" id="files" name="photos[]" multiple><br>
+        <input type="submit" value="Add Property">
+    </form>
+
+{% endblock content %}

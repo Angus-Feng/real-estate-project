@@ -18,17 +18,28 @@ $log->pushProcessor(function ($record) {
     return $record;
 });
 
-DB::$dbName = "phprealestateproject";
-DB::$user = "phprealestateproject";
-DB::$password = "ErqxYbYHaoV7tDPa";
-DB::$host = 'localhost';
-DB::$port = 3333;
+
+if (strpos($_SERVER['HTTP_HOST'], "fsd01.ca") !== false) {
+    //hosting
+    DB::$dbName = "cp5016_realestate";
+    DB::$user = "cp5016_realestate";
+    DB::$password = "nCWNrAiDg6un";
+
+} else {
+    //local machine
+    DB::$dbName = "phprealestateproject";
+    DB::$user = "phprealestateproject";
+    DB::$password = "ErqxYbYHaoV7tDPa";
+    DB::$host = 'localhost';
+    DB::$port = 3333;
+}
 
 //Custom SQL error handling in Meekrodb
 DB::$error_handler = 'db_error_handler'; // runs on mysql query errors
 DB::$nonsql_error_handler = 'db_error_handler'; // runs on library errors (bad syntax, etc)
 
-function db_error_handler($params) {
+function db_error_handler($params)
+{
     global $log, $container;
     $log->error("Database error: " . $params['error']);
     if (isset($params['query'])) {

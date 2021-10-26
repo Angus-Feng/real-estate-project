@@ -12,7 +12,7 @@ Register
             <div class="col-12">
                 <label for="email" class="form-label">Email address</label>
                 <input type="email" name="email" class="form-control" value="{{data.email}}">
-                <div class="">{{er.email}}</div>
+                <div class="err-msg">{{er.email}}</div>
             </div>
             <div class="col-12">
                 <label for="password" class="form-label">Password</label>
@@ -42,6 +42,11 @@ Register
                 <label for="licenseNo" class="form-label">license Number</label>
                 <input type="text" name="licenseNo" class="form-control" value="{{data.licenseNo}}" placeholder="AAA000000AAA">
                 <div class="err-msg">{{er.licenseNo}}</div>
+            </div>
+            <div class="col-12">
+                <label for="company" class="form-label">Company name that you work for</label>
+                <input type="text" name="company" class="form-control" value="{{data.company}}">
+                <div class="err-msg">{{er.company}}</div>
             </div>
         <button type="submit" class="btn btn-primary" name="submit">Submit</button>
     </div>

@@ -1,0 +1,70 @@
+<form method="post">
+	<div class="row g-3">
+		<div class="mb-3">
+			<label for="email" class="form-label">Email</label>
+			<input disabled type="text" class="form-control" placeholder="{{user.email}}">
+		</div>
+		<div class="col-sm-6">
+			<label for="firstName" class="form-label">First Name</label>
+			<input type="text" class="form-control" name="firstName" value="{{user.firstName}}">
+			<div class="err-msg">{{er.firstName}}</div>
+		</div>
+		<div class="col-sm-6">
+			<label for="lastName" class="form-label">Last Name</label>
+			<input type="text" class="form-control" name="lastName" value="{{user.lastName}}">
+			<div class="err-msg">{{er.lastName}}</div>
+		</div>
+		<br>
+		<div class="mb-3">Contact Infomation</div>
+		<div class="col-sm-6">
+			<label for="phone" class="form-label">Phone number</label>
+			<input type="text" class="form-control" name="phone" value="{{user.phone}}">
+			<div class="err-msg">{{er.phone}}</div>
+		</div>
+		<div class="col-sm-6">
+			<label for="city" class="form-label">City</label>
+			<input type="text" class="form-control" name="city" value="{{user.city}}">
+			<div class="err-msg">{{er.city}}</div>
+		</div>
+		<div class="col-sm-6">
+			<label for="city" class="form-label">Province</label>
+			<select class="form-select" name="province">
+				<option selected>No Preference</option>
+				<option value="AB">Alberta</option>
+				<option value="BC">British Columbia</option>
+				<option value="MB">New Brunswick</option>
+				<option value="NL">Newfoundland & Labrador</option>
+				<option value="NT">Northwest Territories</option>
+				<option value="NS">Nova Scotia</option>
+				<option value="NU">Nunavut</option>
+				<option value="ON">Ontario</option>
+				<option value="PE">Prince Edward Island</option>
+				<option value="QC">Quebec</option>
+				<option value="SK">Saskatchewan</option>
+				<option value="YT">Yukon</option>
+			</select>
+		</div>
+		<div class="col-sm-6">
+			<label for="postalCode" class="form-label">Postal Code</label>
+			<input type="text" class="form-control" name="postalCode" value="{{user.postalCode}}">
+			<div class="err-msg">{{er.postalCode}}</div>
+		</div>
+		<div class="mb-3 form-check">
+			<input type="checkbox" class="form-check-input" name="becomeBroker">
+			<label class="form-check-label" for="becomeBroker">I'm a broker</label>
+		</div>
+		<div class="mb-3">
+			<label for="licenseNo" class="form-label">license Number</label>
+			<input type="text" name="licenseNo" class="form-control" value="{{user.licenseNo}}" placeholder="AAA000000AAA">
+			<div class="err-msg">{{er.licenseNo}}</div>
+		</div>
+		<div class="mb-3">
+			<label for="company" class="form-label">Company name that you work for</label>
+			<input type="text" name="company" class="form-control" value="{{user.company}}">
+			<div class="err-msg">{{er.company}}</div>
+		</div>
+		<button type="submit" class="btn btn-primary" name="submit">Submit</button>
+
+
+	</div>
+</form>

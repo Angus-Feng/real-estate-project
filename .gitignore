@@ -1,5 +1,6 @@
 vendor
 tmplcache
 logs
-composer.lock
 .DS_Store
+.vscode
+sftp.json
