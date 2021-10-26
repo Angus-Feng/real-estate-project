@@ -39,6 +39,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         $phone = $request->getParam('phone');
         $company = $request->getParam('company');
         $jobTitle = $request->getParam('jobTitle');
+        $uploadedPhoto = $request->getUploadedFiles()['photoFilePath'];
         $appartmentNo = $request->getParam('appartmentNo');
         $streetAddress = $request->getParam('streetAddress');
         $city = $request->getParam('city');
@@ -61,6 +62,11 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
     }
     // Check if user is a broker 
     if ($userType === 'broker') {
+        $photoFilePath = null;
+        $result = verifyUploadedProfilePhoto($uploadedPhoto, $photoFilePath, $licenseNo);
+        if ($result !== TRUE) {
+            $errorList []= $result;
+        }
         $verifyLicenseNo = verifyLicenseNo($licenseNo);
         if ($verifyLicenseNo !== TRUE) {
             $errorList[] = $verifyLicenseNo;
@@ -77,33 +83,57 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         if ($verifyLicenseNo !== TRUE) {
             $errorList[] = $verifyPhone;
         }
-        $verifyCompany = verifyCompany($company);
-        if ($verifyCompany !== TRUE) {
-            $errorList[] = $verifyCompany;
+        if ($company !== "") {
+            $verifyCompany = verifyCompany($company);
+            if ($verifyCompany !== TRUE) {
+                $errorList[] = $verifyCompany;
+            }
+        } else {
+            $company = NULL;
         }
-        $verifyJobTitle = verifyJobTitle($jobTitle);
-        if ($verifyJobTitle !== TRUE) {
-            $errorList[] = $verifyJobTitle;
+        if ($jobTitle !== "") {
+            $verifyJobTitle = verifyJobTitle($jobTitle);
+            if ($verifyJobTitle !== TRUE) {
+                $errorList[] = $verifyJobTitle;
+            }
+        } else {
+            $jobTitle = NULL;
         }
+        if ($appartmentNo !== "") {
         $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
-        if ($verifyAppartmentNo !== TRUE) {
-            $errorList[] = $verifyAppartmentNo;
+            if ($verifyAppartmentNo !== TRUE) {
+                $errorList[] = $verifyAppartmentNo;
+            }
+        } else {
+            $appartmentNo = NULL;
         }
         $verifyStreetAddress = verifyUserStreetAddress($streetAddress);
         if ($verifyStreetAddress !== TRUE) {
             $errorList[] = $verifyStreetAddress;
         }
-        $verifyCityName = verifyCityName($city);
-        if ($verifyCityName !== TRUE) {
-            $errorList[] = $verifyCityName;
+        if ($city !== "") {
+            $verifyCityName = verifyCityName($city);
+            if ($verifyCityName !== TRUE) {
+                $errorList[] = $verifyCityName;
+            }
+        } else {
+            $city = NULL;
         }
-        $verifyProvince = verifyProvince($province);
-        if ($verifyProvince !== TRUE) {
-            $errorList[] = $verifyProvince;
-        }
-        $verifyPostalCode = verifyPostalCode($postalCode);
-        if ($verifyPostalCode !== TRUE) {
-            $errorList[] = $verifyPostalCode;
+        // if ($province !== "") {
+        //     $verifyProvince = verifyProvince($province);
+        //     if ($verifyProvince !== TRUE) {
+        //         $errorList[] = $verifyProvince;
+        //     }
+        // } else {
+        //     $province = NULL;
+        // }
+        if ($postalCode !== "") {
+            $verifyPostalCode = verifyPostalCode($postalCode);
+            if ($verifyPostalCode !== TRUE) {
+                $errorList[] = $verifyPostalCode;
+            }
+        } else {
+            $postalCode = NULL;
         }
     }
 
@@ -124,6 +154,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
             'phone' => $phone,
             'company' => $company,
             'jobTitle' => $jobTitle,
+            'photoFilePath' => $photoFilePath,
             'appartmentNo' => $appartmentNo,
             'streetAddress' => $streetAddress,
             'city' => $city,
@@ -179,9 +210,13 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
     // if ($emailVerification !== TRUE) {
     //     $errorList[] = $emailVerification;
     // }
-    $verifyPasswords = verifyPasswords($password1);
-    if ($verifyPasswords !== TRUE) {
-        $errorList[] = $verifyPasswords;
+    if ($password1 === "" && $password2 === "" && $user['role'] === 'broker') {
+        $password1 = $user['password'];
+    } else {
+        $errorList[] = verifyPasswords($password1);
+        if ($password1 !== $password2) {
+            $errorList[] = "The passwords don't match";
+        }
     }
     if ($password1 !== $password2) {
         $errorList[] = 'The passwords you have entered do not match.';
@@ -224,10 +259,10 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
         if ($verifyCityName !== TRUE) {
             $errorList[] = $verifyCityName;
         }
-        $verifyProvince = verifyProvince($province);
-        if ($verifyProvince !== TRUE) {
-            $errorList[] = $verifyProvince;
-        }
+        // $verifyProvince = verifyProvince($province);
+        // if ($verifyProvince !== TRUE) {
+        //     $errorList[] = $verifyProvince;
+        // }
         $verifyPostalCode = verifyPostalCode($postalCode);
         if ($verifyPostalCode !== TRUE) {
             $errorList[] = $verifyPostalCode;
@@ -394,10 +429,10 @@ $app->post('/admin/property/add', function ($request, $response, $args) {
     if ($verifyCityName !== TRUE) {
         $errorList[] = $verifyCityName;
     }
-    $verifyProvince = verifyProvince($province);
-    if ($verifyProvince !== TRUE) {
-        $errorList[] = $verifyProvince;
-    }
+    // $verifyProvince = verifyProvince($province);
+    // if ($verifyProvince !== TRUE) {
+    //     $errorList[] = $verifyProvince;
+    // }
     $verifyPostalCode = verifyPostalCode($postalCode);
     if ($verifyPostalCode !== TRUE) {
         $errorList[] = $verifyPostalCode;
@@ -527,10 +562,10 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
     if ($verifyCityName !== TRUE) {
         $errorList[] = $verifyCityName;
     }
-    $verifyProvince = verifyProvince($province);
-    if ($verifyProvince !== TRUE) {
-        $errorList[] = $verifyProvince;
-    }
+    // $verifyProvince = verifyProvince($province);
+    // if ($verifyProvince !== TRUE) {
+    //     $errorList[] = $verifyProvince;
+    // }
     $verifyPostalCode = verifyPostalCode($postalCode);
     if ($verifyPostalCode !== TRUE) {
         $errorList[] = $verifyPostalCode;
