@@ -2,8 +2,14 @@
 
 {% block header %}
     <h1>Profile</h1>
+    <h3>{{success}}</h3>
 {% endblock %}
 
 {% block content %}
+    {% if user.role is same as("broker") %}
+    {% include "profile-broker.html.twig" %}
+    {% else %}
+        {% include "profile-buyer.html.twig" %}
+    {% endif %}
     
 {% endblock %}

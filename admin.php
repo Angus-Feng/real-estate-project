@@ -7,7 +7,7 @@ require_once 'init.php';
 // Default admin page
 $app->get('/admin', function ($request, $response, $args) {
     return $this->view->render($response, 'admin/index_admin.html.twig');
-});
+})->setName('admin');
 
 
 // Users (Buyers/Brokers)
@@ -40,8 +40,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         $company = $request->getParam('company');
         $jobTitle = $request->getParam('jobTitle');
         $appartmentNo = $request->getParam('appartmentNo');
-        $streetNo = $request->getParam('streetNo');
-        $streetName = $request->getParam('streetName');
+        $streetAddress = $request->getParam('streetAddress');
         $city = $request->getParam('city');
         $province = $request->getParam('province');
         $postalCode = $request->getParam('postalCode');
@@ -53,9 +52,12 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
     if ($emailVerification !== TRUE) {
         $errorList[] = $emailVerification;
     }
-    $verifyPasswords = verifyPasswords($password1, $password2);
+    $verifyPasswords = verifyPasswords($password1);
     if ($verifyPasswords !== TRUE) {
         $errorList[] = $verifyPasswords;
+    }
+    if ($password1 !== $password2) {
+        $errorList[] = 'The passwords you have entered do not match.';
     }
     // Check if user is a broker 
     if ($userType === 'broker') {
@@ -87,13 +89,9 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         if ($verifyAppartmentNo !== TRUE) {
             $errorList[] = $verifyAppartmentNo;
         }
-        $verifyStreetNo = verifyStreetNo($streetNo);
-        if ($verifyStreetNo !== TRUE) {
-            $errorList[] = $verifyStreetNo;
-        }
-        $verifyStreetName = verifyStreetName($streetName);
-        if ($verifyStreetName !== TRUE) {
-            $errorList[] = $verifyStreetName;
+        $verifyStreetAddress = verifyUserStreetAddress($streetAddress);
+        if ($verifyStreetAddress !== TRUE) {
+            $errorList[] = $verifyStreetAddress;
         }
         $verifyCityName = verifyCityName($city);
         if ($verifyCityName !== TRUE) {
@@ -127,7 +125,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
             'company' => $company,
             'jobTitle' => $jobTitle,
             'appartmentNo' => $appartmentNo,
-            'streetNo' => $streetNo,
+            'streetAddress' => $streetAddress,
             'city' => $city,
             'province' => $province,
             'postalCode' => $postalCode
@@ -169,8 +167,7 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
         $company = $request->getParam('company');
         $jobTitle = $request->getParam('jobTitle');
         $appartmentNo = $request->getParam('appartmentNo');
-        $streetNo = $request->getParam('streetNo');
-        $streetName = $request->getParam('streetName');
+        $streetAddress = $request->getParam('streetAddress');
         $city = $request->getParam('city');
         $province = $request->getParam('province');
         $postalCode = $request->getParam('postalCode');
@@ -182,9 +179,12 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
     // if ($emailVerification !== TRUE) {
     //     $errorList[] = $emailVerification;
     // }
-    $verifyPasswords = verifyPasswords($password1, $password2);
+    $verifyPasswords = verifyPasswords($password1);
     if ($verifyPasswords !== TRUE) {
         $errorList[] = $verifyPasswords;
+    }
+    if ($password1 !== $password2) {
+        $errorList[] = 'The passwords you have entered do not match.';
     }
     // Check if user is a broker 
     if ($user['role'] === 'broker') {
@@ -216,13 +216,9 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
         if ($verifyAppartmentNo !== TRUE) {
             $errorList[] = $verifyAppartmentNo;
         }
-        $verifyStreetNo = verifyStreetNo($streetNo);
-        if ($verifyStreetNo !== TRUE) {
-            $errorList[] = $verifyStreetNo;
-        }
-        $verifyStreetName = verifyStreetName($streetName);
-        if ($verifyStreetName !== TRUE) {
-            $errorList[] = $verifyStreetName;
+        $verifyStreetAddress = verifyUserStreetAddress($streetAddress);
+        if ($verifyStreetAddress !== TRUE) {
+            $errorList[] = $verifyStreetAddress;
         }
         $verifyCityName = verifyCityName($city);
         if ($verifyCityName !== TRUE) {
@@ -261,7 +257,7 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
             'company' => $company,
             'jobTitle' => $jobTitle,
             'appartmentNo' => $appartmentNo,
-            'streetNo' => $streetNo,
+            'streetAddress' => $streetAddress,
             'city' => $city,
             'province' => $province,
             'postalCode' => $postalCode
