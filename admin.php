@@ -215,12 +215,10 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
     } else {
         $errorList[] = verifyPasswords($password1);
         if ($password1 !== $password2) {
-            $errorList[] = "The passwords don't match";
+            $errorList[] = 'The passwords you have entered do not match.';
         }
     }
-    if ($password1 !== $password2) {
-        $errorList[] = 'The passwords you have entered do not match.';
-    }
+
     // Check if user is a broker 
     if ($user['role'] === 'broker') {
         // $verifyLicenseNo = verifyLicenseNo($licenseNo, $id);
