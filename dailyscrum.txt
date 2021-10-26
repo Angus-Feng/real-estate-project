@@ -1,28 +1,38 @@
-2021/10/22 
+2021/10/26
 
 Nari
 1. Done / not done since last scrum:
+- make wireframe for register, login and admin page
+- plug in broker id - not done
 2. To do until next Scrum:
-- finish adding user stories in Trello
-- setup the basic HTML structure and add bootstrap CDN
+- finish broker reads property (view their property listing)
+- make wirefram for broker view
 3. Need assistance / figure things out
-- find free neighbourhood statistic api
+- nothing for now
 
 Chris
-1. Done / not done since the last scrum:
-2. To do until the next Scrum:
-- Watch past group recordings (especially admin video)
-- Attempt the admin CRUD page
-3. Need assistance/figure things out
-- Find free neighbourhood statistic API and/or property/real estate API
+1. Done / not done since last scrum:
+- Add/Delete property with mutiple image upload in admin
+- Improvements to user CRUD in admin 
+2. To do until next Scrum:
+- Finish Edit property in admin
+- Try to finish pending broker interface and functionality in admin
+3. Need assistance / figure things out
+- Nothing for now
 
 Feng
 1. Done / not done since last scrum:
+- profile page is functional.
+- verification functions and regex in utils are done.
 2. To do until next Scrum:
-- start to work with register and login page
+- finish the proper list
+- start to work on favourite page
 3. Need assistance / figure things out
-- find a solution to pass variables from one handler to another in slim framework
+- how to implement cookies in login page
+- how to set the default value of dropdown list
+
 ----------------------------------------------------------------------------------------------
+
 2021/10/25 
 
 Nari
@@ -53,3 +63,30 @@ Feng
 - finish profile page
 3. Need assistance / figure things out
 - nothing for now
+
+----------------------------------------------------------------------------------------------
+
+2021/10/22 
+
+Nari
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+- finish adding user stories in Trello
+- setup the basic HTML structure and add bootstrap CDN
+3. Need assistance / figure things out
+- find free neighbourhood statistic api
+
+Chris
+1. Done / not done since the last scrum:
+2. To do until the next Scrum:
+- Watch past group recordings (especially admin video)
+- Attempt the admin CRUD page
+3. Need assistance/figure things out
+- Find free neighbourhood statistic API and/or property/real estate API
+
+Feng
+1. Done / not done since last scrum:
+2. To do until next Scrum:
+- start to work with register and login page
+3. Need assistance / figure things out
+- find a solution to pass variables from one handler to another in slim framework
