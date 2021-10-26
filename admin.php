@@ -157,14 +157,14 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
     }
 
     $id = $args['id'];
-    $email = $request->getParam('email');
+    // $email = $request->getParam('email');
     $password1 = $request->getParam('password1');
     $password2 = $request->getParam('password2');
     // Check if user is a broker 
     if ($user['role'] === 'broker') {
-        $licenseNo = $request->getParam('licenseNo');
-        $firstName = $request->getParam('firstName');
-        $lastName = $request->getParam('lastName');
+        // $licenseNo = $request->getParam('licenseNo');
+        // $firstName = $request->getParam('firstName');
+        // $lastName = $request->getParam('lastName');
         $phone = $request->getParam('phone');
         $company = $request->getParam('company');
         $jobTitle = $request->getParam('jobTitle');
@@ -178,30 +178,30 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
 
     $errorList = [];
 
-    $emailVerification = verfiyEmailUpdate($email, $id);
-    if ($emailVerification !== TRUE) {
-        $errorList[] = $emailVerification;
-    }
+    // $emailVerification = verfiyEmailUpdate($email, $id);
+    // if ($emailVerification !== TRUE) {
+    //     $errorList[] = $emailVerification;
+    // }
     $verifyPasswords = verifyPasswords($password1, $password2);
     if ($verifyPasswords !== TRUE) {
         $errorList[] = $verifyPasswords;
     }
     // Check if user is a broker 
     if ($user['role'] === 'broker') {
-        $verifyLicenseNo = verifyLicenseNo($licenseNo, $id);
-        if ($verifyLicenseNo !== TRUE) {
-            $errorList[] = $verifyLicenseNo;
-        }
-        $verifyFirstName = verifyFirstName($firstName);
-        if ($verifyFirstName !== TRUE) {
-            $errorList[] = $verifyFirstName;
-        }
-        $verifyLastName = verifyLastName($lastName);
-        if ($verifyLastName !== TRUE) {
-            $errorList[] = $verifyLastName;
-        }
+        // $verifyLicenseNo = verifyLicenseNo($licenseNo, $id);
+        // if ($verifyLicenseNo !== TRUE) {
+        //     $errorList[] = $verifyLicenseNo;
+        // }
+        // $verifyFirstName = verifyFirstName($firstName);
+        // if ($verifyFirstName !== TRUE) {
+        //     $errorList[] = $verifyFirstName;
+        // }
+        // $verifyLastName = verifyLastName($lastName);
+        // if ($verifyLastName !== TRUE) {
+        //     $errorList[] = $verifyLastName;
+        // }
         $verifyPhone = verifyPhone($phone);
-        if ($verifyLicenseNo !== TRUE) {
+        if ($verifyPhone !== TRUE) {
             $errorList[] = $verifyPhone;
         }
         $verifyCompany = verifyCompany($company);
@@ -247,14 +247,16 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
     }
 
     if ($user['role'] === 'buyer') {
-        DB::update('users', ['email' => $email, 'password' => $password1], "id=%d", $id);
+        DB::update('users', [
+            // 'email' => $email, 
+            'password' => $password1], "id=%d", $id);
     } else {
         DB::update('users', [
-            'email' => $email, 
+            // 'email' => $email, 
             'password' => $password1, 
-            'licenseNo' => $licenseNo, 
-            'firstName' => $firstName, 
-            'lastName' => $lastName, 
+            // 'licenseNo' => $licenseNo, 
+            // 'firstName' => $firstName, 
+            // 'lastName' => $lastName, 
             'phone' => $phone,
             'company' => $company,
             'jobTitle' => $jobTitle,
@@ -312,7 +314,288 @@ $app->get('/admin/property/list', function ($request, $response, $args) {
 
 // Add property: GET
 $app->get('/admin/property/add', function ($request, $response, $args) {
-    return $this->view->render($response, 'admin/property_add.html.twig'); // TODO: Add multiple image upload
+    return $this->view->render($response, 'admin/property_add.html.twig');
 });
 
+// Add property: POST
+$app->post('/admin/property/add', function ($request, $response, $args) {
+
+    $licenseNo = $request->getParam('licenseNo');
+    $price = $request->getParam('price');
+    $title = $request->getParam('title');
+    $bedrooms = $request->getParam('bedrooms');
+    $bathrooms = $request->getParam('bathrooms');
+    $buildingYear = $request->getParam('buildingYear');
+    $lotArea = $request->getParam('lotArea');
+    $description = $request->getParam('description');
+    $appartmentNo = $request->getParam('appartmentNo');
+    $streetAddress = $request->getParam('streetAddress');
+    $city = $request->getParam('city');
+    $province = $request->getParam('province');
+    $postalCode = $request->getParam('postalCode');
+    $uploadedPhotos = $request->getUploadedFiles()['photos'];
+
+    $errorList = [];
+
+    $photoPathArray = [];
+    $errorPhotoCount = 1;
+    $photoNo = 0;
+    foreach ($uploadedPhotos as $photo) {
+        if ($photo->getError() !== UPLOAD_ERR_OK) {
+            $errorList []= 'There was an error uploading photo ' . $errorPhotoCount . ".";
+            $errorPhotoCount++;
+        }
+        $photoFilePath = null;
+        $result = verifyUploadedHousePhoto($photo, $photoFilePath, $postalCode, $photoNo);
+        if ($result !== TRUE) {
+            $errorList []= $result;
+        } else {
+            $photoPathArray []= $photoFilePath;
+            $photoNo++;
+        }
+    }
+    $verifyPrice = verifyPrice($price);
+    if ($verifyPrice !== TRUE) {
+        $errorList[] = $verifyPrice;
+    }
+    $verifyTitle = verifyTitle($title);
+    if ($verifyTitle !== TRUE) {
+        $errorList[] = $verifyTitle;
+    }
+    $verifyBedrooms = verifyBedrooms($bedrooms);
+    if ($verifyBedrooms !== TRUE) {
+        $errorList[] = $verifyBedrooms;
+    }
+    $verifyBathrooms = verifyBathrooms($bathrooms);
+    if ($verifyBathrooms !== TRUE) {
+        $errorList[] = $verifyBathrooms;
+    }
+    $verifyBuildingYear = verifyBuildingYear($buildingYear);
+    if ($verifyBuildingYear !== TRUE) {
+        $errorList[] = $verifyBuildingYear;
+    }
+    $verifyLotArea = verifyLotArea($lotArea);
+    if ($verifyLotArea !== TRUE) {
+        $errorList[] = $verifyLotArea;
+    }
+    $verifyDescription = verifyDescription($description);
+    if ($verifyDescription !== TRUE) {
+        $errorList[] = $verifyDescription;
+    }
+    if ($appartmentNo !== "") {
+        $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
+        if ($verifyAppartmentNo !== TRUE) {
+            $errorList[] = $verifyAppartmentNo;
+        }
+    } else {
+        $appartmentNo = NULL;
+    }
+    $verifyStreetAddress = verifyStreetAddress($streetAddress);
+    if ($verifyStreetAddress !== TRUE) {
+        $errorList[] = $verifyStreetAddress;
+    }
+    $verifyCityName = verifyCityName($city);
+    if ($verifyCityName !== TRUE) {
+        $errorList[] = $verifyCityName;
+    }
+    $verifyProvince = verifyProvince($province);
+    if ($verifyProvince !== TRUE) {
+        $errorList[] = $verifyProvince;
+    }
+    $verifyPostalCode = verifyPostalCode($postalCode);
+    if ($verifyPostalCode !== TRUE) {
+        $errorList[] = $verifyPostalCode;
+    }
+
+    if ($errorList) {
+        return $this->view->render($response, 'admin/property_add.html.twig', ['errorList' => $errorList]);
+    }
+
+    $brokerId = DB::queryFirstRow("SELECT id FROM users WHERE licenseNo=%s", $licenseNo);
+
+    DB::insert('properties', [
+        'brokerId' => $brokerId['id'], 
+        'price' => $price, 
+        'title' => $title, 
+        'bedrooms' => $bedrooms,
+        'bathrooms' => $bathrooms,
+        'buildingYear' => $buildingYear,
+        'lotArea' => $lotArea,
+        'description' => $description,
+        'appartmentNo' => $appartmentNo,
+        'streetAddress' => $streetAddress,
+        'city' => $city,
+        'province' => $province,
+        'postalCode' => $postalCode
+    ]);
+
+    $photoNo = 0;
+    $propertyId = DB::insertId();
+    foreach ($photoPathArray as $photoFilePath) {
+        DB::insert('propertyphotos', ['propertyId' => $propertyId, 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);
+        $photoNo++;
+    }
+
+    return $this->view->render($response, 'admin/modification_success.html.twig');
+});
+
+// Edit property: GET
+$app->get('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $args) { // TODO
+    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%d", $args['id']);
+    $brokerId = DB::queryFirstRow("SELECT brokerId FROM properties WHERE id=%d", $args['id']);
+    $broker = DB::queryFirstRow("SELECT licenseNo, firstName, lastName FROM users WHERE id=%d", $brokerId['brokerId']);
+    if (!$property) {
+        // $response = $response->withStatus(404);
+        return $this->view->render($response, '404_error.html.twig');
+    }
+    return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker]);
+});
+
+// Edit property: POST
+$app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $args) { // TODO
+    $licenseNo = $request->getParam('licenseNo');
+    $price = $request->getParam('price');
+    $title = $request->getParam('title');
+    $bedrooms = $request->getParam('bedrooms');
+    $bathrooms = $request->getParam('bathrooms');
+    $buildingYear = $request->getParam('buildingYear');
+    $lotArea = $request->getParam('lotArea');
+    $description = $request->getParam('description');
+    $appartmentNo = $request->getParam('appartmentNo');
+    $streetAddress = $request->getParam('streetAddress');
+    $city = $request->getParam('city');
+    $province = $request->getParam('province');
+    $postalCode = $request->getParam('postalCode');
+    $uploadedPhotos = $request->getUploadedFiles()['photos'];
+
+    $errorList = [];
+
+    $photoPathArray = [];
+    $errorPhotoCount = 1;
+    $photoNo = 0;
+    foreach ($uploadedPhotos as $photo) {
+        if ($photo->getError() !== UPLOAD_ERR_OK) {
+            $errorList []= 'There was an error uploading photo ' . $errorPhotoCount . ".";
+            $errorPhotoCount++;
+        }
+        $photoFilePath = null;
+        $result = verifyUploadedHousePhoto($photo, $photoFilePath, $postalCode, $photoNo);
+        if ($result !== TRUE) {
+            $errorList []= $result;
+        } else {
+            $photoPathArray []= $photoFilePath;
+            $photoNo++;
+        }
+    }
+    $verifyPrice = verifyPrice($price);
+    if ($verifyPrice !== TRUE) {
+        $errorList[] = $verifyPrice;
+    }
+    $verifyTitle = verifyTitle($title);
+    if ($verifyTitle !== TRUE) {
+        $errorList[] = $verifyTitle;
+    }
+    $verifyBedrooms = verifyBedrooms($bedrooms);
+    if ($verifyBedrooms !== TRUE) {
+        $errorList[] = $verifyBedrooms;
+    }
+    $verifyBathrooms = verifyBathrooms($bathrooms);
+    if ($verifyBathrooms !== TRUE) {
+        $errorList[] = $verifyBathrooms;
+    }
+    $verifyBuildingYear = verifyBuildingYear($buildingYear);
+    if ($verifyBuildingYear !== TRUE) {
+        $errorList[] = $verifyBuildingYear;
+    }
+    $verifyLotArea = verifyLotArea($lotArea);
+    if ($verifyLotArea !== TRUE) {
+        $errorList[] = $verifyLotArea;
+    }
+    $verifyDescription = verifyDescription($description);
+    if ($verifyDescription !== TRUE) {
+        $errorList[] = $verifyDescription;
+    }
+    if ($appartmentNo !== "") {
+        $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
+        if ($verifyAppartmentNo !== TRUE) {
+            $errorList[] = $verifyAppartmentNo;
+        }
+    } else {
+        $appartmentNo = NULL;
+    }
+    $verifyStreetAddress = verifyStreetAddress($streetAddress);
+    if ($verifyStreetAddress !== TRUE) {
+        $errorList[] = $verifyStreetAddress;
+    }
+    $verifyCityName = verifyCityName($city);
+    if ($verifyCityName !== TRUE) {
+        $errorList[] = $verifyCityName;
+    }
+    $verifyProvince = verifyProvince($province);
+    if ($verifyProvince !== TRUE) {
+        $errorList[] = $verifyProvince;
+    }
+    $verifyPostalCode = verifyPostalCode($postalCode);
+    if ($verifyPostalCode !== TRUE) {
+        $errorList[] = $verifyPostalCode;
+    }
+
+    if ($errorList) {
+        return $this->view->render($response, 'admin/property_edit.html.twig', ['errorList' => $errorList]);
+    }
+
+    $brokerId = DB::queryFirstRow("SELECT id FROM users WHERE licenseNo=%s", $licenseNo);
+
+    DB::insert('properties', [
+        'brokerId' => $brokerId['id'], 
+        'price' => $price, 
+        'title' => $title, 
+        'bedrooms' => $bedrooms,
+        'bathrooms' => $bathrooms,
+        'buildingYear' => $buildingYear,
+        'lotArea' => $lotArea,
+        'description' => $description,
+        'appartmentNo' => $appartmentNo,
+        'streetAddress' => $streetAddress,
+        'city' => $city,
+        'province' => $province,
+        'postalCode' => $postalCode
+    ]);
+
+    $photoNo = 0;
+    $propertyId = DB::insertId();
+    foreach ($photoPathArray as $photoFilePath) {
+        DB::insert('propertyphotos', ['propertyId' => $propertyId, 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);
+        $photoNo++;
+    }
+
+    return $this->view->render($response, 'admin/modification_success.html.twig');
+});
+
+// Delete property: GET
+$app->get('/admin/property/delete/{id:[0-9]+}', function ($request, $response, $args) {
+    $id = $args['id'];
+    // if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 'admin') {
+    //     $app->redirect('/forbidden');
+    //     return;
+    // }
+
+    $property = DB::queryFirstRow("SELECT p.id, u.firstName, u.lastName, u.licenseNo, p.price, p.title, p.streetAddress, p.postalCode 
+        FROM properties AS p, users AS u WHERE u.id=p.brokerId AND p.id=%d", $id);
+
+    if (!$property) {
+        // $response = $response->withStatus(404);
+        return $this->view->render($response, '404_error.html.twig');
+    }
+    
+    return $this->view->render($response, 'admin/property_delete.html.twig', ['property' => $property]);
+});
+
+// Delete property: POST
+$app->post('/admin/property/delete/{id:[0-9]+}', function ($request, $response, $args) {
+    DB::delete('propertyphotos', 'propertyId=%d', $args['id']);
+    DB::delete('properties', 'id=%d', $args['id']);
+
+    return $this->view->render($response, 'admin/modification_success.html.twig');
+});
 //-----------------------------------------------------------------------------------------------------------------

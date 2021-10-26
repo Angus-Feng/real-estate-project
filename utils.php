@@ -4,18 +4,15 @@ require_once 'vendor/autoload.php';
 
 require_once 'init.php';
 
-function verifyUploadedPhoto($photo, &$filePath) {
-
+function verifyUploadedProfilePhoto($photo, &$filePath, $licenseNo) {
     if ($photo->getError() !== UPLOAD_ERR_OK) {
-        return "Upload failed." . $photo->getError();
+        return 'There was an error uploading the photo.';
     }
 
     $info = getimagesize($photo->file);
-    if (!$info) {
-        return "File is not an image";
-    }
-    if ($info[0] < 200 || $info[0] > 1000 || $info[1] < 200 || $info[1] > 1000) {
-        return "Width and height must be within 200-1000 pixels range";
+
+    if ($info[0] < 127 || $info[0] > 127 || $info[1] < 150 || $info[1] > 150) {
+        return "Width must be 127px and height must be 150px.";
     }
 
     $ext = "";
@@ -29,14 +26,37 @@ function verifyUploadedPhoto($photo, &$filePath) {
         case 'image/png':
             $ext = "png";
             break;
-        case 'image/bmp':
-            $ext = "bmp";
-            break;
         default:
-            return "Only JPG, GIF, PNG and BMP file types are accepted";
+            return "Only JPG, GIF, PNG file types are accepted";
     }
 
-    $filePath = "uploads/" . mb_ereg_replace("[^\w\s\d\)]", '_', pathinfo($photo->getClientFilename(), PATHINFO_FILENAME)) . "." . $ext;
+    $filePath = "uploads/" . $licenseNo . "." . $ext;
+    return TRUE;
+}
+
+function verifyUploadedHousePhoto($photo, &$filePath, $postalCode, $photoNo) {
+    $info = getimagesize($photo->file);
+
+    if ($info[0] < 640 || $info[0] > 640 || $info[1] < 480 || $info[1] > 480) {
+        return "Width must be 640px and height must be 480px.";
+    }
+
+    $ext = "";
+    switch ($info['mime']) {
+        case 'image/jpeg':
+            $ext = "jpg";
+            break;
+        case 'image/gif':
+            $ext = "gif";
+            break;
+        case 'image/png':
+            $ext = "png";
+            break;
+        default:
+            return "Only JPG, GIF, PNG file types are accepted";
+    }
+
+    $filePath = "uploads/" . $postalCode . "_" . $photoNo . "." . $ext;
     return TRUE;
 }
 
@@ -177,6 +197,62 @@ function verifyProvince($province) { //TEST REGEX
 function verifyPostalCode($postalCode) { //TEST REGEX
     if (!preg_match('/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/', $postalCode)) {
         return "Postal code must be in the following format: H9X3L9.";
+    }
+    return TRUE;
+}
+
+function verifyPrice($price) {
+    if ($price < 1 && $price > 1000000000) {
+        return "The price of the home must range from 1 - 1,000,000,000 CAD.";
+    }
+    return TRUE;
+}
+
+function verifyTitle($title) { //TEST REGEX
+    if (!preg_match('/^[a-zA-Z\.\'\-\s]+$/', $title) || strlen($title) < 1 || strlen($title) > 100) {
+        return "Title must be between 1 - 100 characters long and can only contain letters, periods, apostrophes and hyphens.";
+    }
+    return TRUE;
+}
+
+function verifyBedrooms($bedrooms) {
+    if ($bedrooms < 0 || $bedrooms > 2000) {
+        return "Bedrooms should be between 0 - 2000.";
+    }
+    return TRUE;
+}
+
+function verifyBathrooms($bathrooms) {
+    if ($bathrooms < 0 || $bathrooms > 1000) {
+        return "Bathrooms should be between 0 - 1000.";
+    }
+    return TRUE;
+}
+
+function verifyBuildingYear($buildingYear) {
+    if ($buildingYear < 1900 || $buildingYear > 2021) {
+        return "Building year must be between 1900 - 2021.";
+    }
+    return TRUE;
+}
+
+function verifyLotArea($lotArea) {
+    if ($lotArea < 50 || $lotArea > 500) {
+        return "Lot area must be between 50 - 500.";
+    }
+    return TRUE;
+}
+
+function verifyStreetAddress($streetAddress) { //TEST REGEX
+    if (!preg_match('/^[a-zA-Z0-9\.\'\-\s]+$/', $streetAddress) || strlen($streetAddress) < 1 || strlen($streetAddress) > 320) {
+        return "Street address must be between 1 - 320 characters long and can only contain letters, numbers, periods, apostrophes, spaces and hyphens.";
+    }
+    return TRUE;
+}
+
+function verifyDescription($description) { //TEST REGEX
+    if (strlen($description) < 1 || strlen($description) > 2000) {
+        return "Title must be between 1 - 2000 characters long.";
     }
     return TRUE;
 }

@@ -1,6 +1,6 @@
 {% extends "admin/master_admin.html.twig" %}
 
-{% block title %}User List{% endblock %}
+{% block title %}Property List{% endblock %}
 
 {% block content %}
 
@@ -18,8 +18,7 @@
             <th>Building Year</th>
             <th>Lot Area</th>
             <th>Appartment #</th>
-            <th>Street #</th>
-            <th>Street Name</th>
+            <th>Street Address</th>
             <th>City</th>
             <th>Province</th>
             <th>Postal Code</th>
@@ -36,8 +35,7 @@
             <td>{{p.buildingYear}}</td>
             <td>{{p.lotArea}}</td>
             <td>{{p.appartmentNo}}</td>
-            <td>{{p.streetNo}}</td>
-            <td>{{p.streetName}}</td>
+            <td>{{p.streetAddress}}</td>
             <td>{{p.city}}</td>
             <td>{{p.province}}</td>
             <td>{{p.postalCode}}</td>

@@ -15,7 +15,7 @@
     {# Form for buyers #}
     {% if user.role is same as("buyer")%}
         <form method="post">
-            Email: <input name="email" type="email" value="{{ user.email }}"><br>
+            Email: <input name="email" type="email" value="{{ user.email }}" disabled><br>
             Password: <input name="password1" type="password"><br>
             Confirm Password: <input name="password2" type="password"><br>
             <input type="submit" value="Update Buyer Information">
@@ -25,16 +25,16 @@
     {# Form for broker #}
     {% if user.role is same as("broker")%}
         <form method="post" enctype="multipart/form-data">
-            Email: <input name="email" type="email" value="{{ user.email }}"><br>
+            Email: <input name="email" type="email" value="{{ user.email }}" disabled><br>
             Password: <input name="password1" type="password"><br>
             Confirm Password: <input name="password2" type="password"><br>
-            License Number: <input name="licenseNo" type="text" value="{{ user.licenseNo }}"><br>
-            First Name: <input name="firstName" type="text" value="{{ user.firstName }}"><br>
-            Last Name: <input name="lastName" type="text" value="{{ user.lastName }}"><br>
+            License Number: <input name="licenseNo" type="text" value="{{ user.licenseNo }}" disabled><br>
+            First Name: <input name="firstName" type="text" value="{{ user.firstName }}" disabled><br>
+            Last Name: <input name="lastName" type="text" value="{{ user.lastName }}" disabled><br>
             Phone Number: <input name="phone" type="text" value="{{ user.phone }}"><br>
             Company: <input name="company" type="text" value="{{ user.company }}"><br>
             Job Title: <input name="jobTitle" type="text" value="{{ user.jobTitle }}"><br>
-            {# Image: <input type="file" name="photoFilePath"/><br> #}
+            Image: <input type="file" name="photoFilePath"/><br>
             Appartment Number: <input name="appartmentNo" type="number" value="{{ user.appartmentNo }}"><br>
             Street Number: <input name="streetNo" type="number" value="{{ user.streetNo }}"><br>
             Street Name: <input name="streetName" type="text" value="{{ user.streetName }}"><br>

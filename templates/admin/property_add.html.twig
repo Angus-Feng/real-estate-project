@@ -14,19 +14,20 @@
 
     {# Form for adding a property #}
     <form method="post" enctype="multipart/form-data">
-        Broker License: <input name="licenseNo" type="email"><br>
+        Broker License: <input name="licenseNo" type="text"><br>
         Price: <input name="price" type="number" min="0" step=".01"><br>
         Title: <input name="title" type="text"><br>
         Bedrooms: <input name="bedrooms" type="number" min="0"><br>
         Bathrooms: <input name="bathrooms" type="number" min="0"><br>
-        Building Year: <input name="phone" type="number" min="0"><br>
-        Lot Area: <input name="company" type="number" min="0" step=".01"><br>
+        Building Year: <input name="buildingYear" type="number" min="0"><br>
+        Lot Area: <input name="lotArea" type="number" min="0" step=".01"><br>
         House Description: <textarea name="description" cols="60" row="10"></textarea><br>
         Appartment Number: <input name="appartmentNo" type="number"><br>
         Street Address: <input name="streetAddress" type="text"><br>
         City: <input name="city" type="text"><br>
         Province: <input name="province" type="text"><br>
         Postal Code: <input name="postalCode" type="text"><br>
+        Upload Images: <input type="file" id="files" name="photos[]" multiple><br>
         <input type="submit" value="Add Property">
     </form>
 

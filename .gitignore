@@ -2,3 +2,5 @@ vendor
 tmplcache
 logs
 .DS_Store
+.vscode
+sftp.json
