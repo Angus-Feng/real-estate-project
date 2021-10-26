@@ -39,6 +39,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         $phone = $request->getParam('phone');
         $company = $request->getParam('company');
         $jobTitle = $request->getParam('jobTitle');
+        $uploadedPhoto = $request->getUploadedFiles()['photoFilePath'];
         $appartmentNo = $request->getParam('appartmentNo');
         $streetNo = $request->getParam('streetNo');
         $streetName = $request->getParam('streetName');
@@ -59,6 +60,11 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
     }
     // Check if user is a broker 
     if ($userType === 'broker') {
+        $photoFilePath = null;
+        $result = verifyUploadedProfilePhoto($uploadedPhoto, $photoFilePath, $licenseNo);
+        if ($result !== TRUE) {
+            $errorList []= $result;
+        }
         $verifyLicenseNo = verifyLicenseNo($licenseNo);
         if ($verifyLicenseNo !== TRUE) {
             $errorList[] = $verifyLicenseNo;
@@ -158,6 +164,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
             'phone' => $phone,
             'company' => $company,
             'jobTitle' => $jobTitle,
+            'photoFilePath' => $photoFilePath,
             'appartmentNo' => $appartmentNo,
             'streetNo' => $streetNo,
             'city' => $city,
@@ -214,9 +221,13 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
     // if ($emailVerification !== TRUE) {
     //     $errorList[] = $emailVerification;
     // }
-    $verifyPasswords = verifyPasswords($password1, $password2);
-    if ($verifyPasswords !== TRUE) {
-        $errorList[] = $verifyPasswords;
+    if ($password1 === "" && $password2 === "" && $user['role'] === 'broker') {
+        $password1 = $user['password'];
+    } else {
+        $verifyPasswords = verifyPasswords($password1, $password2);
+        if ($verifyPasswords !== TRUE) {
+            $errorList[] = $verifyPasswords;
+        }
     }
     // Check if user is a broker 
     if ($user['role'] === 'broker') {
