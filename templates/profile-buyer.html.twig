@@ -30,18 +30,18 @@
 			<label for="city" class="form-label">Province</label>
 			<select class="form-select" name="province">
 				<option selected>No Preference</option>
-				<option value="AB">Alberta</option>
-				<option value="BC">British Columbia</option>
-				<option value="MB">New Brunswick</option>
-				<option value="NL">Newfoundland & Labrador</option>
-				<option value="NT">Northwest Territories</option>
-				<option value="NS">Nova Scotia</option>
-				<option value="NU">Nunavut</option>
-				<option value="ON">Ontario</option>
-				<option value="PE">Prince Edward Island</option>
-				<option value="QC">Quebec</option>
-				<option value="SK">Saskatchewan</option>
-				<option value="YT">Yukon</option>
+				<option value="AB"{% if user.province is same as ('AB') %}selected="selected"{% endif %}>Alberta</option>
+				<option value="BC"{% if user.province is same as ('BC') %}selected="selected"{% endif %}>British Columbia</option>
+				<option value="MB"{% if user.province is same as ('MB') %}selected="selected"{% endif %}>New Brunswick</option>
+				<option value="NL"{% if user.province is same as ('NL') %}selected="selected"{% endif %}>Newfoundland & Labrador</option>
+				<option value="NT"{% if user.province is same as ('NT') %}selected="selected"{% endif %}>Northwest Territories</option>
+				<option value="NS"{% if user.province is same as ('NS') %}selected="selected"{% endif %}>Nova Scotia</option>
+				<option value="NU"{% if user.province is same as ('NU') %}selected="selected"{% endif %}>Nunavut</option>
+				<option value="ON"{% if user.province is same as ('ON') %}selected="selected"{% endif %}>Ontario</option>
+				<option value="PE"{% if user.province is same as ('PE') %}selected="selected"{% endif %}>Prince Edward Island</option>
+				<option value="QC"{% if user.province is same as ('QC') %}selected="selected"{% endif %}>Quebec</option>
+				<option value="SK"{% if user.province is same as ('SK') %}selected="selected"{% endif %}>Saskatchewan</option>
+				<option value="YT"{% if user.province is same as ('YT') %}selected="selected"{% endif %}>Yukon</option>
 			</select>
 		</div>
 		<div class="col-sm-6">
