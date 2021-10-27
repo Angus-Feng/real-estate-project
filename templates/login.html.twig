@@ -4,20 +4,26 @@
 {% endblock %}
 {% block header %}
 	<h1>Log In</h1>
-    <div class="err-msg">{{er}}</div>
+	<div class="err-msg">{{er}}</div>
 {% endblock %}
+
 
 {% block content %}
 	<form method="post">
 		<div class="row g-3">
 			<div class="col-12">
 				<label for="email" class="form-label">Email address</label>
-				<input type="email" name="email" class="form-control" value="{{data.email}}">
+				<input type="email" name="email" class="form-control" {% if email %}value="{{email}}"{% else %}value="{{data}}"{% endif %}>
 			</div>
 			<div class="col-12">
 				<label for="password" class="form-label">Password</label>
 				<input type="password" name="password" class="form-control">
 			</div>
+			<div class="mb-3 form-check">
+				<input type="checkbox" class="form-check-input" name="rememberMe">
+				<label class="form-check-label" for="rememberMe">Remember Me</label>
+			</div>
 			<button type="submit" class="btn btn-primary" name="submit">Submit</button>
 		</div>
-{% endblock %}
+	</form>
+	{% endblock %}

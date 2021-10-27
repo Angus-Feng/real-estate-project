@@ -8,6 +8,7 @@ require_once 'utils.php';
 require_once 'admin.php';
 require_once 'user.php';
 require_once 'broker.php';
+require_once 'property.php';
 
 // Define app routes
 $app->get('/hello/{name}', function ($request, $response, $args) {

@@ -1,0 +1,36 @@
+{% extends "master.html.twig" %}
+
+{% block header %}
+	<h1>Property list</h1>
+{% endblock %}
+
+{% block content %}
+	<div class="container overflow-hidden">
+		<div class="row gy-5">
+			{% for property in properties %}
+				<div class="col-3">
+					<div class="p-3 border bg-light">
+						<div class="card">
+							<input type="checkbox" class="form-check-input" name="favourite">
+							<label class="form-check-label" for="favourite">Add to favourite</label>
+							<img src="/images/ninja.png" class="card-img-top" alt="property photo" width="150px">
+							<div class="card-body">
+								<h5 class="card-title">${{property.price}}</h5>
+								<p class="card-text">
+									{% if property.appartmentNo %}#
+									{% endif %}
+									{{property.appartmentNo}}
+									{{property.streetAddress}},
+									{{property.city}},
+									{{property.province}}</p>
+								<p class="card-text">{{property.bedrooms}}bedroom(s) +
+									{{property.bathrooms}}bathroom(s)</p>
+								<a href="#" class="btn btn-primary">View details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
