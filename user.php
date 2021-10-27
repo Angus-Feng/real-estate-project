@@ -127,6 +127,7 @@ $app->get('/profile', function ($request, $response, $args) {
 $app->post('/profile', function ($request, $response, $args) {
 
     $id = $_SESSION['user']['id'];
+    $email = $request->getParam('email');
     $licenseNo = $request->getParam('licenseNo');
     $firstName = $request->getParam('firstName');
     $lastName = $request->getParam('lastName');
@@ -138,11 +139,6 @@ $app->post('/profile', function ($request, $response, $args) {
     $city = $request->getParam('city');
     $province = $request->getParam('province');
     $postalCode = $request->getParam('postalCode');
-    $valueList = [
-        'email' => $_SESSION['user']['email'], 'firstName' => $firstName, 'lastName' => $lastName,
-        'phone' => $phone, 'company' => $company, 'jobTitle' => $jobTitle, 'appartmentNo' => $appartmentNo,
-        'streetAddress' => $streetAddress, 'city' => $city, 'province' => $province, 'postalCode' => $postalCode
-    ];
     // error msg
     $errors = array(
         'licenseNo' => "", 'firstName' => "", 'lastName' => "", 'phone' => "", 'company' => "",
@@ -171,7 +167,15 @@ $app->post('/profile', function ($request, $response, $args) {
     }
     // strip the space in postal code.
     $postalCode = str_replace(' ', '', $postalCode);
+    // put all values in value list
+    $valueList = [
+        'email' => $email, 'firstName' => $firstName, 'lastName' => $lastName,
+        'phone' => $phone, 'company' => $company, 'jobTitle' => $jobTitle, 'appartmentNo' => $appartmentNo,
+        'streetAddress' => $streetAddress, 'city' => $city, 'province' => $province, 'postalCode' => $postalCode
+    ];
+
     if ($_SESSION['user']['role'] == 'buyer' || $_SESSION['user']['role'] == 'broker-check') {
+        echo $_SESSION['user']['role'];
         $becomeBroker = $request->getParam('becomeBroker');
         if ($becomeBroker) {
             if (verifyLicenseNo($licenseNo) !== TRUE) {
@@ -192,6 +196,7 @@ $app->post('/profile', function ($request, $response, $args) {
                     'firstName' => $firstName, 'lastName' => $lastName, 'company' => $company
                 ]);
                 DB::update('users', ['role' => 'broker-check'], "id=%s", $id);
+                DB::update('users', $valueList, "id=%s", $id);
                 $success = "Request submitted.";
                 $valueList['licenseNo'] = $licenseNo;
                 return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'success' => $success]);
@@ -203,6 +208,8 @@ $app->post('/profile', function ($request, $response, $args) {
             $valueList['licenseNo'] = $licenseNo;
             return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'success' => $success]);
         }
+        $valueList['licenseNo'] = $licenseNo;
+        return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'er' => $errors]);
     } else if ($_SESSION['user']['role'] == 'broker') {
         if (!array_filter($errors)) {
             DB::update('users', $valueList, "id=%s", $id);
@@ -210,9 +217,10 @@ $app->post('/profile', function ($request, $response, $args) {
             $valueList['licenseNo'] = $licenseNo;
             $valueList['role'] = 'broker';
             return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'success' => $success]);
+        } else {
+            $valueList['licenseNo'] = $licenseNo;
+            $valueList['role'] = 'broker';
+            return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'er' => $errors]);
         }
     }
-    $valueList['licenseNo'] = $licenseNo;
-    $valueList['role'] = 'broker';
-    return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'er' => $errors]);
 });
