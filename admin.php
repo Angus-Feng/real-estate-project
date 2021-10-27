@@ -31,20 +31,20 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
     $email = $request->getParam('email');
     $password1 = $request->getParam('password1');
     $password2 = $request->getParam('password2');
-    // Check if user is a broker 
+    $firstName = $request->getParam('firstName');
+    $lastName = $request->getParam('lastName');
+    $phone = $request->getParam('phone');
+    $uploadedPhoto= $request->getUploadedFiles()['photoFilePath'];
+    $appartmentNo = $request->getParam('appartmentNo');
+    $streetAddress = $request->getParam('streetAddress');
+    $city = $request->getParam('city');
+    $province = $request->getParam('province');
+    $postalCode = $request->getParam('postalCode');
+
     if ($userType === 'broker') {
         $licenseNo = $request->getParam('licenseNo');
-        $firstName = $request->getParam('firstName');
-        $lastName = $request->getParam('lastName');
-        $phone = $request->getParam('phone');
         $company = $request->getParam('company');
         $jobTitle = $request->getParam('jobTitle');
-        $uploadedPhoto = $request->getUploadedFiles()['photoFilePath'];
-        $appartmentNo = $request->getParam('appartmentNo');
-        $streetAddress = $request->getParam('streetAddress');
-        $city = $request->getParam('city');
-        $province = $request->getParam('province');
-        $postalCode = $request->getParam('postalCode');
     }
 
     $errorList = [];
@@ -60,37 +60,77 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
     if ($password1 !== $password2) {
         $errorList[] = 'The passwords you have entered do not match.';
     }
-    // Check if user is a broker 
-    if ($userType === 'broker') {
-        $photoFilePath = null;
-        $result = verifyUploadedProfilePhoto($uploadedPhoto, $photoFilePath, $licenseNo);
-        if ($result !== TRUE) {
-            $errorList []= $result;
+
+    if ($appartmentNo !== "") {
+        $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
+        if ($verifyAppartmentNo !== TRUE) {
+            $errorList[] = $verifyAppartmentNo;
         }
+    } else {
+        $appartmentNo = NULL;
+    }
+
+    if ($streetAddress !== "") {
+        $verifyStreetAddress = verifyUserStreetAddress($streetAddress);
+        if ($verifyStreetAddress !== TRUE) {
+            $errorList[] = $verifyStreetAddress;
+        }
+    } else {
+        $streetAddress = NULL;
+    }
+
+    if ($city !== "") {
+        $verifyCityName = verifyCityName($city);
+        if ($verifyCityName !== TRUE) {
+            $errorList[] = $verifyCityName;
+        }
+    } else {
+        $city = NULL;
+    }
+
+    if ($phone !== "") {
+        $verifyPhone = verifyPhone($phone);
+        if ($verifyPhone !== TRUE) {
+            $errorList[] = $verifyPhone;
+        }
+    } else {
+        $phone = NULL;
+    }
+
+    if ($province === "") {
+        $province = NULL;
+    }
+
+    if ($postalCode !== "") {
+        $verifyPostalCode = verifyPostalCode($postalCode);
+        if ($verifyPostalCode !== TRUE) {
+            $errorList[] = $verifyPostalCode;
+        }
+    } else {
+        $postalCode = NULL;
+    }
+
+    if ($userType === 'broker') {
         $verifyLicenseNo = verifyLicenseNo($licenseNo);
         if ($verifyLicenseNo !== TRUE) {
             $errorList[] = $verifyLicenseNo;
         }
+
         $verifyFirstName = verifyFirstName($firstName);
         if ($verifyFirstName !== TRUE) {
             $errorList[] = $verifyFirstName;
         }
+
         $verifyLastName = verifyLastName($lastName);
         if ($verifyLastName !== TRUE) {
             $errorList[] = $verifyLastName;
         }
-        $verifyPhone = verifyPhone($phone);
-        if ($verifyLicenseNo !== TRUE) {
-            $errorList[] = $verifyPhone;
+
+        $verifyCompany = verifyCompany($company);
+        if ($verifyCompany !== TRUE) {
+            $errorList[] = $verifyCompany;
         }
-        if ($company !== "") {
-            $verifyCompany = verifyCompany($company);
-            if ($verifyCompany !== TRUE) {
-                $errorList[] = $verifyCompany;
-            }
-        } else {
-            $company = NULL;
-        }
+
         if ($jobTitle !== "") {
             $verifyJobTitle = verifyJobTitle($jobTitle);
             if ($verifyJobTitle !== TRUE) {
@@ -99,58 +139,71 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         } else {
             $jobTitle = NULL;
         }
-        if ($appartmentNo !== "") {
-        $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
-            if ($verifyAppartmentNo !== TRUE) {
-                $errorList[] = $verifyAppartmentNo;
+    } else { // If user is a buyer
+        if ($firstName !== "") {
+            $verifyFirstName = verifyFirstName($firstName);
+            if ($verifyFirstName !== TRUE) {
+                $errorList[] = $verifyFirstName;
             }
         } else {
-            $appartmentNo = NULL;
+            $firstName = NULL;
         }
-        $verifyStreetAddress = verifyUserStreetAddress($streetAddress);
-        if ($verifyStreetAddress !== TRUE) {
-            $errorList[] = $verifyStreetAddress;
-        }
-        if ($city !== "") {
-            $verifyCityName = verifyCityName($city);
-            if ($verifyCityName !== TRUE) {
-                $errorList[] = $verifyCityName;
+
+        if ($lastName !== "") {
+            $verifyLastName = verifyLastName($lastName);
+            if ($verifyLastName !== TRUE) {
+                $errorList[] = $verifyLastName;
             }
         } else {
-            $city = NULL;
-        }
-        // if ($province !== "") {
-        //     $verifyProvince = verifyProvince($province);
-        //     if ($verifyProvince !== TRUE) {
-        //         $errorList[] = $verifyProvince;
-        //     }
-        // } else {
-        //     $province = NULL;
-        // }
-        if ($postalCode !== "") {
-            $verifyPostalCode = verifyPostalCode($postalCode);
-            if ($verifyPostalCode !== TRUE) {
-                $errorList[] = $verifyPostalCode;
-            }
-        } else {
-            $postalCode = NULL;
+            $lastName = NULL;
         }
     }
+
+    $photoFilePath = null;
+    if ($uploadedPhoto !== NULL) {
+        if ($uploadedPhoto->getError() === UPLOAD_ERR_OK) {
+            if ($userType === 'broker') {
+                $result = verifyUploadedBrokerProfilePhoto($uploadedPhoto, $photoFilePath, $licenseNo);
+                if ($result !== TRUE) {
+                    $errorList[] = $result;
+                }
+            } else if ($userType === 'buyer') {
+                $result = verifyUploadedBuyerProfilePhoto($uploadedPhoto, $photoFilePath);
+                if ($result !== TRUE) {
+                    $errorList[] = $result;
+                }
+            }
+        }
+    }
+
 
     if ($errorList) {
         return $this->view->render($response, 'admin/users_add.html.twig', ['errorList' => $errorList, 'userType' => $userType]);
     }
 
     if ($userType === 'buyer') {
-        DB::insert('users', ['email' => $email, 'password' => $password1]);
+        DB::insert('users', [
+            'email' => $email,
+            'password' => $password1,
+            'role' => 'buyer',
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'phone' => $phone,
+            'photoFilePath' => $photoFilePath,
+            'appartmentNo' => $appartmentNo,
+            'streetAddress' => $streetAddress,
+            'city' => $city,
+            'province' => $province,
+            'postalCode' => $postalCode
+        ]);
     } else {
         DB::insert('users', [
-            'email' => $email, 
-            'password' => $password1, 
+            'email' => $email,
+            'password' => $password1,
             'role' => 'broker',
-            'licenseNo' => $licenseNo, 
-            'firstName' => $firstName, 
-            'lastName' => $lastName, 
+            'licenseNo' => $licenseNo,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
             'phone' => $phone,
             'company' => $company,
             'jobTitle' => $jobTitle,
@@ -186,31 +239,32 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
     }
 
     $id = $args['id'];
-    // $email = $request->getParam('email');
+    $email = $request->getParam('email');
     $password1 = $request->getParam('password1');
     $password2 = $request->getParam('password2');
-    // Check if user is a broker 
+    $firstName = $request->getParam('firstName');
+    $lastName = $request->getParam('lastName');
+    $phone = $request->getParam('phone');
+    $uploadedPhoto= $request->getUploadedFiles()['photoFilePath'];
+    $appartmentNo = $request->getParam('appartmentNo');
+    $streetAddress = $request->getParam('streetAddress');
+    $city = $request->getParam('city');
+    $province = $request->getParam('province');
+    $postalCode = $request->getParam('postalCode');
+
     if ($user['role'] === 'broker') {
-        // $licenseNo = $request->getParam('licenseNo');
-        // $firstName = $request->getParam('firstName');
-        // $lastName = $request->getParam('lastName');
-        $phone = $request->getParam('phone');
+        $licenseNo = $request->getParam('licenseNo');
         $company = $request->getParam('company');
         $jobTitle = $request->getParam('jobTitle');
-        $appartmentNo = $request->getParam('appartmentNo');
-        $streetAddress = $request->getParam('streetAddress');
-        $city = $request->getParam('city');
-        $province = $request->getParam('province');
-        $postalCode = $request->getParam('postalCode');
     }
 
     $errorList = [];
 
-    // $emailVerification = verfiyEmailUpdate($email, $id);
-    // if ($emailVerification !== TRUE) {
-    //     $errorList[] = $emailVerification;
-    // }
-    if ($password1 === "" && $password2 === "" && $user['role'] === 'broker') {
+    $emailVerification = verfiyEmailUpdate($email, $id);
+    if ($emailVerification !== TRUE) {
+        $errorList[] = $emailVerification;
+    }
+    if ($password1 === "" && $password2 === "") {
         $password1 = $user['password'];
     } else {
         $errorList[] = verifyPasswords($password1);
@@ -219,51 +273,117 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
         }
     }
 
-    // Check if user is a broker 
-    if ($user['role'] === 'broker') {
-        // $verifyLicenseNo = verifyLicenseNo($licenseNo, $id);
-        // if ($verifyLicenseNo !== TRUE) {
-        //     $errorList[] = $verifyLicenseNo;
-        // }
-        // $verifyFirstName = verifyFirstName($firstName);
-        // if ($verifyFirstName !== TRUE) {
-        //     $errorList[] = $verifyFirstName;
-        // }
-        // $verifyLastName = verifyLastName($lastName);
-        // if ($verifyLastName !== TRUE) {
-        //     $errorList[] = $verifyLastName;
-        // }
-        $verifyPhone = verifyPhone($phone);
-        if ($verifyPhone !== TRUE) {
-            $errorList[] = $verifyPhone;
-        }
-        $verifyCompany = verifyCompany($company);
-        if ($verifyCompany !== TRUE) {
-            $errorList[] = $verifyCompany;
-        }
-        $verifyJobTitle = verifyJobTitle($jobTitle);
-        if ($verifyJobTitle !== TRUE) {
-            $errorList[] = $verifyJobTitle;
-        }
+    if ($appartmentNo !== "") {
         $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
         if ($verifyAppartmentNo !== TRUE) {
             $errorList[] = $verifyAppartmentNo;
         }
+    } else {
+        $appartmentNo = NULL;
+    }
+
+    if ($streetAddress !== "") {
         $verifyStreetAddress = verifyUserStreetAddress($streetAddress);
         if ($verifyStreetAddress !== TRUE) {
             $errorList[] = $verifyStreetAddress;
         }
+    } else {
+        $streetAddress = NULL;
+    }
+
+    if ($city !== "") {
         $verifyCityName = verifyCityName($city);
         if ($verifyCityName !== TRUE) {
             $errorList[] = $verifyCityName;
         }
-        // $verifyProvince = verifyProvince($province);
-        // if ($verifyProvince !== TRUE) {
-        //     $errorList[] = $verifyProvince;
-        // }
+    } else {
+        $city = NULL;
+    }
+
+    if ($phone !== "") {
+        $verifyPhone = verifyPhone($phone);
+        if ($verifyPhone !== TRUE) {
+            $errorList[] = $verifyPhone;
+        }
+    } else {
+        $phone = NULL;
+    }
+
+    if ($province === "") {
+        $province = NULL;
+    }
+
+    if ($postalCode !== "") {
         $verifyPostalCode = verifyPostalCode($postalCode);
         if ($verifyPostalCode !== TRUE) {
             $errorList[] = $verifyPostalCode;
+        }
+    } else {
+        $postalCode = NULL;
+    }
+
+    if ($user['role'] === 'broker') {
+        $verifyLicenseNo = verifyLicenseNoUpdate($licenseNo, $id);
+        if ($verifyLicenseNo !== TRUE) {
+            $errorList[] = $verifyLicenseNo;
+        }
+
+        $verifyFirstName = verifyFirstName($firstName);
+        if ($verifyFirstName !== TRUE) {
+            $errorList[] = $verifyFirstName;
+        }
+
+        $verifyLastName = verifyLastName($lastName);
+        if ($verifyLastName !== TRUE) {
+            $errorList[] = $verifyLastName;
+        }
+
+        $verifyCompany = verifyCompany($company);
+        if ($verifyCompany !== TRUE) {
+            $errorList[] = $verifyCompany;
+        }
+        if ($jobTitle !== "") {
+            $verifyJobTitle = verifyJobTitle($jobTitle);
+            if ($verifyJobTitle !== TRUE) {
+                $errorList[] = $verifyJobTitle;
+            }
+        } else {
+            $jobTitle = NULL;
+        }
+    } else {
+        if ($firstName !== "") {
+            $verifyFirstName = verifyFirstName($firstName);
+            if ($verifyFirstName !== TRUE) {
+                $errorList[] = $verifyFirstName;
+            }
+        } else {
+            $firstName = NULL;
+        }
+
+        if ($lastName !== "") {
+            $verifyLastName = verifyLastName($lastName);
+            if ($verifyLastName !== TRUE) {
+                $errorList[] = $verifyLastName;
+            }
+        } else {
+            $lastName = NULL;
+        }
+    }
+
+    $photoFilePath = $user['photoFilePath'];
+    if ($uploadedPhoto !== NULL) {
+        if ($uploadedPhoto->getError() === UPLOAD_ERR_OK) {
+            if ($user['role'] === 'broker') {
+                $result = verifyUploadedBrokerProfilePhoto($uploadedPhoto, $photoFilePath, $licenseNo);
+                if ($result !== TRUE) {
+                    $errorList[] = $result;
+                }
+            } else if ($user['role'] === 'buyer') {
+                $result = verifyUploadedBuyerProfilePhoto($uploadedPhoto, $photoFilePath);
+                if ($result !== TRUE) {
+                    $errorList[] = $result;
+                }
+            }
         }
     }
 
@@ -277,15 +397,26 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
 
     if ($user['role'] === 'buyer') {
         DB::update('users', [
-            // 'email' => $email, 
-            'password' => $password1], "id=%d", $id);
+            'email' => $email,
+            'password' => $password1,
+            'role' => 'buyer',
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'phone' => $phone,
+            'photoFilePath' => $photoFilePath,
+            'appartmentNo' => $appartmentNo,
+            'streetAddress' => $streetAddress,
+            'city' => $city,
+            'province' => $province,
+            'postalCode' => $postalCode
+        ], "id=%d", $id);
     } else {
         DB::update('users', [
-            // 'email' => $email, 
-            'password' => $password1, 
-            // 'licenseNo' => $licenseNo, 
-            // 'firstName' => $firstName, 
-            // 'lastName' => $lastName, 
+            'email' => $email,
+            'password' => $password1,
+            'licenseNo' => $licenseNo, 
+            'firstName' => $firstName, 
+            'lastName' => $lastName, 
             'phone' => $phone,
             'company' => $company,
             'jobTitle' => $jobTitle,
@@ -371,15 +502,15 @@ $app->post('/admin/property/add', function ($request, $response, $args) {
     $photoNo = 0;
     foreach ($uploadedPhotos as $photo) {
         if ($photo->getError() !== UPLOAD_ERR_OK) {
-            $errorList []= 'There was an error uploading photo ' . $errorPhotoCount . ".";
+            $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
             $errorPhotoCount++;
         }
         $photoFilePath = null;
         $result = verifyUploadedHousePhoto($photo, $photoFilePath, $postalCode, $photoNo);
         if ($result !== TRUE) {
-            $errorList []= $result;
+            $errorList[] = $result;
         } else {
-            $photoPathArray []= $photoFilePath;
+            $photoPathArray[] = $photoFilePath;
             $photoNo++;
         }
     }
@@ -443,9 +574,9 @@ $app->post('/admin/property/add', function ($request, $response, $args) {
     $brokerId = DB::queryFirstRow("SELECT id FROM users WHERE licenseNo=%s", $licenseNo);
 
     DB::insert('properties', [
-        'brokerId' => $brokerId['id'], 
-        'price' => $price, 
-        'title' => $title, 
+        'brokerId' => $brokerId['id'],
+        'price' => $price,
+        'title' => $title,
         'bedrooms' => $bedrooms,
         'bathrooms' => $bathrooms,
         'buildingYear' => $buildingYear,
@@ -473,11 +604,12 @@ $app->get('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $ar
     $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%d", $args['id']);
     $brokerId = DB::queryFirstRow("SELECT brokerId FROM properties WHERE id=%d", $args['id']);
     $broker = DB::queryFirstRow("SELECT licenseNo, firstName, lastName FROM users WHERE id=%d", $brokerId['brokerId']);
+    $propertyPhotos = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%d", $property['id']);
     if (!$property) {
         // $response = $response->withStatus(404);
         return $this->view->render($response, '404_error.html.twig');
     }
-    return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker]);
+    return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker, 'propertyPhotos' => $propertyPhotos]);
 });
 
 // Edit property: POST
@@ -504,15 +636,15 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
     $photoNo = 0;
     foreach ($uploadedPhotos as $photo) {
         if ($photo->getError() !== UPLOAD_ERR_OK) {
-            $errorList []= 'There was an error uploading photo ' . $errorPhotoCount . ".";
+            $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
             $errorPhotoCount++;
         }
         $photoFilePath = null;
         $result = verifyUploadedHousePhoto($photo, $photoFilePath, $postalCode, $photoNo);
         if ($result !== TRUE) {
-            $errorList []= $result;
+            $errorList[] = $result;
         } else {
-            $photoPathArray []= $photoFilePath;
+            $photoPathArray[] = $photoFilePath;
             $photoNo++;
         }
     }
@@ -576,9 +708,9 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
     $brokerId = DB::queryFirstRow("SELECT id FROM users WHERE licenseNo=%s", $licenseNo);
 
     DB::insert('properties', [
-        'brokerId' => $brokerId['id'], 
-        'price' => $price, 
-        'title' => $title, 
+        'brokerId' => $brokerId['id'],
+        'price' => $price,
+        'title' => $title,
         'bedrooms' => $bedrooms,
         'bathrooms' => $bathrooms,
         'buildingYear' => $buildingYear,
@@ -616,7 +748,7 @@ $app->get('/admin/property/delete/{id:[0-9]+}', function ($request, $response, $
         // $response = $response->withStatus(404);
         return $this->view->render($response, '404_error.html.twig');
     }
-    
+
     return $this->view->render($response, 'admin/property_delete.html.twig', ['property' => $property]);
 });
 
@@ -628,3 +760,43 @@ $app->post('/admin/property/delete/{id:[0-9]+}', function ($request, $response, 
     return $this->view->render($response, 'admin/modification_success.html.twig');
 });
 //-----------------------------------------------------------------------------------------------------------------
+
+// Pending Brokers
+
+// View a list of all pending brokers and their information
+$app->get('/admin/pending/list', function ($request, $response, $args) {
+    $pendingUserList = DB::query("SELECT * FROM brokerpendinglist");
+    return $this->view->render($response, 'admin/pending_list.html.twig', ['list' => $pendingUserList]);
+});
+
+$app->get('/admin/pending/{choice:accept|decline}/{id:[0-9]+}', function ($request, $response, $args) {
+    $choice = $args['choice'];
+    $userId = $args['id'];
+    $pendingUser = DB::queryFirstRow("SELECT * FROM brokerpendinglist WHERE userId=%d", $userId);
+    return $this->view->render($response, 'admin/pending_confirm.html.twig', ['choice' => $choice, 'pendingUser' => $pendingUser]);
+});
+
+
+// Pending Broker choice handler: POST
+$app->post('/admin/pending/{choice:accept|decline}/{id:[0-9]+}', function ($request, $response, $args) {
+    $choice = $args['choice'];
+    $userId = $args['id'];
+
+    if ($choice === "accept") {
+        $pendingUser = DB::queryFirstRow("SELECT * FROM brokerpendinglist WHERE userId=%d", $userId);
+
+        DB::update('users', [
+            'role' => 'broker',
+            'licenseNo' => $pendingUser['licenseNo'],
+            'firstName' => $pendingUser['firstName'],
+            'lastName' => $pendingUser['lastName'],
+            'company' => $pendingUser['company']
+        ], "id=%d", $userId);
+
+        DB::delete('brokerpendinglist', 'userId=%d', $userId);
+    } else {
+        DB::delete('brokerpendinglist', 'userId=%d', $userId);
+    }
+
+    return $this->view->render($response, 'admin/modification_success.html.twig');
+});

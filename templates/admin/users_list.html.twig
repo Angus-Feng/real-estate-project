@@ -11,6 +11,15 @@
         <tr>
             <th>#</th>
             <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone #</th>
+            <th>Photo File Path</th>
+            <th>Appartment #</th>
+            <th>Street Address</th>
+            <th>City</th>
+            <th>Province</th>
+            <th>Postal Code</th>
             <th>*Modify*</th>
         </tr>
         {% for u in usersList %}
@@ -18,6 +27,15 @@
         <tr>
             <td>{{u.id}}</td>
             <td>{{u.email}}</td>
+            <td>{{u.firstName}}</td>
+            <td>{{u.lastName}}</td>
+            <td>{{u.phone}}</td>
+            <td><img src="/{{u.photoFilePath}}" width="100"></td>
+            <td>{{u.appartmentNo}}</td>
+            <td>{{u.streetAddress}}</td>
+            <td>{{u.city}}</td>
+            <td>{{u.province}}</td>
+            <td>{{u.postalCode}}</td>
             <td>
                 <button onclick="window.location='/admin/users/edit/{{u.id}}';">Edit</button>
                 <button onclick="window.location='/admin/users/delete/{{u.id}}';">Delete</button>
@@ -38,13 +56,12 @@
             <th>License #</th>
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Phone #</th>
             <th>Company</th>
             <th>Job Title</th>
+            <th>Phone #</th>
             <th>Photo File Path</th>
             <th>Appartment #</th>
-            <th>Street #</th>
-            <th>Street Name</th>
+            <th>Street Address</th>
             <th>City</th>
             <th>Province</th>
             <th>Postal Code</th>
@@ -58,13 +75,12 @@
             <td>{{u.licenseNo}}</td>
             <td>{{u.firstName}}</td>
             <td>{{u.lastName}}</td>
-            <td>{{u.phone}}</td>
             <td>{{u.company}}</td>
             <td>{{u.jobTitle}}</td>
+            <td>{{u.phone}}</td>
             <td><img src="/{{u.photoFilePath}}" width="100"></td>
             <td>{{u.appartmentNo}}</td>
-            <td>{{u.streetNo}}</td>
-            <td>{{u.streetName}}</td>
+            <td>{{u.streetAddress}}</td>
             <td>{{u.city}}</td>
             <td>{{u.province}}</td>
             <td>{{u.postalCode}}</td>

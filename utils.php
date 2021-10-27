@@ -4,10 +4,42 @@ require_once 'vendor/autoload.php';
 
 require_once 'init.php';
 
-function verifyUploadedProfilePhoto($photo, &$filePath, $licenseNo) {
-    if ($photo->getError() !== UPLOAD_ERR_OK) {
-        return 'There was an error uploading the photo.';
+function verifyUploadedBuyerProfilePhoto($photo, &$filePath) {
+    $num = str_pad(mt_rand(1,99999999),8,'0',STR_PAD_LEFT);
+    
+    // if ($photo->getError() !== UPLOAD_ERR_OK) {
+    //     return 'There was an error uploading the photo.';
+    // }
+
+    $info = getimagesize($photo->file);
+
+    if ($info[0] < 127 || $info[0] > 127 || $info[1] < 150 || $info[1] > 150) {
+        return "Width must be 127px and height must be 150px.";
     }
+
+    $ext = "";
+    switch ($info['mime']) {
+        case 'image/jpeg':
+            $ext = "jpg";
+            break;
+        case 'image/gif':
+            $ext = "gif";
+            break;
+        case 'image/png':
+            $ext = "png";
+            break;
+        default:
+            return "Only JPG, GIF, PNG file types are accepted";
+    }
+
+    $filePath = "uploads/" . $num . "." . $ext;
+    return TRUE;
+}
+
+function verifyUploadedBrokerProfilePhoto($photo, &$filePath, $licenseNo) {
+    // if ($photo->getError() !== UPLOAD_ERR_OK) {
+    //     return 'There was an error uploading the photo.';
+    // }
 
     $info = getimagesize($photo->file);
 
@@ -114,17 +146,17 @@ function verifyLicenseNo($licenseNo) {
     return TRUE;
 }
 
-// function verifyLicenseNoUpdate($licenseNo, $id) {
-//     if (!preg_match('/[A-Z]{3}[0-9]{6}[A-Z]{2}/', $licenseNo)) {
-//         return "Please enter a valid license number";
-//     } else {
-//         $checkLicenseNo = DB::query("SELECT licenseNo FROM users WHERE licenseNo = '$licenseNo' AND id != $id");
-//         if ($checkLicenseNo) {
-//             return "This license number is already registered.";
-//         }
-//     }
-//     return TRUE;
-// }
+function verifyLicenseNoUpdate($licenseNo, $id) {
+    if (!preg_match('/[A-Z]{3}[0-9]{6}[A-Z]{2}/', $licenseNo)) {
+        return "Please enter a valid license number";
+    } else {
+        $checkLicenseNo = DB::query("SELECT licenseNo FROM users WHERE licenseNo = '$licenseNo' AND id != $id");
+        if ($checkLicenseNo) {
+            return "This license number is already registered.";
+        }
+    }
+    return TRUE;
+}
 
 function verifyFirstName($firstName) { //TEST REGEX
     if (strlen($firstName) < 1 || strlen($firstName) > 100) {

@@ -15,9 +15,24 @@
     {# Form for buyers #}
     {% if user.role is same as("buyer")%}
         <form method="post">
-            Email: <input name="email" type="email" value="{{ user.email }}" disabled><br>
+            <div>Required fields:</div>
+            <br>
+            Email: <input name="email" type="email" value="{{ user.email }}"><br>
+            (Leave the password fields blank to leave it unchanged)<br>
             Password: <input name="password1" type="password"><br>
             Confirm Password: <input name="password2" type="password"><br>
+            <br>
+            <div>Optional fields:</div>
+            <br>
+            First Name: <input name="firstName" type="text" value="{{ user.firstName }}"><br>
+            Last Name: <input name="lastName" type="text" value="{{ user.lastName }}"><br>
+            Phone Number: <input name="phone" type="text" value="{{ user.phone }}"><br>
+            Image: <input type="file" name="photoFilePath"/><br>
+            Appartment Number: <input name="appartmentNo" type="number" value="{{ user.appartmentNo }}"><br>
+            Street Address: <input name="streetAddress" type="text" value="{{ user.streetAddress }}"><br>
+            City: <input name="city" type="text" value="{{ user.city }}"><br>
+            Province: <input name="province" type="text" value="{{ user.province }}"><br>
+            Postal Code: <input name="postalCode" type="text" value="{{ user.postalCode }}"><br>
             <input type="submit" value="Update Buyer Information">
         </form>
     {% endif %}               
@@ -25,18 +40,24 @@
     {# Form for broker #}
     {% if user.role is same as("broker")%}
         <form method="post" enctype="multipart/form-data">
-            Email: <input name="email" type="email" value="{{ user.email }}" disabled><br>
+            <div>Required fields:</div>
+            <br>
+            Email: <input name="email" type="email" value="{{ user.email }}"><br>
+            (Leave the password fields blank to leave it unchanged)<br>
             Password: <input name="password1" type="password"><br>
             Confirm Password: <input name="password2" type="password"><br>
-            License Number: <input name="licenseNo" type="text" value="{{ user.licenseNo }}" disabled><br>
-            First Name: <input name="firstName" type="text" value="{{ user.firstName }}" disabled><br>
-            Last Name: <input name="lastName" type="text" value="{{ user.lastName }}" disabled><br>
-            Phone Number: <input name="phone" type="text" value="{{ user.phone }}"><br>
+            License Number: <input name="licenseNo" type="text" value="{{ user.licenseNo }}"><br>
+            First Name: <input name="firstName" type="text" value="{{ user.firstName }}"><br>
+            Last Name: <input name="lastName" type="text" value="{{ user.lastName }}"><br>
             Company: <input name="company" type="text" value="{{ user.company }}"><br>
+            <br>
+            <div>Optional fields:</div>
+            <br>
+            Phone Number: <input name="phone" type="text" value="{{ user.phone }}"><br>
             Job Title: <input name="jobTitle" type="text" value="{{ user.jobTitle }}"><br>
             Image: <input type="file" name="photoFilePath"/><br>
             Appartment Number: <input name="appartmentNo" type="number" value="{{ user.appartmentNo }}"><br>
-            Street Adress: <input name="streetAddress" type="text" value="{{ user.streetAddress }}"><br>
+            Street Address: <input name="streetAddress" type="text" value="{{ user.streetAddress }}"><br>
             City: <input name="city" type="text" value="{{ user.city }}"><br>
             Province: <input name="province" type="text" value="{{ user.province }}"><br>
             Postal Code: <input name="postalCode" type="text" value="{{ user.postalCode }}"><br>

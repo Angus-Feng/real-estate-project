@@ -27,8 +27,36 @@
         City: <input name="city" type="text" value="{{property.city}}"><br>
         Province: <input name="province" type="text" value="{{property.province}}"><br>
         Postal Code: <input name="postalCode" type="text" value="{{property.postalCode}}"><br>
-        Upload Images: <input type="file" id="files" name="photos[]" multiple><br>
+        Upload More Images: <input type="file" id="files" name="photos[]" multiple><br>
         <input type="submit" value="Add Property">
     </form>
+
+    {% if propertyPhotos %}
+        {# Table for list of pending brokers #}
+        <h1>List of property photos</h1>
+        <table border="1">
+            <tr>
+                <th>#</th>
+                <th>Ordinal #</th>
+                <th>Photo</th>
+                <th>*Choice*</th>
+            </tr>
+            {% for p in propertyPhotos %}
+                <tr>
+                    <td>{{p.id}}</td>
+                    <td>{{p.ordinalINT}}</td>
+                    <td>{{p.photoFilePath}}</td>
+                    <td>
+                        <form action="" method="post">
+                            <button name="accept" onclick="window.location='/admin/pending/accept/{{l.userId}}';">Higher</button>
+                        </form>
+                        <form action="" method="post">
+                            <button name="decline" onclick="window.location='/admin/pending/decline/{{l.userId}}';">Lower</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
 
 {% endblock content %}

@@ -1,0 +1,34 @@
+{% extends "admin/master_admin.html.twig" %}
+
+{% block title %}Pending Broker List{% endblock %}
+
+{% block content %}
+
+	{# Table for list of pending brokers #}
+	<h1>List of pending brokers</h1>
+	<table border="1">
+		<tr>
+			<th>User #</th>
+			<th>License #</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Company Name</th>
+            <th>*Choice*</th>
+		</tr>
+		{% for l in list %}
+			<tr>
+				<td>{{l.userId}}</td>
+				<td>{{l.licenseNo}}</td>
+				<td>{{l.firstName}}</td>
+				<td>{{l.lastName}}</td>
+				<td>{{l.company}}</td>
+				<td>
+                    <button onclick="window.location='/admin/pending/accept/{{l.userId}}';">Accept</button>
+                    <button onclick="window.location='/admin/pending/decline/{{l.userId}}';">Decline</button>
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+	<br>
+
+{% endblock content %}

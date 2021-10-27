@@ -15,9 +15,23 @@
     {# Form for buyers #}
     {% if userType is same as("buyer")%}
         <form method="post">
+            <div>Required fields:</div>
+            <br>
             Email: <input name="email" type="email"><br>
             Password: <input name="password1" type="password"><br>
             Confirm Password: <input name="password2" type="password"><br>
+            <br>
+            <div>Optional fields:</div>
+            <br>
+            First Name: <input name="firstName" type="text"><br>
+            Last Name: <input name="lastName" type="text"><br>
+            Phone Number: <input name="phone" type="text"><br>
+            Image: <input type="file" name="photoFilePath"/><br>
+            Appartment Number: <input name="appartmentNo" type="number"><br>
+            Street Address: <input name="streetAddress" type="text"><br>
+            City: <input name="city" type="text"><br>
+            Province: <input name="province" type="text"><br>
+            Postal Code: <input name="postalCode" type="text"><br>
             <input type="submit" value="Add User">
         </form>
     {% endif %}               
@@ -33,11 +47,11 @@
             License Number: <input name="licenseNo" type="text"><br>
             First Name: <input name="firstName" type="text"><br>
             Last Name: <input name="lastName" type="text"><br>
-            Phone Number: <input name="phone" type="text"><br>
+            Company: <input name="company" type="text"><br>
             <br>
             <div>Optional fields:</div>
             <br>
-            Company: <input name="company" type="text"><br>
+            Phone Number: <input name="phone" type="text"><br>
             Job Title: <input name="jobTitle" type="text"><br>
             Image: <input type="file" name="photoFilePath"/><br>
             Appartment Number: <input name="appartmentNo" type="number"><br>

@@ -1,0 +1,29 @@
+{% extends "admin/master_admin.html.twig" %}
+
+{% block title %}Pending Broker Confirm{% endblock %}
+
+{% block content %}
+
+    {% if choice is same as("accept") %}
+        <h1>Are you sure that you want to acccept this user as a broker?</h1>
+        <br>
+        <p>Broker Full Name: {{pendingUser.firstName}} {{pendingUser.lastName}}</p>
+        <p>Broker License: {{pendingUser.licenseNo}}</p>
+        <p>Price: {{pendingUser.company}}</p>
+        <form method="post">
+            <button onclick="window.location='/admin/pending/accept/{{u.id}}';">Accept</button>
+        </form>
+    {% endif %}
+
+    {% if choice is same as("decline") %}
+        <h1>Are you sure that you want to decline this user as a broker?</h1>
+        <br>
+        <p>Broker Full Name: {{pendingUser.firstName}} {{pendingUser.lastName}}</p>
+        <p>Broker License: {{pendingUser.licenseNo}}</p>
+        <p>Company: {{pendingUser.company}}</p>
+        <form method="post">
+            <button onclick="window.location='/admin/pending/decline/{{u.id}}';">Decline</button>
+        </form>
+    {% endif %}
+
+{% endblock content %}
