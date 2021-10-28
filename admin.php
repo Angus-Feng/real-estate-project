@@ -633,7 +633,8 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
 
     $photoPathArray = [];
     $errorPhotoCount = 1;
-    $photoNo = 0;
+    $previousOrdinal = DB::queryFirstRow("SELECT ordinalINT FROM propertyphotos WHERE propertyId=%d ORDER BY ordinalINT DESC", $args['id']);
+    $photoNo = $previousOrdinal['ordinalINT'] + 1;
     foreach ($uploadedPhotos as $photo) {
         if ($photo->getError() !== UPLOAD_ERR_OK) {
             $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
@@ -705,10 +706,7 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
         return $this->view->render($response, 'admin/property_edit.html.twig', ['errorList' => $errorList]);
     }
 
-    $brokerId = DB::queryFirstRow("SELECT id FROM users WHERE licenseNo=%s", $licenseNo);
-
-    DB::insert('properties', [
-        'brokerId' => $brokerId['id'],
+    DB::update('properties', [
         'price' => $price,
         'title' => $title,
         'bedrooms' => $bedrooms,
@@ -721,12 +719,12 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
         'city' => $city,
         'province' => $province,
         'postalCode' => $postalCode
-    ]);
+    ], "id=%d", $args['id']);
 
-    $photoNo = 0;
+    $photoNo = $previousOrdinal['ordinalINT'] + 1;
     $propertyId = DB::insertId();
     foreach ($photoPathArray as $photoFilePath) {
-        DB::insert('propertyphotos', ['propertyId' => $propertyId, 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);
+        DB::insert('propertyphotos', ['propertyId' => $args['id'], 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);
         $photoNo++;
     }
 

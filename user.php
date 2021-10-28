@@ -89,13 +89,15 @@ $app->post('/register', function ($request, $response, $args) use ($log) {
 });
 
 $app->get('/login', function ($request, $response, $args) {
-    return $this->view->render($response, 'login.html.twig');
+    $email = @$_COOKIE['email'];
+    return $this->view->render($response, 'login.html.twig', ['email' => $email]);
 })->setName('login');
 
 $app->post('/login', function ($request, $response, $args) use ($log) {
 
     $email = $request->getParam('email');
     $password = $request->getParam('password');
+    $rememberMe = $request->getParam('rememberMe');
     $error = "";
     $result = DB::queryFirstRow("SELECT id, email, `password`, `role`, firstName, lastName FROM users WHERE email = '$email'");
     $loginCheck = ($result != NULL) && (password_verify($password, $result['password']));
@@ -104,13 +106,16 @@ $app->post('/login', function ($request, $response, $args) use ($log) {
         session_unset();
         $_SESSION['user'] = $result;
         $log->debug(sprintf("user login with id=%s", $_SESSION['user']['id']));
-        if ($result['id'] == 'admin') {
+        if ($rememberMe) {
+            setcookie('email', $email, time() + 604800);
+        }
+        if ($result['role'] == 'admin') {
             return $response->withRedirect($this->router->pathFor('admin'));
         }
         return $response->withRedirect($this->router->pathFor('index'));
     } else {
         $error = "Invalid email address or password";
-        return $this->view->render($response, 'login.html.twig', ['er' => $error]);
+        return $this->view->render($response, 'login.html.twig', ['er' => $error, 'data' => $email]);
     }
 });
 
