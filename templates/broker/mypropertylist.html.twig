@@ -9,18 +9,24 @@
     {% for property in propertyList %}
 
     <!-- FIXME: remove style tag -->
-    <article class="card" style="width: 18rem; display: inline-block">
-        <!-- FIXME: change to main property photo -->
-        <img class="card-img-top" src="../../images/ninja.png" alt="Card image cap">
-        <div class="card-body">
-            <h5 class="card-title">{{ property.title }}</h5>
-            <p class="card-text">${{ property.price }}</p>
-            <address>
-                <p class="card-text">{{ property.streetAddress }}, {{ property.city }}, {{ property.province }}</p>
-            </address>
-            <a href="property/{{ property.id }}" class="btn btn-primary">Edit</a>
-            <a href="property/{{ property.id }}/delete" class="btn btn-primary">Delete</a>
-        </div>
+    <article class="card" style="width: 18rem; display: inline-block;">
+        <a href="myproperty/{{property.id}}">
+            <!-- FIXME: change to main property photo -->
+            <img class="card-img-top" src="../../images/ninja.png" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{ property.title }}</h5>
+                <p class="card-text">${{ property.price }}</p>
+                <address>
+                    <p class="card-text">{{ property.streetAddress }}, {{ property.city }}, {{ property.province }}</p>
+                </address>
+                <a href="myproperty/edit/{{ property.id }}">
+                    <button class="btn btn-primary">Edit</button>
+                </a>
+                <a href="myproperty/delete/{{ property.id }}">
+                    <button class="btn btn-primary">Delete</button>
+                </a>
+            </div>
+        </a>
     </article>
 
     {% endfor %}

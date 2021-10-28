@@ -1,0 +1,42 @@
+{% extends "master.html.twig" %}
+
+{% block header %}
+    <h1>{{ property.title }}</h1>
+{% endblock %}
+
+{% block content %}
+
+<article>
+    <!-- FIXME: move width to style.css & let broker can view photos and choose to edit -->
+    <img width="500" src="../../images/ninja.png">
+        <h2>{{ property.price }}</h2>
+        <p>Bedrooms : {{ property.bedrooms }}</p>
+        <p>Bathrooms : {{ property.bathrooms }}</p>
+        <p>Built Year : {{ property.buildingYear }}</p>
+        <p>Lot Area: {{ property.lotArea }}</p>
+    </div>
+        <p>Description</p>
+        <p>{{ property.description }}</p>
+    </div>
+    <div>
+        <h2>Location</h2>
+        <p>
+            {{ property.streetAddress }}, 
+
+            {% if property.appartmentNo %}
+                {{ property.appartmentNo }},
+            {% endif %}
+
+            {{ property.city }}, 
+            {{ property.province }}
+        </p>
+    </div>
+    <a href="edit/{{property.id}}">
+        <button class="btn btn-primary">Edit</button>
+    </a>
+    <a href="delete/{{ property.id}}">
+        <button class="btn btn-primary">Delete</button>
+    </a>
+</article>
+
+{% endblock %}

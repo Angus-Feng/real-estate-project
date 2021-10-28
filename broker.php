@@ -115,7 +115,6 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
 //     return TRUE;
 // }
 
-
 // GET '/mypropertylist'
 $app->get('/mypropertylist', function ($request, $response, $args) {
     // TODO: get broker id from SESSION?
@@ -126,10 +125,8 @@ $app->get('/mypropertylist', function ($request, $response, $args) {
     return $this->view->render($response, 'broker/mypropertylist.html.twig', ['propertyList' => $propertyList]);
 });
 
-
-
-// GET '/property/propertyID'
-$app->get('/property/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+// GET '/myproperty/propertyID'
+$app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
     // TODO: get broker id from SESSION?
     // FIXME: plug in the brokerId
     $id = $args['id'];
@@ -139,13 +136,27 @@ $app->get('/property/{id:[0-9]+}', function ($request, $response, $args) use ($l
     if (!$property) { // not found - cause 404 here
         throw new \Slim\Exception\NotFoundException($request, $response);
     } else {
-        return $this->view->render($response, 'broker/propertyedit.html.twig', ['property' => $property]);
+        return $this->view->render($response, 'broker/myproperty.html.twig', ['property' => $property]);
     }
 });
 
+// GET '/myproperty/edit/propertyID'
+$app->get('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+    // TODO: get broker id from SESSION?
+    // FIXME: plug in the brokerId
+    $id = $args['id'];
+    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s", $id);
+    $log->debug(sprintf("Fetch a property data with id=%s", $id));
 
-// POST '/property/propertyID'
-$app->post('/property/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+    if (!$property) { // not found - cause 404 here
+        throw new \Slim\Exception\NotFoundException($request, $response);
+    } else {
+        return $this->view->render($response, 'broker/myproperty_edit.html.twig', ['property' => $property]);
+    }
+});
+
+// POST '/myproperty/edit/propertyID'
+$app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
     // TODO: get broker id from SESSION?
     // FIXME: plug in the brokerId
     $id = $args['id'];
@@ -218,7 +229,7 @@ $app->post('/property/{id:[0-9]+}', function ($request, $response, $args) use ($
     ];
 
     if ($errorList) {
-        return $this->view->render($response, 'broker/addproperty.html.twig', 
+        return $this->view->render($response, 'broker/mypropertyedit.html.twig', 
             ['errorList' => $errorList, 'values' => $valueList]);
     } else {
         DB::update('properties', $valueList, "id=%i", $id);
@@ -226,4 +237,14 @@ $app->post('/property/{id:[0-9]+}', function ($request, $response, $args) use ($
         // FIXME: render the updated property view
         return $response->write('Property is updated successfully.');
     }
+});
+
+// GET '/myproperty/delete/propertyID'
+$app->get('/myproperty/delete/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+    /* TODO: get broker id from SESSION?
+        delete photos too*/
+    // FIXME: plug in the brokerId
+    DB::delete('properties', 'id=%s', $args['id']);
+    // TODO: delete confirmation popup 
+    return $response->write('Property is deleted successfully.');
 });
