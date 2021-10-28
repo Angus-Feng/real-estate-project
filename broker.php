@@ -142,3 +142,88 @@ $app->get('/property/{id:[0-9]+}', function ($request, $response, $args) use ($l
         return $this->view->render($response, 'broker/propertyedit.html.twig', ['property' => $property]);
     }
 });
+
+
+// POST '/property/propertyID'
+$app->post('/property/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+    // TODO: get broker id from SESSION?
+    // FIXME: plug in the brokerId
+    $id = $args['id'];
+
+    // extract values 
+    $price = $request->getParam('price');
+    $title = $request->getParam('title');
+    $bedrooms = $request->getParam('bedrooms');
+    $bathrooms = $request->getParam('bathrooms');
+    $buildingYear = $request->getParam('buildingYear');
+    $lotArea = $request->getParam('lotArea');
+    $description = $request->getParam('description');
+    $appartmentNo = $request->getParam('appartmentNo');
+    $streetAddress = $request->getParam('streetAddress');
+    $city = $request->getParam('city');
+    $province = $request->getParam('province');
+    $postalCode = $request->getParam('postalCode');
+
+    // validation
+    $errorList = [];
+    
+    if (verifyPrice($price) !== TRUE) {
+        $errorList[] = verifyPrice($title);
+    }
+    if (verifyTitle($title) !== TRUE) {
+        $errorList[] = verifyTitle($title);
+    }
+    if (verifyBedrooms($bedrooms) !== TRUE) {
+        $errorList[] = verifyBedrooms($bedrooms);
+    }
+    if (verifyBathrooms($bathrooms) !== TRUE) {
+        $errorList[] = verifyBathrooms($bathrooms);
+    }
+    if (verifyBuildingYear($buildingYear) !== TRUE) {
+        $errorList[] = verifyBuildingYear($buildingYear);
+    }
+    if (verifyLotArea($lotArea) !== TRUE) {
+        $errorList[] = verifyLotArea($lotArea);
+    }
+    if (verifyDescription($description) !== TRUE) {
+        $errorList[] = verifyDescription($description);
+    }
+    if (verifyAppartmentNo($appartmentNo) !== TRUE) {
+        $errorList[] = verifyAppartmentNo($appartmentNo);
+    }
+    if (verifyStreetAddress($streetAddress) !== TRUE) {
+        $errorList[] = verifyStreetAddress($streetAddress);
+    }
+    if (verifyCityName($city) !== TRUE) {
+        $errorList[] = verifyCityName($city);
+    }
+    if (verifyPostalCode($postalCode) !== TRUE) {
+        $errorList[] = verifyPostalCode($postalCode);
+    }
+    // TODO: user can select a province, otherwise display error message
+
+    $valueList = [
+        'brokerId' => 1,
+        'price' => $price,
+        'title' => $title,
+        'bedrooms' => $bedrooms,
+        'bathrooms' => $bathrooms,
+        'buildingYear' => $buildingYear,
+        'lotArea' => $lotArea,
+        'description' => $description,
+        'streetAddress' => $streetAddress,
+        'city' => $city,
+        'province' => $province,
+        'postalCode' => $postalCode
+    ];
+
+    if ($errorList) {
+        return $this->view->render($response, 'broker/addproperty.html.twig', 
+            ['errorList' => $errorList, 'values' => $valueList]);
+    } else {
+        DB::update('properties', $valueList, "id=%i", $id);
+        $log->debug(sprintf("Property with id=%s updated", $id));
+        // FIXME: render the updated property view
+        return $response->write('Property is updated successfully.');
+    }
+});
