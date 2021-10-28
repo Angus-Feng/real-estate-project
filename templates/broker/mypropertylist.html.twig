@@ -1,0 +1,28 @@
+{% extends "master.html.twig" %}
+
+{% block header %}
+    <h1>My listing</h1>
+{% endblock %}
+
+{% block content %}
+
+    {% for property in propertyList %}
+
+    <!-- FIXME: remove style tag -->
+    <article class="card" style="width: 18rem; display: inline-block">
+        <!-- FIXME: change to main property photo -->
+        <img class="card-img-top" src="../../images/ninja.png" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">{{ property.title }}</h5>
+            <p class="card-text">${{ property.price }}</p>
+            <address>
+                <p class="card-text">{{ property.streetAddress }}, {{ property.city }}, {{ property.province }}</p>
+            </address>
+            <a href="property/{{ property.id }}" class="btn btn-primary">Edit</a>
+            <a href="property/{{ property.id }}/delete" class="btn btn-primary">Delete</a>
+        </div>
+    </article>
+
+    {% endfor %}
+
+{% endblock %}
