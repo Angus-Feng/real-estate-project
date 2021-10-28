@@ -1,5 +1,31 @@
 {% extends "master.html.twig" %}
-
+{% block addHead %}
+<script>
+        $(document).ready(function() {
+			$('.corner').on('click', function(e){
+				e.preventDefault();
+				var userId = $(this).attr('userId');
+				var propertyId = $(this).attr('propertyId');
+				var method = $(this).attr('method');
+				if (method == 'like') {
+					$(this).attr('method', 'unlike');
+					$("#" + propertyId).replaceWith("<img id='" + propertyId + "' src='images/addedFavourite.png' title='remove favourite' width='30px'>");
+				} else if (method == 'unlike') {
+					$(this).attr('method', 'like');
+					$("#" + propertyId).replaceWith("<img id='" + propertyId + "' src='images/addFavourite.png' title='add favourite' width='30px'>");
+				}
+				$.ajax({
+                  url: '/addFav',
+                  type: 'GET',
+                  data: {userId: userId, propertyId: propertyId, method: method},
+                  cache: false,
+                  success: function(data){
+                  }
+				});
+			})
+        })
+    </script>
+{% endblock %}
 {% block header %}
 	<h1>Property list</h1>
 {% endblock %}
@@ -11,8 +37,15 @@
 				<div class="col-3">
 					<div class="p-3 border bg-light">
 						<div class="card">
-							<input type="checkbox" class="form-check-input" name="favourite">
-							<label class="form-check-label" for="favourite">Add to favourite</label>
+						{% if userId %}
+							{% if property.id in favProperties %}
+								<div class='btn corner' method='unlike' propertyId="{{property.id}}" userId='{{userId}}'> 
+								<img class='unlike' id='{{property.id}}' src='images/addedFavourite.png' title='remove favourite' width="30px"></div>
+							{% else %}
+								<div class='btn corner' method='like' propertyId="{{property.id}}" userId='{{userId}}'> 
+								<img class='like' id='{{property.id}}' src='images/addFavourite.png' title='add favourite' width="30px"></div>
+							{% endif %}
+						{% endif %}
 							<img src="/images/ninja.png" class="card-img-top" alt="property photo" width="150px">
 							<div class="card-body">
 								<h5 class="card-title">${{property.price}}</h5>

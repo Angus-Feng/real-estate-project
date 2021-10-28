@@ -1,3 +1,9 @@
 .err-msg {
     color: red;
 }
+
+.corner {
+    margin: 0;
+    padding: 0;
+    margin-left: 88%;
+}
