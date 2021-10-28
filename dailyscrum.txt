@@ -1,3 +1,36 @@
+2021/10/28
+
+Nari
+1. Done / not done since last scrum:
+- broker update their property 
+- working on delete feature for property 
+2. To do until next Scrum:
+- finish delete feature on properties
+- check real estate property data apis 
+3. Need assistance / figure things out
+- which one is more natural way to do : 
+    having two submit inputs (update & delete) or having a likned button on delete
+
+Chris
+1. Done / not done since the last scrum:
+- Started image reordering 
+- Started some admin panel design
+2. To do until next Scrum:
+- Finish image reordering
+- Add solid css foundation to admin panel 
+3. Need assistance / figure things out
+- .htaccess setup issue
+
+Feng
+1. Done / not done since last scrum:
+- add favourite function is done
+2. To do until next Scrum:
+- complete user profile (add/change photo, change password)
+3. Need assistance / figure things out
+- .htaccess setup issue
+
+----------------------------------------------------------------------------------------------
+
 2021/10/27
 
 Nari
