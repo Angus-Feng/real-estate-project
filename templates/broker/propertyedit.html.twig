@@ -1,0 +1,61 @@
+{% extends "master.html.twig" %}
+
+{% block header %}
+    <h1>Edit Property</h1>
+{% endblock %}
+
+{% block content %}
+
+{% if errorList %}
+    <ul>
+        {% for error in errorList %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<form method="POST">
+    <!-- FIXME: move width to style.css & let broker can view photos and choose to edit -->
+    <img width="500" src="../../images/ninja.png">
+
+    <div class="form-row">
+        <label for="">Title</label>
+        <input type="text" name="title" value="{{ property.title }}" />
+    </div>
+    <div class="form-group">
+        <label for="">Price</label>
+        <input type="number" name="price" step="0.01" value="{{ property.price }}" />
+        <label for="">Bedrooms</label>
+        <input type="number" name="bedrooms" value="{{ property.bedrooms }}" />
+        <label for="">Bathrooms</label>
+        <input type="number" name="bathrooms" value="{{ property.bathrooms }}" />
+        <label for="">Year built</label>
+        <input type="number" name="buildingYear" value="{{ property.buildingYear }}" />
+        <label for="">Lot area (sqft)</label>
+        <input type="number" name="lotArea" value="{{ property.lotArea }}" />
+    </div>
+    <div class="form-row">
+        <label for="">Description</label>
+        <textarea name="description" cols="30" rows="10">{{ property.description }}</textarea>
+    </div>
+    <label for="">Location</label>
+    {# TODO: dropdown disply for province #}
+    <div class="form-group">
+        <label for="">Stree address</label>
+        <input type="text" name="streetAddress" value="{{ property.streetAddress }}" />
+        <label for="">Appartment No.</label>
+        <input type="number" name="appartmentNo" value="{{ property.appartmentNo }}" />
+        <label for="">City</label>
+        <input type="text" name="city" value="{{ property.city }}" />
+        <label for="">Province</label>
+        <input type="text" name="province" value="{{ property.province }}" />
+        <label for="">Postal code</label>
+        <input type="text" name="postalCode" value="{{ property.postalCode }}" />
+    </div>
+    <input type="submit" name="update" value="Update Information" />
+    <!-- add delete button or input for delete -->
+    <input type="submit" name="delete" value="Delete" />
+    <a href="property/{{ property.id }}/delete"><button>Delete</button></a>
+</form>
+
+{% endblock %}

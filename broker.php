@@ -114,3 +114,31 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
 //     }
 //     return TRUE;
 // }
+
+
+// GET '/mypropertylist'
+$app->get('/mypropertylist', function ($request, $response, $args) {
+    // TODO: get broker id from SESSION?
+    // FIXME: plug in the brokerId
+    $propertyList = DB::query(
+        "SELECT * FROM properties WHERE brokerId=1"
+    );
+    return $this->view->render($response, 'broker/mypropertylist.html.twig', ['propertyList' => $propertyList]);
+});
+
+
+
+// GET '/property/propertyID'
+$app->get('/property/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+    // TODO: get broker id from SESSION?
+    // FIXME: plug in the brokerId
+    $id = $args['id'];
+    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s", $id);
+    $log->debug(sprintf("Fetch a property data with id=%s", $id));
+
+    if (!$property) { // not found - cause 404 here
+        throw new \Slim\Exception\NotFoundException($request, $response);
+    } else {
+        return $this->view->render($response, 'broker/propertyedit.html.twig', ['property' => $property]);
+    }
+});
