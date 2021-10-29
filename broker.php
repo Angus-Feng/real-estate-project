@@ -3,21 +3,24 @@
 require_once 'vendor/autoload.php';
 require_once 'init.php';
 
-// define routes
-// FIXME: endpoint /broker -> /borker/id
-$app->get('/broker', function ($request, $response, $args) {
-    return $this->view->render($response, 'broker.html.twig');
-});
+// Define routes
 
 // GET '/addproperty'
 $app->get('/addproperty', function ($request, $response, $args) {
-    // TODO: check if the user is broker
+    if ($_SESSION['user']['role'] !== 'broker') {
+        return $response->write('Access Denied');
+    } 
+
     return $this->view->render($response, 'broker/addproperty.html.twig');
 });
 
 // POST '/addproperty'
 $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
-    // TODO: check if the user is broker
+    $brokerId = $_SESSION['user']['id'];
+
+    if ($_SESSION['user']['role'] !== 'broker') {
+        return $response->write('Access Denied');
+    } 
 
     // extract values 
     $price = $request->getParam('price');
@@ -72,7 +75,7 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     // TODO: user can select a province, otherwise display error message
 
     $valueList = [
-        'brokerId' => 1,
+        'brokerId' => $brokerId,
         'price' => $price,
         'title' => $title,
         'bedrooms' => $bedrooms,
@@ -117,20 +120,25 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
 
 // GET '/mypropertylist'
 $app->get('/mypropertylist', function ($request, $response, $args) {
-    // TODO: get broker id from SESSION?
-    // FIXME: plug in the brokerId
-    $propertyList = DB::query(
-        "SELECT * FROM properties WHERE brokerId=1"
-    );
+    $brokerId = $_SESSION['user']['id'];
+
+    if ($_SESSION['user']['role'] !== 'broker') {
+        return $response->write('Access Denied');
+    } 
+
+    $propertyList = DB::query("SELECT * FROM properties WHERE brokerId=%s", $brokerId);
     return $this->view->render($response, 'broker/mypropertylist.html.twig', ['propertyList' => $propertyList]);
 });
 
 // GET '/myproperty/propertyID'
 $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-    // TODO: get broker id from SESSION?
+    $brokerId = $_SESSION['user']['id'];
+    if ($_SESSION['user']['role'] !== 'broker') {
+        return $response->write('Access Denied');
+    } 
     // FIXME: plug in the brokerId
     $id = $args['id'];
-    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s", $id);
+    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $id, $brokerId);
     $log->debug(sprintf("Fetch a property data with id=%s", $id));
 
     if (!$property) { // not found - cause 404 here
@@ -138,14 +146,17 @@ $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use (
     } else {
         return $this->view->render($response, 'broker/myproperty.html.twig', ['property' => $property]);
     }
-})->setName('myproperty');;
+})->setName('mypropertyEdit');;
 
 // GET '/myproperty/edit/propertyID'
 $app->get('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-    // TODO: get broker id from SESSION?
-    // FIXME: plug in the brokerId
+    $brokerId = $_SESSION['user']['id'];
+    if ($_SESSION['user']['role'] !== 'broker') {
+        return $response->write('Access Denied');
+    } 
+
     $id = $args['id'];
-    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s", $id);
+    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $id, $brokerId);
     $log->debug(sprintf("Fetch a property data with id=%s", $id));
 
     if (!$property) { // not found - cause 404 here
@@ -157,8 +168,11 @@ $app->get('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) 
 
 // POST '/myproperty/edit/propertyID'
 $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-    // TODO: get broker id from SESSION?
-    // FIXME: plug in the brokerId
+    $brokerId = $_SESSION['user']['id'];
+    if ($_SESSION['user']['role'] !== 'broker') {
+        return $response->write('Access Denied');
+    } 
+
     $id = $args['id'];
 
     // extract values 
@@ -214,7 +228,7 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
     // TODO: user can select a province, otherwise display error message
 
     $valueList = [
-        'brokerId' => 1,
+        'brokerId' => $brokerId,
         'price' => $price,
         'title' => $title,
         'bedrooms' => $bedrooms,
@@ -235,16 +249,19 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
         DB::update('properties', $valueList, "id=%i", $id);
         $log->debug(sprintf("Property with id=%s updated", DB::insertId()));
         // redirect to '/myproperty/propertyID' with a parameter (propertyID)
-        return $response->withRedirect($this->router->pathFor('myproperty', ['id' => $id]));
+        return $response->withRedirect($this->router->pathFor('mypropertyEdit', ['id' => $id]));
     }
 });
 
 // GET '/myproperty/delete/propertyID'
 $app->get('/myproperty/delete/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-    /* TODO: get broker id from SESSION?
-        delete photos too*/
-    // FIXME: plug in the brokerId
+    $brokerId = $_SESSION['user']['id'];
+    if ($_SESSION['user']['role'] !== 'broker') {
+        return $response->write('Access Denied');
+    } 
+
+    // TODO: delete photos
     DB::delete('properties', 'id=%s', $args['id']);
-    // TODO: delete confirmation popup 
+    // TODO: delete confirmation popup
     return $response->write('Property is deleted successfully.');
 });
