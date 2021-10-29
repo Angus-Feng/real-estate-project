@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('America/Toronto');
+
 require_once 'vendor/autoload.php';
 require_once 'init.php';
 require_once 'utils.php';
