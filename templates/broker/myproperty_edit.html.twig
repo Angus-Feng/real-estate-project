@@ -52,10 +52,10 @@
         <label for="">Postal code</label>
         <input type="text" name="postalCode" value="{{ property.postalCode }}" />
     </div>
-    <input type="submit" name="update" value="Update Information" />
+    <input type="submit" name="submit" value="Update" />
     <!-- add delete button or input for delete -->
-    <input type="submit" name="delete" value="Delete" />
-    <a href="property/{{ property.id }}/delete"><button>Delete</button></a>
+    <input type="submit" name="submit" value="Delete" />
+    <!-- <a href="property/{{ property.id }}/delete"><button>Delete</button></a> -->
 </form>
 
 {% endblock %}

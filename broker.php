@@ -138,7 +138,7 @@ $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use (
     } else {
         return $this->view->render($response, 'broker/myproperty.html.twig', ['property' => $property]);
     }
-});
+})->setName('myproperty');;
 
 // GET '/myproperty/edit/propertyID'
 $app->get('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
@@ -233,9 +233,9 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
             ['errorList' => $errorList, 'values' => $valueList]);
     } else {
         DB::update('properties', $valueList, "id=%i", $id);
-        $log->debug(sprintf("Property with id=%s updated", $id));
-        // FIXME: render the updated property view
-        return $response->write('Property is updated successfully.');
+        $log->debug(sprintf("Property with id=%s updated", DB::insertId()));
+        // redirect to '/myproperty/propertyID' with a parameter (propertyID)
+        return $response->withRedirect($this->router->pathFor('myproperty', ['id' => $id]));
     }
 });
 
