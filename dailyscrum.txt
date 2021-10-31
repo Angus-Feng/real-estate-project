@@ -1,3 +1,35 @@
+2021/10/31
+
+Nari
+1. Done / not done since last scrum:
+- working on 2 step property creation (property detail and images)
+2. To do until next Scrum:
+- finish 2 seperate forms
+3. Need assistance / figure things out
+- nothing for now
+
+Chris
+1. Done / not done since last scrum:
+- Almost finished image reordering, need to pass data
+- Re-did image property image handling 
+- Added some styles
+2. To do until next Scrum:
+- Finish image reordering 
+- Add solid css foundation to admin panel 
+3. Need assistance / figure things out
+- Figure out how to pass data with AJAX
+
+Feng
+1. Done / not done since last scrum:
+- working on adding broker's image with ajax
+2. To do until next Scrum:
+- add broker's image
+- change password
+3. Need assistance / figure things out
+- send/receive file with ajax
+
+----------------------------------------------------------------------------------------------
+
 2021/10/29
 
 Nari
