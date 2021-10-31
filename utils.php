@@ -105,7 +105,7 @@ function verifyUploadedHousePhoto($photo, &$filePath, $propertyId, $firstPhoto) 
             return "Internal Error.";
     }
 
-    $filePath = "uploads/" . $propertyId . "/640p-" . $generatedFileName . "." . $ext;
+    $filePath = "uploads/" . $propertyId . $generatedFileName . "." . $ext;
 
     return TRUE;
 }
