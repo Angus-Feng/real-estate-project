@@ -6,7 +6,12 @@ require_once 'init.php';
 
 // Default admin page
 $app->get('/admin', function ($request, $response, $args) {
-    return $this->view->render($response, 'admin/index_admin.html.twig');
+    return $this->view->render($response, 'admin/index_admin.html.twig'); // COMMENTED OUT FOR TESTING.
+})->setName('admin');
+
+// Test interface
+$app->get('/admin/interface', function ($request, $response, $args) {
+    return $this->view->render($response, 'admin/interface_admin.html.twig');
 })->setName('admin');
 
 
@@ -469,7 +474,7 @@ $app->post('/admin/users/delete/{id:[0-9]+}', function ($request, $response, $ar
 // View a list of all properties and their information
 $app->get('/admin/property/list', function ($request, $response, $args) {
     $propertyList = DB::query("SELECT * FROM properties");
-    return $this->view->render($response, 'admin/property_list.html.twig', ['propertyList' => $propertyList]);
+    return $this->view->render($response, 'admin/property_list_interface.html.twig', ['propertyList' => $propertyList]);
 });
 
 // Add property: GET
@@ -497,21 +502,15 @@ $app->post('/admin/property/add', function ($request, $response, $args) {
 
     $errorList = [];
 
-    $photoPathArray = [];
     $errorPhotoCount = 1;
-    $photoNo = 0;
     foreach ($uploadedPhotos as $photo) {
         if ($photo->getError() !== UPLOAD_ERR_OK) {
             $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
             $errorPhotoCount++;
         }
-        $photoFilePath = null;
-        $result = verifyUploadedHousePhoto($photo, $photoFilePath, $postalCode, $photoNo);
-        if ($result !== TRUE) {
+        $result = verifyFileExt($photo);
+        if (!$result) {
             $errorList[] = $result;
-        } else {
-            $photoPathArray[] = $photoFilePath;
-            $photoNo++;
         }
     }
     $verifyPrice = verifyPrice($price);
@@ -589,8 +588,21 @@ $app->post('/admin/property/add', function ($request, $response, $args) {
         'postalCode' => $postalCode
     ]);
 
-    $photoNo = 0;
     $propertyId = DB::insertId();
+
+    $photoPathArray = [];
+    $firstPhoto = TRUE;
+    $photoFilePath = null;
+
+    foreach ($uploadedPhotos as $photo) {
+        $result = verifyUploadedHousePhoto($photo, $photoFilePath, $propertyId, $firstPhoto);
+        if ($result === TRUE) {
+            $photoPathArray[] = $photoFilePath;
+            $firstPhoto = FALSE;
+        }
+    }
+
+    $photoNo = 0;
     foreach ($photoPathArray as $photoFilePath) {
         DB::insert('propertyphotos', ['propertyId' => $propertyId, 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);
         $photoNo++;
@@ -609,7 +621,12 @@ $app->get('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $ar
         // $response = $response->withStatus(404);
         return $this->view->render($response, '404_error.html.twig');
     }
-    return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker, 'propertyPhotos' => $propertyPhotos]);
+    $fileNameList = array();
+    foreach($propertyPhotos as $propertyPhoto) {
+        $fileName = explode("/", $propertyPhoto['photoFilePath'], 3);
+        $fileNameList[$fileName[2]] = $propertyPhoto['ordinalINT'];
+    }
+    return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker, 'propertyPhotos' => $propertyPhotos, 'fileNameList' => $fileNameList, 'propertyId' => $property['id']]);
 });
 
 // Edit property: POST
@@ -631,22 +648,15 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
 
     $errorList = [];
 
-    $photoPathArray = [];
     $errorPhotoCount = 1;
-    $previousOrdinal = DB::queryFirstRow("SELECT ordinalINT FROM propertyphotos WHERE propertyId=%d ORDER BY ordinalINT DESC", $args['id']);
-    $photoNo = $previousOrdinal['ordinalINT'] + 1;
     foreach ($uploadedPhotos as $photo) {
         if ($photo->getError() !== UPLOAD_ERR_OK) {
             $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
             $errorPhotoCount++;
         }
-        $photoFilePath = null;
-        $result = verifyUploadedHousePhoto($photo, $photoFilePath, $postalCode, $photoNo);
-        if ($result !== TRUE) {
+        $result = verifyFileExt($photo);
+        if (!$result) {
             $errorList[] = $result;
-        } else {
-            $photoPathArray[] = $photoFilePath;
-            $photoNo++;
         }
     }
     $verifyPrice = verifyPrice($price);
@@ -721,12 +731,30 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
         'postalCode' => $postalCode
     ], "id=%d", $args['id']);
 
+    $previousOrdinal = DB::queryFirstRow("SELECT ordinalINT FROM propertyphotos WHERE propertyId=%d ORDER BY ordinalINT DESC", $args['id']);
     $photoNo = $previousOrdinal['ordinalINT'] + 1;
-    $propertyId = DB::insertId();
+    $photoPathArray = [];
+    $firstPhoto = FALSE;
+    $photoFilePath = null;
+
+    foreach ($uploadedPhotos as $photo) {
+        $result = verifyUploadedHousePhoto($photo, $photoFilePath, $args['id'], $firstPhoto);
+        if ($result === TRUE) {
+            $photoPathArray[] = $photoFilePath;
+        }
+    }
+
     foreach ($photoPathArray as $photoFilePath) {
         DB::insert('propertyphotos', ['propertyId' => $args['id'], 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);
         $photoNo++;
     }
+
+    return $this->view->render($response, 'admin/modification_success.html.twig');
+});
+
+$app->post('/admin/property/edit/reorder', function ($request, $response, $args) { // TODO
+
+    print_r($args['data']);
 
     return $this->view->render($response, 'admin/modification_success.html.twig');
 });

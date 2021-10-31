@@ -2,6 +2,48 @@
 
 {% block title %}Edit Property{% endblock %}
 
+{% block addHead %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.reorder_link').on('click',function(){
+        $("ul.reorder-photos-list").sortable({ tolerance: 'pointer' });
+        $('.reorder_link').html('save reordering');
+        $('.reorder_link').attr("id","saveReorder");
+        $('#reorderHelper').slideDown('slow');
+        $('.image_link').attr("href","javascript:void(0);");
+        $('.image_link').css("cursor","move");
+        
+        $("#saveReorder").click(function( e ){
+            if( !$("#saveReorder i").length ){
+                $("ul.reorder-photos-list").sortable('destroy');
+                $("#reorderHelper").html("Reordering Photos - This could take a moment. Please don't navigate away from this page.").removeClass('light_box').addClass('notice notice_error');
+                
+                var idList = [];
+                $("ul.reorder-photos-list li").each(function() {
+                    idList.push($(this).attr('id').substr(9));
+                });
+                
+                $.ajax({
+                    type: "POST",
+                    url: "/reorder",
+                    data: {ids: " " + idList + ""},
+                    success: function(){
+                        console.log("Success: " + data);
+                        window.location.reload();
+                    }
+                });	
+                console.log("Failed");
+                return false;
+            }	
+            e.preventDefault();
+        });
+    });
+});
+</script>
+
+{% endblock %}
+
 {% block content %}
 
     {% if errorList %}
@@ -32,31 +74,22 @@
     </form>
 
     {% if propertyPhotos %}
-        {# Table for list of pending brokers #}
-        <h1>List of property photos</h1>
-        <table border="1">
-            <tr>
-                <th>#</th>
-                <th>Ordinal #</th>
-                <th>Photo</th>
-                <th>*Choice*</th>
-            </tr>
-            {% for p in propertyPhotos %}
-                <tr>
-                    <td>{{p.id}}</td>
-                    <td>{{p.ordinalINT}}</td>
-                    <td>{{p.photoFilePath}}</td>
-                    <td>
-                        <form action="" method="post">
-                            <button name="accept" onclick="window.location='/admin/pending/accept/{{l.userId}}';">Higher</button>
-                        </form>
-                        <form action="" method="post">
-                            <button name="decline" onclick="window.location='/admin/pending/decline/{{l.userId}}';">Lower</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div class="reorder-container">
+            <a href="javascript:void(0);" class="reorder_link" id="saveReorder">reorder photos</a>
+            <div id="reorderHelper" class="light_box" style="display:none;">1. Drag photos to reorder.<br>2. Click 'Save Reordering' when finished.</div>
+            <div class="gallery">
+                <ul class="reorder_ul reorder-photos-list">
+                    {% for key, value in fileNameList %}
+                        <li id="image_li_{{value}}" class="ui-sortable-handle">
+                            <a href="javascript:void(0);" style="float:none;" class="image_link">
+                                <img src="../../../uploads/{{propertyId}}/640p-{{key}}" alt="">
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
     {% endif %}
 
 {% endblock content %}
