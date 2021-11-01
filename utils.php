@@ -176,6 +176,16 @@ function resizeImage($photo, $w, $h, $ext, $crop=FALSE) {
     return $dst;
 }
 
+function deleteAllPropertyPhotosAndFolder($path, $propertyId) {
+    $files = glob($path . '/*');
+    foreach($files as $file){
+        if(is_file($file)) {
+            unlink($file);
+        }
+    }
+    rmdir('uploads/' . $propertyId);
+}
+
 function verfiyEmail($email) {
     if (!$email) {
         return "An email is required";

@@ -796,6 +796,9 @@ $app->get('/admin/property/delete/{id:[0-9]+}', function ($request, $response, $
 // Delete property: POST
 $app->post('/admin/property/delete/{id:[0-9]+}', function ($request, $response, $args) {
     DB::delete('propertyphotos', 'propertyId=%d', $args['id']);
+
+    deleteAllPropertyPhotosAndFolder('uploads/' . $args['id'], $args['id']);
+
     DB::delete('properties', 'id=%d', $args['id']);
 
     return $this->view->render($response, 'admin/modification_success.html.twig');
