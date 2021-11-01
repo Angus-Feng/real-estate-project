@@ -15,25 +15,24 @@ $(document).ready(function(){
         $('.image_link').css("cursor","move");
         
         $("#saveReorder").click(function( e ){
-            if( !$("#saveReorder i").length ){
+            if( !$("#saveReorder i").length){
                 $("ul.reorder-photos-list").sortable('destroy');
                 $("#reorderHelper").html("Reordering Photos - This could take a moment. Please don't navigate away from this page.").removeClass('light_box').addClass('notice notice_error');
                 
                 var idList = [];
+                var propertyId = $("#propertyId").text();
                 $("ul.reorder-photos-list li").each(function() {
                     idList.push($(this).attr('id').substr(9));
                 });
-                
                 $.ajax({
                     type: "POST",
-                    url: "/reorder",
-                    data: {ids: " " + idList + ""},
-                    success: function(){
-                        console.log("Success: " + data);
+                    url: "/admin/property/edit/reorder",
+                    data: JSON.stringify({ids: idList, 'propertyId': propertyId}),
+                    contentType: "application/json",
+                    success: function(idList, propertyId){
                         window.location.reload();
                     }
                 });	
-                console.log("Failed");
                 return false;
             }	
             e.preventDefault();
@@ -89,7 +88,7 @@ $(document).ready(function(){
                 </ul>
             </div>
         </div>
-
+        <span id="propertyId" style="display:none;">{{propertyId}}</span>
     {% endif %}
 
 {% endblock content %}
