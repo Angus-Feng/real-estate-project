@@ -66,30 +66,114 @@ function verifyUploadedBrokerProfilePhoto($photo, &$filePath, $licenseNo) {
     return TRUE;
 }
 
-function verifyUploadedHousePhoto($photo, &$filePath, $postalCode, $photoNo) {
+function verifyUploadedHousePhoto($photo, &$filePath, $propertyId, $firstPhoto) {
     $info = getimagesize($photo->file);
 
-    if ($info[0] < 640 || $info[0] > 640 || $info[1] < 480 || $info[1] > 480) {
-        return "Width must be 640px and height must be 480px.";
+    $generatedFileName = generateRandomString();
+
+    if (!file_exists('uploads/' . $propertyId)) {
+        mkdir('uploads/' . $propertyId, 0777, true);
     }
 
     $ext = "";
     switch ($info['mime']) {
         case 'image/jpeg':
             $ext = "jpg";
+            imagejpeg(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/640p-' . $generatedFileName . "." . $ext);
+            imagejpeg(resizeImage($photo, $info[0], $info[1], "jpg"), 'uploads/' . $propertyId . '/orig-' . $generatedFileName . "." . $ext);
+            if ($firstPhoto === TRUE) {
+                imagejpeg(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/thmb-' . $generatedFileName . "." . $ext);
+            }
             break;
         case 'image/gif':
             $ext = "gif";
+            imagegif(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . $generatedFileName . "." . $ext);
+            imagegif(resizeImage($photo, $info[0], $info[1], "jpg"), 'uploads/' . $propertyId . '/orig-' . $generatedFileName . "." . $ext);
+            if ($firstPhoto === TRUE) {
+                imagegif(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/thmb-' . $generatedFileName . "." . $ext);
+            }
             break;
         case 'image/png':
             $ext = "png";
+            imagepng(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . $generatedFileName . "." . $ext);
+            imagepng(resizeImage($photo, $info[0], $info[1], "jpg"), 'uploads/' . $propertyId . '/orig-' . $generatedFileName . "." . $ext);
+            if ($firstPhoto === TRUE) {
+                imagepng(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/thmb-' . $generatedFileName . "." . $ext);
+            }
+            break;
+        default:
+            return "Internal Error.";
+    }
+
+    $filePath = "uploads/" . $propertyId . "/" . $generatedFileName . "." . $ext;
+
+    return TRUE;
+}
+
+function verifyFileExt($photo) {
+    $info = getimagesize($photo->file);
+
+    switch ($info['mime']) {
+        case 'image/jpeg':
+            break;
+        case 'image/gif':
+            break;
+        case 'image/png':
             break;
         default:
             return "Only JPG, GIF, PNG file types are accepted";
     }
-
-    $filePath = "uploads/" . $postalCode . "_" . $photoNo . "." . $ext;
     return TRUE;
+}
+
+function generateRandomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
+function resizeImage($photo, $w, $h, $ext, $crop=FALSE) {
+    list($width, $height) = getimagesize($photo->file);
+    $r = $width / $height;
+
+    if ($crop) {
+        if ($width > $height) {
+            $width = ceil($width-($width*abs($r-$w/$h)));
+        } else {
+            $height = ceil($height-($height*abs($r-$w/$h)));
+        }
+        $newwidth = $w;
+        $newheight = $h;
+    } else {
+        if ($w/$h > $r) {
+            $newwidth = $h*$r;
+            $newheight = $h;
+        } else {
+            $newheight = $w/$r;
+            $newwidth = $w;
+        }
+    }
+
+    $src = imagecreatefromjpeg($photo->file);
+
+    if ($ext === "jpg") {
+        $src = imagecreatefromjpeg($photo->file);
+    } 
+    if ($ext === "gif") {
+        $src = imagecreatefromgif($photo->file);
+    }
+    if ($ext === "png") {
+        $src = imagecreatefrompng($photo->file);
+    }
+
+    $dst = imagecreatetruecolor($newwidth, $newheight);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+
+    return $dst;
 }
 
 function verfiyEmail($email) {

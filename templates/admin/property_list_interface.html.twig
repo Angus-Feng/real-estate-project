@@ -1,0 +1,71 @@
+{% extends "admin/interface_admin.html.twig" %}
+
+{% block title %}Properties
+{% endblock %}
+
+{% block contentHeader %}Property List
+{% endblock %}
+
+{% block content %}
+
+	{# Table for list of properties #}
+	<p>
+		<a href="/admin/property/add">Add a new property</a>
+	</p>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">*Modify*</th>
+					<th scope="col">Property ID</th>
+					<th scope="col">Broker ID</th>
+					<th scope="col">Price</th>
+					<th scope="col">Title</th>
+					<th scope="col">Bedrooms</th>
+					<th scope="col">Bathrooms</th>
+					<th scope="col">Building Year</th>
+					<th scope="col">Lot Area</th>
+					<th scope="col">Appartment #</th>
+					<th scope="col">Street Address</th>
+					<th scope="col">City</th>
+					<th scope="col">Province</th>
+					<th scope="col">Postal Code</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for p in propertyList %}
+					<tr>
+						<td>
+							<a href="/admin/property/edit/{{p.id}}">
+								<div class="admin-edit-square">
+									<i class="fas fa-edit admin-edit-icon"></i>
+								</div>
+							</a>
+							<a href="/admin/property/delete/{{p.id}}">
+								<div class="admin-delete-square">
+									<i class="fas fa-trash admin-delete-icon"></i>
+								</div>
+							</a>
+						</td>
+						<td>{{p.id}}</td>
+						<td>{{p.brokerId}}</td>
+						<td>{{p.price}}</td>
+						<td>{{p.title}}</td>
+						<td>{{p.bedrooms}}</td>
+						<td>{{p.bathrooms}}</td>
+						<td>{{p.buildingYear}}</td>
+						<td>{{p.lotArea}}</td>
+						<td>{{p.appartmentNo}}</td>
+						<td>{{p.streetAddress}}</td>
+						<td>{{p.city}}</td>
+						<td>{{p.province}}</td>
+						<td>{{p.postalCode}}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+
+{% endblock %}

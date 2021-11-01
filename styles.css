@@ -7,3 +7,341 @@
     padding: 0;
     margin-left: 88%;
 }
+
+/* --------------------------------------------------------- ADMIN STYLES ------------------------------------------------------- */
+
+/* Admin page START */
+
+.admin-left-side {
+    height: 100vh;
+    background-color: lightblue;
+}
+
+.admin-main-choice-Square {
+    height: 200px;
+    width: 200px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom:5px;
+}
+
+.admin-square-container {
+    height: 200px;
+    width: 200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.admin-main-icons {
+    color: lightblue;
+}
+
+.admin-text-in-icon {
+    font-size: 20px;
+    color: black;
+}
+
+.admin-main-links {
+    text-decoration: none;
+}
+
+.admin-main-links:hover .admin-main-icons {
+    color: rgb(45, 173, 216);
+    text-decoration: none;
+}
+
+.admin-main-links:hover .admin-text-in-icon {
+    color: rgb(0, 147, 196);
+    text-decoration: none;
+}
+
+/* Admin Page END */
+
+/* Admin Interface START */
+
+.admin-home-page-button {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.admin-home-page-text {
+    font-size: 25px;
+}
+
+.admin-logout-text {
+    border-top: 1px solid lightgrey;
+}
+
+.nav-pills > li > a {
+    border-radius: 0;
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    position: absolute;
+    left: 250px;
+    width: 0;
+    height: 100%;
+    margin-left: -250px;
+    overflow-y: auto;
+    background: #000;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    width: 250px;
+}
+
+#page-content-wrapper {
+    position: absolute;
+    padding: 15px;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.xyz {
+    min-width: 360px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: relative;
+    margin-right: 0px;
+}
+
+.fixed-brand {
+    width: auto;
+}
+ 
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-top: 2px;
+}
+
+.sidebar-nav li {
+    text-indent: 15px;
+    line-height: 40px;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #999999;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+    color: #999999;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+    color: #fff;
+    background: none;
+}
+
+.no-margin {
+    margin: 0;
+}
+ 
+#wrapper {
+    padding-left: 250px;
+}
+
+.fixed-brand {
+    width: 250px;
+}
+
+#wrapper.toggled {
+    padding-left: 0;
+}
+
+#sidebar-wrapper {
+    width: 250px;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    width: 250px;
+}
+
+#wrapper.toggled-2 #sidebar-wrapper {
+    width: 50px;
+}
+
+#wrapper.toggled-2 #sidebar-wrapper:hover {
+    width: 250px;
+}
+
+#page-content-wrapper {
+    padding: 20px;
+    position: relative;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: relative;
+    margin-right: 0;
+    padding-left: 250px;
+}
+
+#wrapper.toggled-2 #page-content-wrapper {
+    position: relative;
+    margin-right: 0;
+    margin-left: -200px;
+    width: auto;
+}
+
+.admin-interface-header {
+    background-color: rgb(45, 173, 216);
+    height: 200px;
+}
+
+.admin-content-header {
+    color:rgb(49, 49, 49);
+    margin: 0 auto;
+}
+
+/* Admin Interface END */
+
+.admin-edit-icon {
+    color: white;
+}
+
+.admin-delete-icon {
+    color: white;
+}
+
+.admin-edit-square {
+    height: 30px;
+    width: 30px;
+    background-color: orange;
+    text-align: center;
+}
+
+.admin-delete-square {
+    height: 30px;
+    width: 30px;
+    background-color: red;
+    text-align: center;
+}
+
+.admin-edit-square:hover {
+    background-color: darkorange;
+}
+
+.admin-delete-square:hover {
+    background-color: darkred;
+}
+
+/* Image Order START */
+
+.reorder-container{
+    margin-top:50px;
+    padding: 10px;
+}
+/* ul, ol, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+} */
+.reorder_link {
+    color: #3675B4;
+    border: solid 2px #3675B4;
+    border-radius: 3px;
+    text-transform: uppercase;
+    background: #fff;
+    font-size: 18px;
+    padding: 10px 20px;
+    margin: 15px 15px 15px 0px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.35s;
+    -moz-transition: all 0.35s;
+    -webkit-transition: all 0.35s;
+    -o-transition: all 0.35s;
+    white-space: nowrap;
+}
+.reorder_link:hover {
+    color: #fff;
+    border: solid 2px #3675B4;
+    background: #3675B4;
+    box-shadow: none;
+}
+#reorder-helper{
+    margin: 18px 10px;
+    padding: 10px;
+}
+.light_box {
+    background: #efefef;
+    padding: 20px;
+    margin: 15px 0;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.gallery{
+    width:100%;
+    float:left;
+    margin-top:15px;
+}
+.gallery ul{
+    margin:0;
+    padding:0;
+    list-style-type:none;
+}
+.gallery ul li{
+    padding:7px;
+    border:2px solid #ccc;
+    float:left;
+    margin:10px 7px;
+    background:none;
+    width:auto;
+    height:auto;
+}
+.gallery img{
+    width:250px;
+}
+
+.notice, .notice a{
+    color: #fff !important;
+}
+.notice {
+    z-index: 8888;
+    padding: 10px;
+    margin-top: 20px;
+}
+.notice a {
+    font-weight: bold;
+}
+.notice_error {
+    background: #E46360;
+}
+.notice_success {
+    background: #657E3F;
+}
+
+ /* Image Order END */
+
+/* ------------------------------------------------------------------------------------------------------------------------------ */
