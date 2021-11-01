@@ -7,7 +7,7 @@ require_once 'init.php';
 
 // GET '/addproperty'
 $app->get('/addproperty', function ($request, $response, $args) {
-    if ($_SESSION['user']['role'] !== 'broker') {
+    if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
 
@@ -16,11 +16,15 @@ $app->get('/addproperty', function ($request, $response, $args) {
 
 // POST '/addproperty'
 $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
-    $brokerId = $_SESSION['user']['id'];
+    $brokerId = @$_SESSION['user']['id'];
 
-    if ($_SESSION['user']['role'] !== 'broker') {
+    if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
+
+    echo '<pre>';
+    print_r($_FILES);
+    echo '</pre>';
 
     // extract values 
     $price = $request->getParam('price');
@@ -38,7 +42,7 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
 
     // validation
     $errorList = [];
-    
+
     if (verifyPrice($price) !== TRUE) {
         $errorList[] = verifyPrice($title);
     }
@@ -120,9 +124,9 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
 
 // GET '/mypropertylist'
 $app->get('/mypropertylist', function ($request, $response, $args) {
-    $brokerId = $_SESSION['user']['id'];
+    $brokerId = @$_SESSION['user']['id'];
 
-    if ($_SESSION['user']['role'] !== 'broker') {
+    if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
 
@@ -132,7 +136,7 @@ $app->get('/mypropertylist', function ($request, $response, $args) {
 
 // GET '/myproperty/propertyID'
 $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-    $brokerId = $_SESSION['user']['id'];
+    $brokerId = @$_SESSION['user']['id'];
     if ($_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
@@ -150,8 +154,8 @@ $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use (
 
 // GET '/myproperty/edit/propertyID'
 $app->get('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-    $brokerId = $_SESSION['user']['id'];
-    if ($_SESSION['user']['role'] !== 'broker') {
+    $brokerId = @$_SESSION['user']['id'];
+    if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
 
@@ -168,8 +172,8 @@ $app->get('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) 
 
 // POST '/myproperty/edit/propertyID'
 $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-    $brokerId = $_SESSION['user']['id'];
-    if ($_SESSION['user']['role'] !== 'broker') {
+    $brokerId = @$_SESSION['user']['id'];
+    if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
 
@@ -255,8 +259,8 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
 
 // GET '/myproperty/delete/propertyID'
 $app->get('/myproperty/delete/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-    $brokerId = $_SESSION['user']['id'];
-    if ($_SESSION['user']['role'] !== 'broker') {
+    $brokerId = @$_SESSION['user']['id'];
+    if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
 

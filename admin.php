@@ -1,5 +1,7 @@
 <?php
 
+use Slim\Http\Response;
+
 require_once 'vendor/autoload.php';
 
 require_once 'init.php';
@@ -616,7 +618,7 @@ $app->get('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $ar
     $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%d", $args['id']);
     $brokerId = DB::queryFirstRow("SELECT brokerId FROM properties WHERE id=%d", $args['id']);
     $broker = DB::queryFirstRow("SELECT licenseNo, firstName, lastName FROM users WHERE id=%d", $brokerId['brokerId']);
-    $propertyPhotos = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%d", $property['id']);
+    $propertyPhotos = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%d ORDER BY ordinalINT ASC", $property['id']);
     if (!$property) {
         // $response = $response->withStatus(404);
         return $this->view->render($response, '404_error.html.twig');
@@ -752,11 +754,24 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
     return $this->view->render($response, 'admin/modification_success.html.twig');
 });
 
+// Edit Property Image: POST
 $app->post('/admin/property/edit/reorder', function ($request, $response, $args) { // TODO
 
-    print_r($args['data']);
+    $values = json_decode($request->getBody(), true);
+    $propertyId = $values['propertyId'];
+    $ids = $values['ids'];
 
-    return $this->view->render($response, 'admin/modification_success.html.twig');
+    $propertyPhotos = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%d ORDER BY ordinalINT ASC", $propertyId);
+
+    $counter = 0;
+    foreach($propertyPhotos as $photo) {
+        print_r($photo['id']);
+        echo "<br>";
+        DB::update('propertyphotos', [
+            'ordinalINT' => $ids[$counter]
+        ], "id=%d", $photo['id']);
+        $counter++;
+    }
 });
 
 // Delete property: GET

@@ -14,41 +14,95 @@
         </ul>
     {% endif %}
 
-    <form method="POST">
-        <div class="form-row">
-            <label for="">Title</label>
-            <input type="text" name="title" value="{{ values.title }}" />
+    <div class="progress-bar">
+        <div class="step">
+            <div class="bullet">
+                <span>1</span>
+                <p>Property Details</p>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="">Price</label>
-            <input type="number" name="price" step="0.01" value="{{ values.price }}" />
-            <label for="">Bedrooms</label>
-            <input type="number" name="bedrooms" value="{{ values.bedrooms }}" />
-            <label for="">Bathrooms</label>
-            <input type="number" name="bathrooms" value="{{ values.bathrooms }}" />
-            <label for="">Year built</label>
-            <input type="number" name="buildingYear" value="{{ values.buildingYear }}" />
-            <label for="">Lot area (sqft)</label>
-            <input type="number" name="lotArea" value="{{ values.lotArea }}" />
+        <div class="step">
+            <div class="bullet">
+                <span>2</span>
+                <p>Property Location</p>
+            </div>
         </div>
-        <div class="form-row">
-            <label for="">Description</label>
-            <textarea name="description" cols="30" rows="10">{{ values.description }}</textarea>
+        <div class="step">
+            <div class="bullet">
+                <span>3</span>
+                <p>Property Images</p>
+            </div>
         </div>
-        <label for="">Location</label>
-        {# TODO: dropdown disply for province #}
-        <div class="form-group">
-            <label for="">Stree address</label>
-            <input type="text" name="streetAddress" value="{{ values.streetAddress }}" />
-            <label for="">Appartment No.</label>
-            <input type="number" name="appartmentNo" value="{{ values.appartmentNo }}" />
-            <label for="">City</label>
-            <input type="text" name="city" value="{{ values.city }}" />
-            <label for="">Province</label>
-            <input type="text" name="province" value="{{ values.province }}" />
-            <label for="">Postal code</label>
-            <input type="text" name="postalCode" value="{{ values.postalCode }}" />
+        <div class="step">
+            <div class="bullet">
+                <span>4</span>
+                <p>Submit</p>
+            </div>
         </div>
-        <input type="submit" name="submit" value="Create a property" />
+    </div>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-page">
+            <div class="form-row">
+                <label for="">Title</label>
+                <input type="text" name="title" value="{{ values.title }}" />
+            </div>
+            <div class="form-group">
+                <label for="">Price</label>
+                <input type="number" name="price" step="0.01" value="{{ values.price }}" />
+                <label for="">Bedrooms</label>
+                <input type="number" name="bedrooms" value="{{ values.bedrooms }}" />
+                <label for="">Bathrooms</label>
+                <input type="number" name="bathrooms" value="{{ values.bathrooms }}" />
+                <label for="">Year built</label>
+                <input type="number" name="buildingYear" value="{{ values.buildingYear }}" />
+                <label for="">Lot area (sqft)</label>
+                <input type="number" name="lotArea" value="{{ values.lotArea }}" />
+            </div>
+            <div class="form-row">
+                <label for="">Description</label>
+                <textarea name="description" cols="30" rows="10">{{ values.description }}</textarea>
+                <div>
+                </div>
+                <button>Next</button>
+            </div>
+        </div>
+        <div class="form-page">
+            <label for="">Location</label>
+            {# TODO: dropdown disply for province #}
+            <div class="form-group">
+                <label for="">Stree address</label>
+                <input type="text" name="streetAddress" value="{{ values.streetAddress }}" />
+                <label for="">Appartment No.</label>
+                <input type="number" name="appartmentNo" value="{{ values.appartmentNo }}" />
+                <label for="">City</label>
+                <input type="text" name="city" value="{{ values.city }}" />
+                <label for="">Province</label>
+                <input type="text" name="province" value="{{ values.province }}" />
+                <label for="">Postal code</label>
+                <input type="text" name="postalCode" value="{{ values.postalCode }}" />
+            </div>
+            <div>
+                <button>Previous</button>
+                <button>Next</button>
+            </div>
+        </div>
+        <div class="form-page">
+            <div class="form-group">
+                <label for="">Upload property images</label>
+                <input type="file" name="propertyImages[]" multiple />
+            </div>
+            <div>
+                <button>Previous</button>
+                <input type="submit" name="submit" value="Create a property" />
+            </div>
+        </div>
+        <!-- last page shows a success message with a button linked to the property page  -->
+        <div class="form-page">
+            <div>
+                <a href="">
+                    <button>View the Property</button>
+                </a>
+            </div>
+        </div>
     </form>
 {% endblock %}
