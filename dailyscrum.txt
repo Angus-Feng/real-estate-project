@@ -1,3 +1,34 @@
+2021/11/02
+
+Nari
+1. Done / not done since last scrum:
+- working on jQuery for multi step form
+2. To do until next Scrum:
+- finish multi step form 
+- refactor validation for multi step form
+3. Need assistance / figure things out
+- add Ajax on form
+
+Chris
+1. Done / not done since last scrum:
+- Finished image reordering
+- Edit delete property so that all images are deleted as well
+2. To do until next Scrum:
+- Start pagination in admin
+3. Need assistance / figure things out
+- Nothing for now
+
+Feng
+1. Done / not done since last scrum:
+- adding broker's image with ajax is done
+2. To do until next Scrum:
+- change password page for all users
+- refine property list
+3. Need assistance / figure things out
+- Not for now
+
+----------------------------------------------------------------------------------------------
+
 2021/11/01
 
 Nari
