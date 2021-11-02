@@ -1,70 +1,98 @@
-<form method="post" class='profile'>
-	<div class="row g-3">
-		<div class="mb-3">
-			<label for="email" class="form-label">Email</label>
-			<input readonly type="text" class="form-control" name="email" value="{{user.email}}">
+<div class='with_sidebar'>
+	<ul class="nav flex-column">
+		<li class="nav-item">
+			<a class="nav-link" href="#" id='changeProf'>View and Change profile</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#" id='changePass'>Change password</a>
+		</li>
+	</ul>
+	<form class='changePass' style="display: none;">
+		<div class="row g-3">
+			<div class="err-msg pass_err"></div>
+			<div class="mb-3">
+				<label for="origPw" class="form-label">Current Password</label>
+				<input type="password" name="origPw" class="form-control">
+			</div>
+			<div class="mb-3">
+				<label for="newPw" class="form-label">New Password</label>
+				<input type="password" name="newPw" class="form-control">
+			</div>
+			<div class="mb-3">
+				<label for="newPwRepeat" class="form-label">Re-enter new password</label>
+				<input type="password" name="newPwRepeat" class="form-control">
+			</div>
+			<button class="btn btn-primary" id="btnChangePass" type="submit">Submit</button>
 		</div>
-		<div class="col-sm-6">
-			<label for="firstName" class="form-label">First Name</label>
-			<input type="text" class="form-control" name="firstName" value="{{user.firstName}}">
-			<div class="err-msg">{{er.firstName}}</div>
-		</div>
-		<div class="col-sm-6">
-			<label for="lastName" class="form-label">Last Name</label>
-			<input type="text" class="form-control" name="lastName" value="{{user.lastName}}">
-			<div class="err-msg">{{er.lastName}}</div>
-		</div>
-		<br>
-		<div class="mb-3">Contact Infomation</div>
-		<div class="col-sm-6">
-			<label for="phone" class="form-label">Phone number</label>
-			<input type="text" class="form-control" name="phone" value="{{user.phone}}">
-			<div class="err-msg">{{er.phone}}</div>
-		</div>
-		<div class="col-sm-6">
-			<label for="city" class="form-label">City</label>
-			<input type="text" class="form-control" name="city" value="{{user.city}}">
-			<div class="err-msg">{{er.city}}</div>
-		</div>
-		<div class="col-sm-6">
-			<label for="city" class="form-label">Province</label>
-			<select class="form-select" name="province">
-				<option selected>No Preference</option>
-				<option value="AB"{% if user.province is same as ('AB') %}selected="selected"{% endif %}>Alberta</option>
-				<option value="BC"{% if user.province is same as ('BC') %}selected="selected"{% endif %}>British Columbia</option>
-				<option value="MB"{% if user.province is same as ('MB') %}selected="selected"{% endif %}>New Brunswick</option>
-				<option value="NL"{% if user.province is same as ('NL') %}selected="selected"{% endif %}>Newfoundland & Labrador</option>
-				<option value="NT"{% if user.province is same as ('NT') %}selected="selected"{% endif %}>Northwest Territories</option>
-				<option value="NS"{% if user.province is same as ('NS') %}selected="selected"{% endif %}>Nova Scotia</option>
-				<option value="NU"{% if user.province is same as ('NU') %}selected="selected"{% endif %}>Nunavut</option>
-				<option value="ON"{% if user.province is same as ('ON') %}selected="selected"{% endif %}>Ontario</option>
-				<option value="PE"{% if user.province is same as ('PE') %}selected="selected"{% endif %}>Prince Edward Island</option>
-				<option value="QC"{% if user.province is same as ('QC') %}selected="selected"{% endif %}>Quebec</option>
-				<option value="SK"{% if user.province is same as ('SK') %}selected="selected"{% endif %}>Saskatchewan</option>
-				<option value="YT"{% if user.province is same as ('YT') %}selected="selected"{% endif %}>Yukon</option>
-			</select>
-		</div>
-		<div class="col-sm-6">
-			<label for="postalCode" class="form-label">Postal Code</label>
-			<input type="text" class="form-control" name="postalCode" value="{{user.postalCode}}">
-			<div class="err-msg">{{er.postalCode}}</div>
-		</div>
-		<div class="mb-3 form-check">
-			<input type="checkbox" class="form-check-input" name="becomeBroker">
-			<label class="form-check-label" for="becomeBroker">I'm a broker</label>
-		</div>
-		<div class="mb-3">
-			<label for="licenseNo" class="form-label">license Number</label>
-			<input type="text" name="licenseNo" class="form-control" value="{{user.licenseNo}}" placeholder="AAA000000AAA">
-			<div class="err-msg">{{er.licenseNo}}</div>
-		</div>
-		<div class="mb-3">
-			<label for="company" class="form-label">Company name that you work for</label>
-			<input type="text" name="company" class="form-control" value="{{user.company}}">
-			<div class="err-msg">{{er.company}}</div>
-		</div>
-		<button type="submit" class="btn btn-primary" name="submit">Submit</button>
+	</form>
+	<form method="post" class='profile'>
+		<div class="row g-3">
+			<div class="mb-3">
+				<label for="email" class="form-label">Email</label>
+				<input readonly type="text" class="form-control" name="email" value="{{user.email}}">
+			</div>
+			<div class="col-sm-6">
+				<label for="firstName" class="form-label">First Name</label>
+				<input type="text" class="form-control" name="firstName" value="{{user.firstName}}">
+				<div class="err-msg">{{er.firstName}}</div>
+			</div>
+			<div class="col-sm-6">
+				<label for="lastName" class="form-label">Last Name</label>
+				<input type="text" class="form-control" name="lastName" value="{{user.lastName}}">
+				<div class="err-msg">{{er.lastName}}</div>
+			</div>
+			<br>
+			<div class="mb-3">Contact Infomation</div>
+			<div class="col-sm-6">
+				<label for="phone" class="form-label">Phone number</label>
+				<input type="text" class="form-control" name="phone" value="{{user.phone}}">
+				<div class="err-msg">{{er.phone}}</div>
+			</div>
+			<div class="col-sm-6">
+				<label for="city" class="form-label">City</label>
+				<input type="text" class="form-control" name="city" value="{{user.city}}">
+				<div class="err-msg">{{er.city}}</div>
+			</div>
+			<div class="col-sm-6">
+				<label for="city" class="form-label">Province</label>
+				<select class="form-select" name="province">
+					<option selected>No Preference</option>
+					<option value="AB" {% if user.province is same as ('AB') %} selected="selected" {% endif %}>Alberta</option>
+					<option value="BC" {% if user.province is same as ('BC') %} selected="selected" {% endif %}>British Columbia</option>
+					<option value="MB" {% if user.province is same as ('MB') %} selected="selected" {% endif %}>New Brunswick</option>
+					<option value="NL" {% if user.province is same as ('NL') %} selected="selected" {% endif %}>Newfoundland & Labrador</option>
+					<option value="NT" {% if user.province is same as ('NT') %} selected="selected" {% endif %}>Northwest Territories</option>
+					<option value="NS" {% if user.province is same as ('NS') %} selected="selected" {% endif %}>Nova Scotia</option>
+					<option value="NU" {% if user.province is same as ('NU') %} selected="selected" {% endif %}>Nunavut</option>
+					<option value="ON" {% if user.province is same as ('ON') %} selected="selected" {% endif %}>Ontario</option>
+					<option value="PE" {% if user.province is same as ('PE') %} selected="selected" {% endif %}>Prince Edward Island</option>
+					<option value="QC" {% if user.province is same as ('QC') %} selected="selected" {% endif %}>Quebec</option>
+					<option value="SK" {% if user.province is same as ('SK') %} selected="selected" {% endif %}>Saskatchewan</option>
+					<option value="YT" {% if user.province is same as ('YT') %} selected="selected" {% endif %}>Yukon</option>
+				</select>
+			</div>
+			<div class="col-sm-6">
+				<label for="postalCode" class="form-label">Postal Code</label>
+				<input type="text" class="form-control" name="postalCode" value="{{user.postalCode}}">
+				<div class="err-msg">{{er.postalCode}}</div>
+			</div>
+			<div class="mb-3 form-check">
+				<input type="checkbox" class="form-check-input" name="becomeBroker">
+				<label class="form-check-label" for="becomeBroker">I'm a broker</label>
+			</div>
+			<div class="mb-3">
+				<label for="licenseNo" class="form-label">license Number</label>
+				<input type="text" name="licenseNo" class="form-control" value="{{user.licenseNo}}" placeholder="AAA000000AAA">
+				<div class="err-msg">{{er.licenseNo}}</div>
+			</div>
+			<div class="mb-3">
+				<label for="company" class="form-label">Company name that you work for</label>
+				<input type="text" name="company" class="form-control" value="{{user.company}}">
+				<div class="err-msg">{{er.company}}</div>
+			</div>
+			<button type="submit" class="btn btn-primary" name="submit">Submit</button>
 
 
-	</div>
-</form>
+		</div>
+	</form>
+</div>

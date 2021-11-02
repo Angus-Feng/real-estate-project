@@ -26,8 +26,16 @@
         })
 
         $('#changePass').click(function() {
+            
             $('.profile').hide();
             $('.changePass').show();
+            
+        });
+
+        $('.changePass').on('submit', function(e) {
+
+            $('.pass_err').html("");
+            e.preventDefault();
             var origPw = $("input[name=origPw]").val();
             var newPw = $("input[name=newPw]").val();
             var newPwRepeat = $("input[name=newPwRepeat]").val();
@@ -37,10 +45,15 @@
                     url: '/profile/changepass',
                     type: 'post',
                     data: jsonString,
-                    dataType: 'json',
+                    dataType: 'json'
                 }).done(function(retVal) {
                     if (retVal == 1) {
-                        
+                        $("input[name=origPw]").val("");
+                        $("input[name=newPw]").val("");
+                        $("input[name=newPwRepeat]").val("");
+                        $('.pass_err').html("Password changed successfully.");
+                    } else {
+                        $('.pass_err').html(retVal);
                     }
                 })
         });
@@ -50,6 +63,7 @@
             $('.profile').show();
             $('.changePass').hide();
         });
+
     }) // document.ready
     </script>
 {% endblock %}
@@ -61,7 +75,7 @@
 
 {% block content %}
     {% if user.role is same as("broker") %}
-    {% include "profile-broker.html.twig" %}
+        {% include "profile-broker.html.twig" %}
     {% else %}
         {% include "profile-buyer.html.twig" %}
     {% endif %}
