@@ -233,7 +233,9 @@ $app->post('/profile', function ($request, $response, $args) {
 
 $app->post('/profile/uploadPhoto', function ($request, $response, $args) {
 
-    $id = $_SESSION['user']['id'];
+    if (!($id = @$_SESSION['user']['id'])) {
+        return $response->write("Please login first.");
+    }
     $broker = DB::queryFirstRow("SELECT licenseNo FROM users WHERE id = %i", $id);
     $photo = $request->getUploadedFiles()['image'];
     $photoFilePath = NULL;
@@ -248,8 +250,39 @@ $app->post('/profile/uploadPhoto', function ($request, $response, $args) {
     return $response;
 });
 
-$app->post('/profile/changepass', function ($request, $response, $args) {
+$app->post('/profile/changepass', function ($request, $response, $args) use($log) {
+
+    if (!($id = @$_SESSION['user']['id'])) {
+        return $response->getBody()->write(json_encode("Please login first."));
+    }
     $retVal = 1;
-    $response->write($retVal);
+    $json = $request->getBody();
+    $passList = json_decode($json, TRUE);
+    $origPw = $passList['origPw'];
+    $newPw = $passList['newPw'];
+    $newPwRepeat = $passList['newPwRepeat'];
+    $result = DB::queryFirstRow("SELECT `password` FROM users WHERE id =%i", $id);
+    $loginCheck = ($result != NULL) && (password_verify($origPw, $result['password'])); 
+    if (!$loginCheck) {
+        $retVal = "The original password is incorrect.";
+        $response->getBody()->write(json_encode($retVal));
+        return $response;
+    }
+    if(verifyPasswords($newPw) !== TRUE) {
+        $retVal = verifyPasswords($newPw);
+    }
+    if($newPw !== $newPwRepeat) {
+        $retVal = 'Please enter the same password in repeat.';
+    }
+    if (!$retVal) {
+        if ($_SESSION['user']['role'] == 'broker') {
+            $password = password_hash($newPw, PASSWORD_DEFAULT, ['cost' => 12]);
+        } else {
+            $password = password_hash($newPw, PASSWORD_DEFAULT);
+        }
+        DB::update('users', ['password' => $password], "id=%i", $id);
+        $log->debug(sprintf("user password changed id=%s", $id));
+    }
+    $response->getBody()->write(json_encode($retVal));
     return $response;
 });
