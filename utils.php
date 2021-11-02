@@ -37,15 +37,15 @@ function verifyUploadedBuyerProfilePhoto($photo, &$filePath) {
 }
 
 function verifyUploadedBrokerProfilePhoto($photo, &$filePath, $licenseNo) {
-    // if ($photo->getError() !== UPLOAD_ERR_OK) {
-    //     return 'There was an error uploading the photo.';
-    // }
+    if ($photo->getError() !== UPLOAD_ERR_OK) {
+        return 'There was an error uploading the photo.';
+    }
 
     $info = getimagesize($photo->file);
 
-    if ($info[0] < 127 || $info[0] > 127 || $info[1] < 150 || $info[1] > 150) {
-        return "Width must be 127px and height must be 150px.";
-    }
+    // if ($info[0] < 127 || $info[0] > 127 || $info[1] < 150 || $info[1] > 150) {
+    //     return "Width must be 127px and height must be 150px.";
+    // }
 
     $ext = "";
     switch ($info['mime']) {

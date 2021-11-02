@@ -37,12 +37,12 @@
 				<div class="col-3">
 					<div class="p-3 border bg-light">
 						<div class="card">
-						{% if userId %}
+						{% if userSession %}
 							{% if property.id in favProperties %}
-								<div class='btn corner' method='unlike' propertyId="{{property.id}}" userId='{{userId}}'> 
+								<div class='btn corner' method='unlike' propertyId="{{property.id}}" userId='{{userSession.id}}'> 
 								<img class='unlike' id='{{property.id}}' src='images/addedFavourite.png' title='remove favourite' width="30px"></div>
 							{% else %}
-								<div class='btn corner' method='like' propertyId="{{property.id}}" userId='{{userId}}'> 
+								<div class='btn corner' method='like' propertyId="{{property.id}}" userId='{{userSession.id}}'> 
 								<img class='like' id='{{property.id}}' src='images/addFavourite.png' title='add favourite' width="30px"></div>
 							{% endif %}
 						{% endif %}

@@ -71,7 +71,7 @@ $container['view'] = function ($c) {
     ]);
     //
     $view->getEnvironment()->addGlobal('test1', 'VALUE');
-    $view->getEnvironment()->addGlobal('user', @$_SESSION['user']);
+    $view->getEnvironment()->addGlobal('userSession', @$_SESSION['user']);
     // Instantiate and add Slim specific extension
     $router = $c->get('router');
     $uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER));

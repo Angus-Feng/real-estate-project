@@ -13,7 +13,7 @@ $app->get('/properties', function ($request, $response, $args) {
         foreach ($favourites as $favourite) {
             $propertyList []= $favourite['propertyId'];
         }
-        return $this->view->render($response, 'properties.html.twig', ['properties' => $properties, 'userId' => $_SESSION['user']['id'], 'favProperties' => $propertyList]);
+        return $this->view->render($response, 'properties.html.twig', ['properties' => $properties, 'favProperties' => $propertyList]);
     } 
     return $this->view->render($response, 'properties.html.twig', ['properties' => $properties]);
 });

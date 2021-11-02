@@ -125,6 +125,7 @@ $app->get('/profile', function ($request, $response, $args) {
         return $response->withRedirect($this->router->pathFor('login'));
     } else {
         $result = DB::queryFirstRow("SELECT * FROM users WHERE id = $id");
+        unset($result['password']);
         return $this->view->render($response, 'profile.html.twig', ['user' => $result]);
     }
 })->setName('profile');
@@ -228,4 +229,27 @@ $app->post('/profile', function ($request, $response, $args) {
             return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'er' => $errors]);
         }
     }
+});
+
+$app->post('/profile/uploadPhoto', function ($request, $response, $args) {
+
+    $id = $_SESSION['user']['id'];
+    $broker = DB::queryFirstRow("SELECT licenseNo FROM users WHERE id = %i", $id);
+    $photo = $request->getUploadedFiles()['image'];
+    $photoFilePath = NULL;
+    $retVal = 1;
+    if (verifyUploadedBrokerProfilePhoto($photo, $photoFilePath, $broker['licenseNo']) !== TRUE) {
+        $retVal = verifyUploadedBrokerProfilePhoto($photo, $photoFilePath, $broker['licenseNo']);
+    } else {
+        $photo->moveTo($photoFilePath);
+        DB::update('users', ['photoFilePath' => $photoFilePath], 'id=%i', $id);
+    }
+    $response->write($retVal);
+    return $response;
+});
+
+$app->post('/profile/changepass', function ($request, $response, $args) {
+    $retVal = 1;
+    $response->write($retVal);
+    return $response;
 });

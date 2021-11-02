@@ -1,5 +1,59 @@
 {% extends "master.html.twig" %}
 
+{% block addHead %}
+    <script>
+    $(document).ready(function() {
+
+       $('#changePhoto').on('submit', function(e) {
+
+           e.preventDefault();
+            // Check file selected or not
+            $.ajax({
+                 url: '/profile/uploadPhoto',
+                type: 'post',
+                data: new FormData(this),
+                contentType: false,
+                processData: false,
+                success: function(retVal) {
+                    if (retVal == 1) {
+                        $('.img-thumbnail').show();
+                        location.reload();
+                    } else {
+                        $('.img_err').html(retVal);
+                    }
+                }
+            })
+        })
+
+        $('#changePass').click(function() {
+            $('.profile').hide();
+            $('.changePass').show();
+            var origPw = $("input[name=origPw]").val();
+            var newPw = $("input[name=newPw]").val();
+            var newPwRepeat = $("input[name=newPwRepeat]").val();
+            var passObj = {origPw: origPw, newPw: newPw, newPwRepeat: newPwRepeat};
+            var jsonString = JSON.stringify(passObj);
+            $.ajax({
+                    url: '/profile/changepass',
+                    type: 'post',
+                    data: jsonString,
+                    dataType: 'json',
+                }).done(function(retVal) {
+                    if (retVal == 1) {
+                        
+                    }
+                })
+        });
+
+        $('#changeProf').click(function() {
+            
+            $('.profile').show();
+            $('.changePass').hide();
+        });
+    }) // document.ready
+    </script>
+{% endblock %}
+
 {% block header %}
     <h1>Profile</h1>
     <h3>{{success}}</h3>

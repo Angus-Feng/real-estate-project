@@ -1,79 +1,121 @@
-<form method="post">
-	<div class="row g-3">
-		<div class="mb-3">
-			<label for="email" class="form-label">Email</label>
-			<input readonly type="text" class="form-control" name="email" value="{{user.email}}">
+<div class='with_sidebar'>
+	<ul class="nav flex-column">
+		<form method="post" action="/profile/uploadPhoto" enctype="multipart/form-data" id="changePhoto">
+			<label class="btn btn-default" title='change your photo' type='submit'>
+				<img src="/{{user.photoFilePath}}" class="img-thumbnail" alt="broker_image">
+				<input type="file" id='changeBrokerPhoto' name='image' hidden>
+				<div class="err-msg img_err"></div>
+			</label>
+			<button type="submit" class="btn btn-primary" name="submit">Change</button>
+		</form>
+		<li class="nav-item">
+			<a class="nav-link active" aria-current="page" href="/addproperty">Add a property</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="/mypropertylist">View my properties</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#" id='changeProf'>View and Change profile</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#" id='changePass'>Change password</a>
+		</li>
+	</ul>
+	<form class='changePass' style="display: none;">
+		<div class="row g-3">
+			<div class="err-msg pass_err"></div>
+			<div class="mb-3">
+				<label for="origPw" class="form-label">Current Password</label>
+				<input type="password" name="origPw" class="form-control">
+			</div>
+			<div class="mb-3">
+				<label for="newPw" class="form-label">New Password</label>
+				<input type="password" name="newPw" class="form-control">
+			</div>
+			<div class="mb-3">
+				<label for="newPwRepeat" class="form-label">Re-enter new password</label>
+				<input type="password" name="newPwRepeat" class="form-control">
+			</div>
+			<button class="btn btn-primary" id="btnChangePass">Submit</button>
 		</div>
-		<div class="col-sm-6">
-			<label for="firstName" class="form-label">First Name</label>
-			<input readonly type="text" class="form-control" name="firstName" value="{{user.firstName}}">
-		</div>
-		<div class="col-sm-6">
-			<label for="lastName" class="form-label">Last Name</label>
-			<input readonly type="text" class="form-control" name="lastName" value="{{user.lastName}}">
-		</div>
-		<div class="col-sm-6">
-			<label for="licenseNo" class="form-label">license Number</label>
-			<input readonly type="text" name="licenseNo" class="form-control" value="{{user.licenseNo}}">
-		</div>
-		<div class="col-sm-6">
-			<label for="company" class="form-label">Company name that you work for</label>
-			<input type="text" name="company" class="form-control" value="{{user.company}}">
-		</div>
-		<br>
-		<div class="mb-3">Contact Infomation</div>
-		<div class="col-sm-6">
-			<label for="jobTitle" class="form-label">Title</label>
-			<input type="text" class="form-control" name="jobTitle" value="{{user.jobTitle}}">
-			<div class="err-msg">{{er.jobTitle}}</div>
-		</div>
-		<div class="col-sm-6">
-			<label for="phone" class="form-label">Phone number</label>
-			<input type="text" class="form-control" name="phone" value="{{user.phone}}">
-			<div class="err-msg">{{er.phone}}</div>
-		</div>
+	</form>
+	<form method="post" class='profile'>
+		<div class="row g-3">
+			<div class="mb-3">
+				<label for="email" class="form-label">Email</label>
+				<input readonly type="text" class="form-control" name="email" value="{{user.email}}">
+			</div>
+			<div class="col-sm-6">
+				<label for="firstName" class="form-label">First Name</label>
+				<input readonly type="text" class="form-control" name="firstName" value="{{user.firstName}}">
+			</div>
+			<div class="col-sm-6">
+				<label for="lastName" class="form-label">Last Name</label>
+				<input readonly type="text" class="form-control" name="lastName" value="{{user.lastName}}">
+			</div>
+			<div class="col-sm-6">
+				<label for="licenseNo" class="form-label">license Number</label>
+				<input readonly type="text" name="licenseNo" class="form-control" value="{{user.licenseNo}}">
+			</div>
+			<div class="col-sm-6">
+				<label for="company" class="form-label">Company name that you work for</label>
+				<input type="text" name="company" class="form-control" value="{{user.company}}">
+			</div>
+			<br>
+			<div class="mb-3">Contact Infomation</div>
+			<div class="col-sm-6">
+				<label for="jobTitle" class="form-label">Title</label>
+				<input type="text" class="form-control" name="jobTitle" value="{{user.jobTitle}}">
+				<div class="err-msg">{{er.jobTitle}}</div>
+			</div>
+			<div class="col-sm-6">
+				<label for="phone" class="form-label">Phone number</label>
+				<input type="text" class="form-control" name="phone" value="{{user.phone}}">
+				<div class="err-msg">{{er.phone}}</div>
+			</div>
 
-		<div class="mb-3">
-			<label for="streetAddress" class="form-label">Street Address</label>
-			<input type="text" class="form-control" name="streetAddress" value="{{user.streetAddress}}">
-			<div class="err-msg">{{er.streetAddress}}</div>
-		</div>
-		<div class="col-sm-6">
-			<label for="appartmentNo" class="form-label">Appartment Number</label>
-			<input type="text" class="form-control" name="appartmentNo" value="{{user.appartmentNo}}">
-			<div class="err-msg">{{er.appartmentNo}}</div>
-		</div>
-		<div class="col-sm-6">
-			<label for="city" class="form-label">City</label>
-			<input type="text" class="form-control" name="city" value="{{user.city}}">
-			<div class="err-msg">{{er.city}}</div>
-		</div>
-		<div class="col-sm-6">
-			<label for="city" class="form-label">Province</label>
-			<select class="form-select" name="province">
-				<option selected>Choose your province</option>
-				<option value="AB">Alberta</option>
-				<option value="BC">British Columbia</option>
-				<option value="MB">New Brunswick</option>
-				<option value="NL">Newfoundland & Labrador</option>
-				<option value="NT">Northwest Territories</option>
-				<option value="NS">Nova Scotia</option>
-				<option value="NU">Nunavut</option>
-				<option value="ON">Ontario</option>
-				<option value="PE">Prince Edward Island</option>
-				<option value="QC">Quebec</option>
-				<option value="SK">Saskatchewan</option>
-				<option value="YT">Yukon</option>
-			</select>
-		</div>
-		<div class="col-sm-6">
-			<label for="postalCode" class="form-label">Postal Code</label>
-			<input type="text" class="form-control" name="postalCode" value="{{user.postalCode}}">
-			<div class="err-msg">{{er.postalCode}}</div>
-		</div>
+			<div class="mb-3">
+				<label for="streetAddress" class="form-label">Street Address</label>
+				<input type="text" class="form-control" name="streetAddress" value="{{user.streetAddress}}">
+				<div class="err-msg">{{er.streetAddress}}</div>
+			</div>
+			<div class="col-sm-6">
+				<label for="appartmentNo" class="form-label">Appartment Number</label>
+				<input type="text" class="form-control" name="appartmentNo" value="{{user.appartmentNo}}">
+				<div class="err-msg">{{er.appartmentNo}}</div>
+			</div>
+			<div class="col-sm-6">
+				<label for="city" class="form-label">City</label>
+				<input type="text" class="form-control" name="city" value="{{user.city}}">
+				<div class="err-msg">{{er.city}}</div>
+			</div>
+			<div class="col-sm-6">
+				<label for="city" class="form-label">Province</label>
+				<select class="form-select" name="province">
+					<option selected>Choose your province</option>
+					<option value="AB">Alberta</option>
+					<option value="BC">British Columbia</option>
+					<option value="MB">New Brunswick</option>
+					<option value="NL">Newfoundland & Labrador</option>
+					<option value="NT">Northwest Territories</option>
+					<option value="NS">Nova Scotia</option>
+					<option value="NU">Nunavut</option>
+					<option value="ON">Ontario</option>
+					<option value="PE">Prince Edward Island</option>
+					<option value="QC">Quebec</option>
+					<option value="SK">Saskatchewan</option>
+					<option value="YT">Yukon</option>
+				</select>
+			</div>
+			<div class="col-sm-6">
+				<label for="postalCode" class="form-label">Postal Code</label>
+				<input type="text" class="form-control" name="postalCode" value="{{user.postalCode}}">
+				<div class="err-msg">{{er.postalCode}}</div>
+			</div>
 
-		<button type="submit" class="btn btn-primary" name="submit">Submit</button>
+			<button type="submit" class="btn btn-primary" name="submit">Submit</button>
 
 
-	</div>
-</form>
+		</div>
+	</form>
+</div>
