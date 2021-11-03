@@ -73,7 +73,6 @@ Nari
 - add Ajax on form
 
 Chris
-Chris
 1. Done / not done since last scrum:
 - Finished image reordering
 2. To do until next Scrum:
