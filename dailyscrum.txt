@@ -1,3 +1,34 @@
+2021/11/03
+
+Nari
+1. Done / not done since last scrum:
+- read google maps api document
+- working on jQuery for multi step form
+- working on ajax for multi step form 
+2. To do until next Scrum:
+- finish multi step form implementation 
+3. Need assistance / figure things out
+- nothing for now
+
+Chris
+1. Done / not done since last scrum:
+- Watch video on pagination
+2. To do until next Scrum:
+- Finish pagination for admin 
+3. Need assistance / figure things out
+- nothing for now
+
+Feng
+1. Done / not done since last scrum:
+- changing password is done
+2. To do until next Scrum:
+- start working on broker detail page 
+- refine property list
+3. Need assistance / figure things out
+- Not for now
+
+----------------------------------------------------------------------------------------------
+
 2021/11/02
 
 Nari
