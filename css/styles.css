@@ -1,3 +1,13 @@
+/* Pusrpose: CSS document for Real estate web site */
+/* Developed by: Feng Han, Chris Lachtman, Nari Roh */
+/* Script Date: October 22, 2021 */
+
+/*******************/
+/* IMPORT base.css */
+/*******************/
+
+@import url("base.css");
+
 /* ---------------------------------------------------------Feng Temp Styles-------------------------------------------------------- */
 
 .err-msg {
@@ -357,3 +367,13 @@
  /* Image Order END */
 
 /* ------------------------------------------------------------------------------------------------------------------------------ */
+
+/****************************/
+/* STYLES FOR BROKER PAGES  */
+/****************************/
+
+/* add property */
+.form-progress {
+    display: flex;
+    /* flex-direction: row; */
+}
