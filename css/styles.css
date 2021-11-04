@@ -373,7 +373,11 @@
 /****************************/
 
 /* add property */
+
 .form-progress {
     display: flex;
-    /* flex-direction: row; */
+}
+
+#property-form fieldset:not(:first-of-type) {
+    display: none;
 }
