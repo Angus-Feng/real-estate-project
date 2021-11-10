@@ -10,8 +10,7 @@ $app->get('/addproperty', function ($request, $response, $args) {
     if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
-    $provinces = ['NL', 'PE', 'NS', 'NB', 'QC', 'ON', 'MB', 'SK', 'AB', 'BC', 'YT', 'NT', 'NU'];
-    return $this->view->render($response, 'broker/addproperty.html.twig', ['provList' => $provinces]);
+    return $this->view->render($response, 'broker/addproperty.html.twig');
 });
 
 // POST '/addproperty'
@@ -34,7 +33,7 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     $city = $request->getParam('city');
     $province = $request->getParam('province');
     $postalCode = $request->getParam('postalCode');
-
+    print_r($province);
     // validation
     $errorList = [];
 
@@ -68,10 +67,14 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     if (verifyCityName($city) !== TRUE) {
         $errorList['city'] = verifyCityName($city);
     }
+    if (verifyProvince($province) !== TRUE) {
+        $errorList['province'] = verifyProvince($province);
+    }
     if (verifyPostalCode($postalCode) !== TRUE) {
         $errorList['postalCode'] = verifyPostalCode($postalCode);
     }
-    // TODO: user can select a province, otherwise display error message
+    // strip the space in postal code.
+    $postalCode = str_replace(' ', '', $postalCode);
 
     $valueList = [
         'brokerId' => $brokerId,

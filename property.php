@@ -33,3 +33,21 @@ $app->get('/addFav', function ($request, $response, $args) {
     }
     return $response->withJson ([ 'error'=>1, 'errorCode'=>'failed' ], 400);
 });
+
+$app->get('/profile/viewFav', function ($request, $response, $args) {
+    
+    $userId = $_SESSION['user']['id'];
+    $favList = DB:: query("SELECT * FROM favourites f, properties p WHERE f.propertyId = p.id AND f.userId = %i", $userId);
+    $response->getBody()->write(json_encode($favList));
+    return $response;
+
+});
+
+$app->delete('/profile/removeFav/{id:[0-9]+}', function ($request, $response, $args) {
+    
+    $propertyId = $args['id'];
+    $userId = $_SESSION['user']['id'];
+    DB::query("DELETE FROM favourites WHERE userId=%i AND propertyId=%i", $userId, $propertyId);
+    return $response->withJson ([ 'success' => 2 ], 200);
+
+});
