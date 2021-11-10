@@ -2,6 +2,36 @@
 
 Nari
 1. Done / not done since last scrum:
+- implement dropdown select for province
+- working on jQuery for multi step form
+2. To do until next Scrum:
+- finish multi step form validation 
+3. Need assistance / figure things out
+- multi step form validation on server side or client side 
+
+Chris
+1. Done / not done since last scrum:
+- Fixed some CSS issues
+2. To do until next Scrum:
+- Finish pagination for admin 
+3. Need assistance / figure things out
+- Nothing for now
+
+Feng
+1. Done / not done since last scrum:
+- buyers can review and delete favourite in profile page
+2. To do until next Scrum:
+- start working on broker detail page 
+- refine property list
+3. Need assistance / figure things out
+- Not for now
+
+----------------------------------------------------------------------------------------------
+
+2021/11/03
+
+Nari
+1. Done / not done since last scrum:
 - read google maps api document
 - working on jQuery for multi step form
 - working on ajax for multi step form 
