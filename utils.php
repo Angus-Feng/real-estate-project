@@ -87,7 +87,7 @@ function verifyUploadedHousePhoto($photo, &$filePath, $propertyId, $firstPhoto) 
             break;
         case 'image/gif':
             $ext = "gif";
-            imagegif(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/640p-'  . $generatedFileName . "." . $ext);
+            imagegif(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/640p-' . $generatedFileName . "." . $ext);
             imagegif(resizeImage($photo, $info[0], $info[1], "jpg"), 'uploads/' . $propertyId . '/orig-' . $generatedFileName . "." . $ext);
             if ($firstPhoto === TRUE) {
                 imagegif(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/thmb-' . $generatedFileName . "." . $ext);
@@ -95,7 +95,7 @@ function verifyUploadedHousePhoto($photo, &$filePath, $propertyId, $firstPhoto) 
             break;
         case 'image/png':
             $ext = "png";
-            imagepng(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/640p-'  . $generatedFileName . "." . $ext);
+            imagepng(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/640p-' . $generatedFileName . "." . $ext);
             imagepng(resizeImage($photo, $info[0], $info[1], "jpg"), 'uploads/' . $propertyId . '/orig-' . $generatedFileName . "." . $ext);
             if ($firstPhoto === TRUE) {
                 imagepng(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/thmb-' . $generatedFileName . "." . $ext);
