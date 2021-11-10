@@ -10,21 +10,15 @@ $app->get('/addproperty', function ($request, $response, $args) {
     if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
-
     return $this->view->render($response, 'broker/addproperty.html.twig');
 });
 
 // POST '/addproperty'
 $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     $brokerId = @$_SESSION['user']['id'];
-
     if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
-
-    echo '<pre>';
-    print_r($_FILES);
-    echo '</pre>';
 
     // extract values 
     $price = $request->getParam('price');
@@ -39,44 +33,48 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     $city = $request->getParam('city');
     $province = $request->getParam('province');
     $postalCode = $request->getParam('postalCode');
-
+    print_r($province);
     // validation
     $errorList = [];
 
     if (verifyPrice($price) !== TRUE) {
-        $errorList[] = verifyPrice($title);
+        $errorList['price'] = verifyPrice($price);
     }
     if (verifyTitle($title) !== TRUE) {
-        $errorList[] = verifyTitle($title);
+        $errorList['title'] = verifyTitle($title);
     }
     if (verifyBedrooms($bedrooms) !== TRUE) {
-        $errorList[] = verifyBedrooms($bedrooms);
+        $errorList['bedrooms'] = verifyBedrooms($bedrooms);
     }
     if (verifyBathrooms($bathrooms) !== TRUE) {
-        $errorList[] = verifyBathrooms($bathrooms);
+        $errorList['bathrooms'] = verifyBathrooms($bathrooms);
     }
     if (verifyBuildingYear($buildingYear) !== TRUE) {
-        $errorList[] = verifyBuildingYear($buildingYear);
+        $errorList['buildingYear'] = verifyBuildingYear($buildingYear);
     }
     if (verifyLotArea($lotArea) !== TRUE) {
-        $errorList[] = verifyLotArea($lotArea);
+        $errorList['lotArea'] = verifyLotArea($lotArea);
     }
     if (verifyDescription($description) !== TRUE) {
-        $errorList[] = verifyDescription($description);
+        $errorList['description'] = verifyDescription($description);
     }
     if (verifyAppartmentNo($appartmentNo) !== TRUE) {
-        $errorList[] = verifyAppartmentNo($appartmentNo);
+        $errorList['appartmentNo'] = verifyAppartmentNo($appartmentNo);
     }
     if (verifyStreetAddress($streetAddress) !== TRUE) {
-        $errorList[] = verifyStreetAddress($streetAddress);
+        $errorList['streetAddress'] = verifyStreetAddress($streetAddress);
     }
     if (verifyCityName($city) !== TRUE) {
-        $errorList[] = verifyCityName($city);
+        $errorList['city'] = verifyCityName($city);
+    }
+    if (verifyProvince($province) !== TRUE) {
+        $errorList['province'] = verifyProvince($province);
     }
     if (verifyPostalCode($postalCode) !== TRUE) {
-        $errorList[] = verifyPostalCode($postalCode);
+        $errorList['postalCode'] = verifyPostalCode($postalCode);
     }
-    // TODO: user can select a province, otherwise display error message
+    // strip the space in postal code.
+    $postalCode = str_replace(' ', '', $postalCode);
 
     $valueList = [
         'brokerId' => $brokerId,

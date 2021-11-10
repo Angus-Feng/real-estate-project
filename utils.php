@@ -330,15 +330,20 @@ function verifyCityName($city) { //TEST REGEX
     return TRUE;
 }
 
-// function verifyProvince($province) { //TEST REGEX
-//     if ($province == "") {
-//         return TRUE;
-//     }
-//     if (!preg_match('/^[A-Z]{2}$/', $province)) {
-//         return "Province must be in the following format: QC.";
-//     }
-//     return TRUE;
-// }
+function verifyProvince($province) { //TEST REGEX
+    // if ($province == "") {
+    //     return TRUE;
+    // }
+    // if (!preg_match('/^[A-Z]{2}$/', $province)) {
+    //     return "Province must be in the following format: QC.";
+    // }
+
+    // when province is not selected
+    if ($province == 'none') {
+        return "Province is not selected.";
+    }
+    return TRUE;
+}
 
 function verifyPostalCode($postalCode) { //TEST REGEX
     if ($postalCode == "") {
