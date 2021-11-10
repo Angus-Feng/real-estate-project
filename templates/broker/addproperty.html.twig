@@ -77,7 +77,6 @@
             <!-- FORM STEP-2 -->
             <fieldset class="form-step">
                 <label for="">Location</label>
-                {# TODO: dropdown disply for province #}
                 <div class="form-group">
                     <label for="">Stree address</label>
                     <input type="text" name="streetAddress" value="{{ values.streetAddress }}" />
@@ -86,7 +85,16 @@
                     <label for="">City</label>
                     <input type="text" name="city" value="{{ values.city }}" />
                     <label for="">Province</label>
-                    <input type="text" name="province" value="{{ values.province }}" />
+                    <select name="province">
+                        <option value="none">Select Province</option>
+
+                        {% for province in provList %}
+
+                        <option value="{{ province }}">{{ province }}</option>
+                            
+                        {% endfor %}
+                      </select>
+                    <!-- <input type="text" name="province" value="{{ values.province }}" /> -->
                     <label for="">Postal code</label>
                     <input type="text" name="postalCode" value="{{ values.postalCode }}" />
                 </div>
