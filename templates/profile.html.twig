@@ -28,6 +28,7 @@
         $('#changePass').click(function() {
             
             $('.profile').hide();
+            $('.viewFav').hide();
             $('.changePass').show();
             
         });
@@ -62,9 +63,53 @@
             
             $('.profile').show();
             $('.changePass').hide();
+            $('.viewFav').hide();
         });
 
+        $('#viewFav').click(function() {
+            viewFav();
+        })
+
     }) // document.ready
+
+    function viewFav() {
+
+        $('.profile').hide();
+            $('.changePass').hide();
+            $('.viewFav').show();
+
+            $.ajax({
+                url: '/profile/viewFav',
+                type: 'GET',
+                dataType: 'json',
+                success: function (favList) {
+                    var body = "";
+                    for (var i = 0; i < favList.length; i++) {
+                        var property = favList[i];
+                        body += '<div class="col-3"><div class="p-3 border bg-light">';
+                        body += '<div class="card">';
+                        body += '<img src="/images/ninja.png" class="card-img-top" alt="property photo">';
+                        body += '<div class="card-body">';
+                        body += '<h5 class="card-title">' + property.price + '</h5>';
+                        body += '<p class="card-text">' + (property.appartmentNo ? "#" + property.appartmentNo + " " : "") + property.streetAddress + ', ' + property.city + ', ' + property.province + '</p>';
+                        body += '<p class="card-text">' +property.bedrooms + 'bedroom(s)' + ' + ' + property.bathrooms + 'bathroom(s)</p>';
+                        body += '<a href="#" class="btn btn-primary">View details</a><a href="#" class="btn btn-danger" onclick="deleteFav(' + property.id + ')">remove</a>';
+                        body += '</div></div></div></div>';
+                    }
+                    $('.viewFav div:first-child').html(body);
+                }
+            })
+    }
+
+    function deleteFav(propertyId) {
+        $.ajax({
+            url: '/profile/removeFav/' + propertyId,
+            type: 'DELETE',
+            dataType: 'json'
+        })
+        viewFav();
+    }
+
     </script>
 {% endblock %}
 
