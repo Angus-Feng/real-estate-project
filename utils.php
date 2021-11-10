@@ -349,7 +349,7 @@ function verifyPostalCode($postalCode) { //TEST REGEX
     if ($postalCode == "") {
         return TRUE;
     }
-    if (!preg_match('/[a-zA-Z][0-9][a-zA-Z][\ ]{0,1}[0-9][a-zA-z][0-9]/', $postalCode)) {
+    if (!preg_match('/^[a-zA-Z][0-9][a-zA-Z][\ ]{0,1}[0-9][a-zA-z][0-9]$/', $postalCode)) {
         return "Postal code must be in the following format: H9X3L9.";
     }
     return TRUE;
