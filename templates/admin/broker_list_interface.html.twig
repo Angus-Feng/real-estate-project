@@ -1,6 +1,6 @@
 {% extends "admin/interface_admin.html.twig" %}
 
-{% block title %}Properties
+{% block title %}Brokers
 {% endblock %}
 
 {% block addHead %}
@@ -9,19 +9,22 @@
         var currPageNo = {{pageNo}};
 
         window.addEventListener('popstate', (event) => {
+            // console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
             loadPage(event.state.page, true);
         });
 
         function loadPage(newPageNo, noHistory = false) {
             if (newPageNo < 1 || newPageNo > {{maxPages}}) return;
+            // remove bold from previously current page and put bold on the new currrent page nav link
             $("#pageNav" + currPageNo).css("font-weight","Normal");
             $("#pageNav" + newPageNo).css("font-weight","Bold");
             currPageNo = newPageNo;
+            // only show prev and next if they are useful
             $("#pageNavPrev").toggle(newPageNo > 1);
             $("#pageNavNext").toggle(newPageNo < {{maxPages}});
-            $(".propertyTable").load("/propertydata/" + currPageNo);
+            $(".articlePreviewBox").load("/propertysinglepage/" + currPageNo);
             if (noHistory == false) {
-                history.pushState({page: currPageNo}, '', '/admin/property/list/' + currPageNo);
+                history.pushState({page: currPageNo}, '', '/admin/brokers/list/' + currPageNo);
             }
         }
 
@@ -37,13 +40,13 @@
     </script>
 {% endblock %}
 
-{% block contentHeader %}Property List
+{% block contentHeader %}Brokers List
 {% endblock %}
 
 {% block content %}
 
 	<p>
-		<a href="/admin/property/add">Add a new property</a>
+		<a href="/admin/user/add">Add a new broker</a>
 	</p>
 			<div class="pageNavigation">
 			<span id="pageNavPrev" onclick="loadPage(currPageNo-1)">Previous</span>
@@ -76,7 +79,7 @@
 			</thead>
 
 			{# Table body loaded in here #}
-			<tbody class="propertyTable"></tbody>
+			<tbody class="articlePreviewBox"></tbody>
 
 		</table>
 	</div>

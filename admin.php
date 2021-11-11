@@ -474,9 +474,26 @@ $app->post('/admin/users/delete/{id:[0-9]+}', function ($request, $response, $ar
 // Properties
 
 // View a list of all properties and their information
-$app->get('/admin/property/list', function ($request, $response, $args) {
-    $propertyList = DB::query("SELECT * FROM properties");
-    return $this->view->render($response, 'admin/property_list_interface.html.twig', ['propertyList' => $propertyList]);
+$propertiesPerPage = 8;
+$app->get('/admin/property/list[/{pageNo:[0-9]+}]', function ($request, $response, $args) {
+    global $propertiesPerPage;
+    $pageNo = $args['pageNo'] ?? 1;
+    $propertiesCount = DB::queryFirstField("SELECT COUNT(*) AS COUNT FROM properties");
+    $maxPages = ceil($propertiesCount / $propertiesPerPage);
+    return $this->view->render($response, 'admin/property_list_interface.html.twig', [
+        'maxPages' => $maxPages,
+        'pageNo' => $pageNo,
+    ]);
+});
+
+$app->get('/propertydata/{pageNo:[0-9]+}', function ($request, $response, $args) {
+    global $propertiesPerPage;
+    $pageNo = $args['pageNo'] ?? 1;
+    $propertyList = DB::query("SELECT * FROM properties ORDER BY id ASC LIMIT %d OFFSET %d",
+             $propertiesPerPage, ($pageNo - 1) * $propertiesPerPage);
+    return $this->view->render($response, 'admin/load_pagination_data.html.twig', [
+            'propertyList' => $propertyList
+        ]);
 });
 
 // Add property: GET
@@ -821,9 +838,29 @@ $app->post('/admin/property/delete/{id:[0-9]+}', function ($request, $response, 
 // Pending Brokers
 
 // View a list of all pending brokers and their information
-$app->get('/admin/pending/list', function ($request, $response, $args) {
-    $pendingUserList = DB::query("SELECT * FROM brokerpendinglist");
-    return $this->view->render($response, 'admin/pending_list.html.twig', ['list' => $pendingUserList]);
+$pendingPerPage = 8;
+$app->get('/admin/pending/list[/{pageNo:[0-9]+}]', function ($request, $response, $args) {
+    // $pendingUserList = DB::query("SELECT * FROM brokerpendinglist");
+    // return $this->view->render($response, 'admin/pending_list.html.twig', ['list' => $pendingUserList]);
+
+    global $pendingPerPage;
+    $pageNo = $args['pageNo'] ?? 1;
+    $pendingCount = DB::queryFirstField("SELECT COUNT(*) AS COUNT FROM brokerpendinglist");
+    $maxPages = ceil($pendingCount / $pendingPerPage);
+    return $this->view->render($response, 'admin/pending_list_interface.html.twig', [
+        'maxPages' => $maxPages,
+        'pageNo' => $pageNo,
+    ]);
+});
+
+$app->get('/pendingdata/{pageNo:[0-9]+}', function ($request, $response, $args) {
+    global $pendingPerPage;
+    $pageNo = $args['pageNo'] ?? 1;
+    $pendingList = DB::query("SELECT * FROM brokerpendinglist ORDER BY id ASC LIMIT %d OFFSET %d",
+             $pendingPerPage, ($pageNo - 1) * $pendingPerPage);
+    return $this->view->render($response, 'admin/load_pagination_data.html.twig', [
+            'pendingList' => $pendingList
+        ]);
 });
 
 $app->get('/admin/pending/{choice:accept|decline}/{id:[0-9]+}', function ($request, $response, $args) {
