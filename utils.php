@@ -221,7 +221,7 @@ function verifyPasswords($password) {
         || (preg_match("/[A-Z]/", $password) !== 1)
         || (preg_match("/[a-z]/", $password) !== 1)
         || (preg_match("/[0-9]/", $password) !== 1)
-        || (preg_match("/[#?!@$%^&*-]/", $password) !== 1)
+        || (preg_match("/[#?!@$%^&*-+]/", $password) !== 1)
     ) {
         return "Minimum 8 characters including minimum 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.";
     }
@@ -409,4 +409,15 @@ function verifyDescription($description) { //TEST REGEX
         return "Title must be between 1 - 2000 characters long.";
     }
     return TRUE;
+}
+
+function utf8ize( $mixed ) {
+    if (is_array($mixed)) {
+        foreach ($mixed as $key => $value) {
+            $mixed[$key] = utf8ize($value);
+        }
+    } elseif (is_string($mixed)) {
+        return mb_convert_encoding($mixed, "UTF-8", "UTF-8");
+    }
+    return $mixed;
 }

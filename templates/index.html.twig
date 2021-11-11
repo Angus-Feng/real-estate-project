@@ -1,9 +1,91 @@
 {% extends "master.html.twig" %}
 
+{% block addHead %}
+  <script>
+
+    $(document).ready(function() {
+
+      $('button[name=propSearch]').click(function() {
+			  minPrice = $("#min-price option:selected").val();
+			  maxPrice = $('#max-price option:selected').val();
+			  beds = $('#beds option:selected').val();
+			  baths = $('#baths option:selected').val();
+			  keyword = $('#keyword').val();
+        window.location.href = '/properties?minPrice=' + minPrice + '&maxPrice=' + maxPrice + '&beds=' + beds + 
+					'&baths=' + baths + '&keyword=' + keyword;
+        return false;
+		  })
+    }) //document ready
+  </script>
+
+{% endblock %}
+
 {% block header %}
     <h1>Index</h1>
 {% endblock %}
 
 {% block content %}
-    
+    <form class="row row-cols-lg-auto g-3 align-items-center">
+        <div class="col-12">
+            <input class="form-control form-control-md" type="text" id="keyword" placeholder="search properties" >
+        </div>
+      
+        <div class="col-12">
+          <select class="form-select" id="min-price">
+            <option value="0" selected>Min Price</option>
+            <option value="0">0</option>
+            <option value="50000">50,000</option>
+            <option value="100000">100,000</option>
+            <option value="200000">200,000</option>
+            <option value="500000">500,000</option>
+          </select>
+        </div>
+      
+        <div class="col-12">
+            <select class="form-select" id="max-price">
+              <option value="1000000000" selected>Max Price</option>
+              <option value="1000000000">Unlimited</option>
+              <option value="1000000">1,000,000</option>
+              <option value="500000">500,000</option>
+              <option value="200000">200,000</option>
+              <option value="100000">100,000</option>
+            </select>
+        </div>
+
+        <div class="col-12">
+            <select class="form-select" id="beds">
+              <option value=">=0" selected>Beds</option>
+              <option value="=1">1</option>
+              <option value=">=1">1+</option>
+              <option value="=2">2</option>
+              <option value=">=2">2+</option>
+              <option value="=3">3</option>
+              <option value=">=3">3+</option>
+              <option value="=4">4</option>
+              <option value=">=4">4+</option>
+              <option value="=5">5</option>
+              <option value=">=5">5+</option>
+            </select>
+        </div>
+
+        <div class="col-12">
+            <select class="form-select" id="baths">
+              <option value=">=0" selected>Baths</option>
+             <option value="=1">1</option>
+              <option value=">=1">1+</option>
+              <option value="=2">2</option>
+              <option value=">=2">2+</option>
+              <option value="=3">3</option>
+              <option value=">=3">3+</option>
+              <option value="=4">4</option>
+              <option value=">=4">4+</option>
+              <option value="=5">5</option>
+              <option value=">=5">5+</option>
+            </select>
+        </div>
+		
+        <div class="col-12">
+          <button class="btn btn-primary" name="propSearch">search</button>
+        </div>
+    </form><br>
 {% endblock %}
