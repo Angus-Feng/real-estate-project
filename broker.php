@@ -3,6 +3,10 @@
 require_once 'vendor/autoload.php';
 require_once 'init.php';
 
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\App;
+
 // Define routes
 
 // GET '/addproperty'
@@ -14,6 +18,66 @@ $app->get('/addproperty', function ($request, $response, $args) {
 });
 
 // POST '/addproperty'
+$app->group('/ajax/addpropertyval', function (App $app) use ($log) {
+
+    // Form step - 1
+    $app->post('/details', function (Request $request, Response $response, array $args) use ($log) {
+        $json = $request->getBody();
+        $details = json_decode($json, TRUE);
+
+        $price = $details['price'];
+        $title = $details['title'];
+        $bedrooms = $details['bedrooms'];
+        $bathrooms = $details['bathrooms'];
+        $buildingYear = $details['buildingYear'];
+        $lotArea = $details['lotArea'];
+        $description = $details['description'];
+        $errorList = [];
+        $result = false;
+
+        if (verifyPrice($price) !== TRUE) {
+            $errorList['price'] = verifyPrice($price);
+        }
+        if (verifyTitle($title) !== TRUE) {
+            $errorList['title'] = verifyTitle($title);
+        }
+        if (verifyBedrooms($bedrooms) !== TRUE) {
+            $errorList['bedrooms'] = verifyBedrooms($bedrooms);
+        }
+        if (verifyBathrooms($bathrooms) !== TRUE) {
+            $errorList['bathrooms'] = verifyBathrooms($bathrooms);
+        }
+        if (verifyBuildingYear($buildingYear) !== TRUE) {
+            $errorList['buildingYear'] = verifyBuildingYear($buildingYear);
+        }
+        if (verifyLotArea($lotArea) !== TRUE) {
+            $errorList['lotArea'] = verifyLotArea($lotArea);
+        }
+        if (verifyDescription($description) !== TRUE) {
+            $errorList['description'] = verifyDescription($description);
+        }
+        if ($errorList) {
+            $response = $response->withStatus(400);
+            $response->getBody()->write(json_encode($errorList));
+            return $response;
+        } else {
+            // FIXME: if validation passes, keep data? 
+            $result = true;
+            $response = $response->withStatus(200);
+            $response->getBody()->write(json_encode($result));
+            return $response;
+        }
+    });
+    // Form step - 2
+    $app->post('/location', function (Request $request, Response $response, array $args) use ($log) {
+
+    });
+    // Form step - 3
+    $app->post('/images', function (Request $request, Response $response, array $args) use ($log) {
+
+    });
+});
+
 $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     $brokerId = @$_SESSION['user']['id'];
     if (@$_SESSION['user']['role'] !== 'broker') {
@@ -33,7 +97,7 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     $city = $request->getParam('city');
     $province = $request->getParam('province');
     $postalCode = $request->getParam('postalCode');
-    print_r($province);
+
     // validation
     $errorList = [];
 
