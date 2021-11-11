@@ -300,9 +300,9 @@ function verifyJobTitle($jobTitle) { //TEST REGEX
 }
 
 function verifyAppartmentNo($appartmentNo) { //TEST REGEX
-    if ($appartmentNo == "") {
-        return TRUE;
-    }
+    // if ($appartmentNo == "") {
+    //     return TRUE;
+    // }
     if (!preg_match('/^[0-9]+/', $appartmentNo)) {
         return "Appartment number can only be made up of numbers.";
     }
@@ -311,9 +311,9 @@ function verifyAppartmentNo($appartmentNo) { //TEST REGEX
 
 
 function verifyUserStreetAddress($streetAddress) { //TEST REGEX
-    if ($streetAddress == "") {
-        return TRUE;
-    }
+    // if ($streetAddress == "") {
+    //     return TRUE;
+    // }
     if (!preg_match('/[a-zA-Z0-9\.\'\-\s]+/', $streetAddress) || strlen($streetAddress) < 1 || strlen($streetAddress) > 100) {
         return "Street name must be between 1 - 100 characters long and can only contain letters, periods, apostrophes and hyphens.";
     }
@@ -321,9 +321,9 @@ function verifyUserStreetAddress($streetAddress) { //TEST REGEX
 }
 
 function verifyCityName($city) { //TEST REGEX
-    if ($city == "") {
-        return TRUE;
-    }
+    // if ($city == "") {
+    //     return TRUE;
+    // }
     if (!preg_match('/[a-zA-Z\.\'\-\s]+/', $city) || strlen($city) < 1 || strlen($city) > 100) {
         return "City name must be between 1 - 100 characters long and can only contain letters, periods, apostrophes and hyphens.";
     }
@@ -346,9 +346,9 @@ function verifyProvince($province) { //TEST REGEX
 }
 
 function verifyPostalCode($postalCode) { //TEST REGEX
-    if ($postalCode == "") {
-        return TRUE;
-    }
+    // if ($postalCode == "") {
+    //     return TRUE;
+    // }
     if (!preg_match('/^[a-zA-Z][0-9][a-zA-Z][\ ]{0,1}[0-9][a-zA-z][0-9]$/', $postalCode)) {
         return "Postal code must be in the following format: H9X3L9.";
     }
