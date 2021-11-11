@@ -406,7 +406,7 @@ function verifyStreetAddress($streetAddress) { //TEST REGEX
 
 function verifyDescription($description) { //TEST REGEX
     if (strlen($description) < 1 || strlen($description) > 2000) {
-        return "Title must be between 1 - 2000 characters long.";
+        return "Description must be between 1 - 2000 characters long.";
     }
     return TRUE;
 }
