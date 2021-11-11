@@ -6,7 +6,7 @@ $(document).ready(function() {
 	showProvinces();
 
 	var validationCount = 0;
-	console.log(validationCount);
+	// console.log(validationCount);
 	
 	// $(".next").click(function() {
 	// 	currentStep = $(this).parents('.form-step');
@@ -15,17 +15,23 @@ $(document).ready(function() {
 	// 	currentStep.hide();
 	// });
 
-	// $(".prev").click(function() {
-	// 	currentStep = $(this).parents('.form-step');
-	// 	prevStep = $(this).parents().prev();
-	// 	prevStep.show();
-	// 	currentStep.hide();
-	// });
+	$(".prev").click(function() {
+		currentStep = $(this).parents('.form-step');
+		prevStep = $(this).parents().prev();
+		prevStep.show();
+		currentStep.hide();
+	});
 
 	$("#step1").click(function (e) {
 		validateDetails(e);
-		validationCount = 1;
-		console.log(validationCount);
+		// validationCount += 1;
+		// console.log(validationCount);
+	});
+
+	$("#step2").click(function (e) {
+		validateLocation(e);
+		// validationCount += 1;
+		// console.log(validationCount);
 	});
 	
 	// TODO: 
@@ -53,9 +59,31 @@ function validateDetails(e) {
 		description: description
 	};
 	const jsonString = JSON.stringify(detailsObj);
+	ajaxPostRequest('details', jsonString, e);
+}
 
+function validateLocation(e) {
+	const streetAddress = $("input[name=streetAddress]").val();
+	const appartmentNo = $("input[name=appartmentNo]").val();
+	const city = $("input[name=city]").val();
+	const province = $("select[name=province] option:selected").val();
+	const postalCode = $("input[name=postalCode]").val();
+	// console.log(province);
+
+	const locationObj = {
+		streetAddress: streetAddress,
+		appartmentNo: appartmentNo,
+		city: city,
+		province: province,
+		postalCode: postalCode
+	};
+	const jsonString = JSON.stringify(locationObj);
+	ajaxPostRequest('location', jsonString, e);
+}
+
+function ajaxPostRequest(endpoint, jsonString, e) {
 	$.ajax({
-		url: '/ajax/addpropertyval/details',
+		url: `/ajax/addpropertyval/${endpoint}`,
 		type: "POST",
 		data: jsonString,
 		dataType: "json",
@@ -65,17 +93,14 @@ function validateDetails(e) {
 			showErrorMsg(jqxhr);
 		},
 		success: function(result) {
-			if (result) {
-				showNextForm(e);
-			}
+			if (result) showNextStep(e);
 		}
 	});
 }
 
-function showNextForm(e) {
-	var currentStep, nextStep, prevStep;
-	currentStep = $(e.target).parents('.form-step');
-	nextStep = $(e.target).parents().next();
+function showNextStep(e) {
+	const currentStep = $(e.target).parents('.form-step');
+	const nextStep = $(e.target).parents().next();
 	nextStep.show();
 	currentStep.hide();
 }
@@ -89,7 +114,10 @@ function showErrorMsg(jqxhr) {
 		for (const error in errorList) {
 			let errorMsg = `<span id="errorMsg${error[0].toUpperCase() + error.slice(1)}" class="errorMsg">${errorList[error]}</span>`;
 			if (error === 'description') {
-				$(`textarea[name=${error}]`).after(errorMsg);
+				$('textarea[name=description]').after(errorMsg);
+			}
+			if (error === 'province') {
+				$('select[name=province]').after(errorMsg);
 			}
 			$(`input[name=${error}]`).after(errorMsg);
 		}
