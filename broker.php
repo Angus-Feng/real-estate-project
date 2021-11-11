@@ -32,6 +32,7 @@ $app->group('/ajax/addpropertyval', function (App $app) use ($log) {
         $buildingYear = $details['buildingYear'];
         $lotArea = $details['lotArea'];
         $description = $details['description'];
+        
         $errorList = [];
         $result = false;
 
@@ -70,7 +71,49 @@ $app->group('/ajax/addpropertyval', function (App $app) use ($log) {
     });
     // Form step - 2
     $app->post('/location', function (Request $request, Response $response, array $args) use ($log) {
+        $json = $request->getBody();
+        $location = json_decode($json, TRUE);
 
+        $streetAddress = $location['streetAddress'];
+        $appartmentNo = $location['appartmentNo'];
+        $city = $location['city'];
+        $province = $location['province'];
+        $postalCode = $location['postalCode'];
+        
+        $errorList = [];
+        $result = false;
+
+        if (verifyStreetAddress($streetAddress) !== TRUE) {
+            $errorList['streetAddress'] = verifyStreetAddress($streetAddress);
+        }
+        if ($appartmentNo) {
+            if (verifyAppartmentNo($appartmentNo) !== TRUE) {
+                $errorList['appartmentNo'] = verifyAppartmentNo($appartmentNo);
+            }
+        }
+        if (verifyCityName($city) !== TRUE) {
+            $errorList['city'] = verifyCityName($city);
+        }
+        if (verifyProvince($province) !== TRUE) {
+            $errorList['province'] = verifyProvince($province);
+        }
+        if (verifyPostalCode($postalCode) !== TRUE) {
+            $errorList['postalCode'] = verifyPostalCode($postalCode);
+        }
+        // strip the space in postal code.
+        $postalCode = str_replace(' ', '', $postalCode);
+
+        if ($errorList) {
+            $response = $response->withStatus(400);
+            $response->getBody()->write(json_encode($errorList));
+            return $response;
+        } else {
+            // FIXME: if validation passes, keep data? 
+            $result = true;
+            $response = $response->withStatus(200);
+            $response->getBody()->write(json_encode($result));
+            return $response;
+        }
     });
     // Form step - 3
     $app->post('/images', function (Request $request, Response $response, array $args) use ($log) {
