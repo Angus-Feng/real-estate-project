@@ -1,6 +1,6 @@
 {% extends "admin/interface_admin.html.twig" %}
 
-{% block title %}Properties
+{% block title %}Pending Users
 {% endblock %}
 
 {% block addHead %}
@@ -19,9 +19,9 @@
             currPageNo = newPageNo;
             $("#pageNavPrev").toggle(newPageNo > 1);
             $("#pageNavNext").toggle(newPageNo < {{maxPages}});
-            $(".propertyTable").load("/propertydata/" + currPageNo);
+            $(".pendingTable").load("/pendingdata/" + currPageNo);
             if (noHistory == false) {
-                history.pushState({page: currPageNo}, '', '/admin/property/list/' + currPageNo);
+                history.pushState({page: currPageNo}, '', '/admin/pending/list/' + currPageNo);
             }
         }
 
@@ -37,46 +37,34 @@
     </script>
 {% endblock %}
 
-{% block contentHeader %}Property List
+{% block contentHeader %}Pending Brokers List
 {% endblock %}
 
 {% block content %}
-
-	<p>
-		<a href="/admin/property/add">Add a new property</a>
-	</p>
-			<div class="pageNavigation">
-			<span id="pageNavPrev" onclick="loadPage(currPageNo-1)">Previous</span>
-			{% for no in 1 .. maxPages %}
-				<span id="pageNav{{no}}" onclick="loadPage({{no}})">{{no}}</span>
-			{% endfor %}
-			<span  id="pageNavNext" onclick="loadPage(currPageNo+1)">Next</span>
-		</div>
+    <div class="pageNavigation">
+        <span id="pageNavPrev" onclick="loadPage(currPageNo-1)">Previous</span>
+        {% for no in 1 .. maxPages %}
+            <span id="pageNav{{no}}" onclick="loadPage({{no}})">{{no}}</span>
+        {% endfor %}
+        <span  id="pageNavNext" onclick="loadPage(currPageNo+1)">Next</span>
+    </div>
 		
 	{# Table for list of properties #}
 	<div class="table-responsive">
 		<table class="table">
 			<thead>
 				<tr>
-					<th scope="col">*Modify*</th>
-					<th scope="col">Property ID</th>
-					<th scope="col">Broker ID</th>
-					<th scope="col">Price</th>
-					<th scope="col">Title</th>
-					<th scope="col">Bedrooms</th>
-					<th scope="col">Bathrooms</th>
-					<th scope="col">Building Year</th>
-					<th scope="col">Lot Area</th>
-					<th scope="col">Appartment #</th>
-					<th scope="col">Street Address</th>
-					<th scope="col">City</th>
-					<th scope="col">Province</th>
-					<th scope="col">Postal Code</th>
+                	<th scope="col">*Choice*</th>
+					<th scope="col">User ID</th>
+					<th scope="col">License</th>
+					<th scope="col">First Name</th>
+					<th scope="col">Last Name</th>
+					<th scope="col">Company Name</th>
 				</tr>
 			</thead>
 
 			{# Table body loaded in here #}
-			<tbody class="propertyTable"></tbody>
+			<tbody class="pendingTable"></tbody>
 
 		</table>
 	</div>

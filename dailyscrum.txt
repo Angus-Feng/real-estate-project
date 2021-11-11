@@ -1,4 +1,37 @@
-2021/11/03
+2021/11/11
+
+Nari
+1. Done / not done since last scrum:
+- form (addproperty) step 1 & 2 with validations
+- DOM manipulation with jQuery
+2. To do until next Scrum:
+- finish multi step form 
+3. Need assistance / figure things out
+- nothing for now
+
+Chris
+1. Done / not done since last scrum:
+- Pagination done for admin property list and pending user
+- Redid some of the twig templates for better design
+2. To do until next Scrum:
+- Pagination for broker and buyer (and css)
+- Image javascript for multiple upload
+3. Need assistance / figure things out
+- Nothing for now
+
+Feng
+1. Done / not done since last scrum:
+- property list and buyer's favourite list can show main image of a property
+- made a draft search bar
+2. To do until next Scrum:
+- finish the sorting and searching function of property list
+- start to work on the property detail page
+3. Need assistance / figure things out
+- Not for now
+
+----------------------------------------------------------------------------------------------
+
+2021/11/10
 
 Nari
 1. Done / not done since last scrum:
