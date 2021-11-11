@@ -87,7 +87,7 @@ function verifyUploadedHousePhoto($photo, &$filePath, $propertyId, $firstPhoto) 
             break;
         case 'image/gif':
             $ext = "gif";
-            imagegif(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . $generatedFileName . "." . $ext);
+            imagegif(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/640p-' . $generatedFileName . "." . $ext);
             imagegif(resizeImage($photo, $info[0], $info[1], "jpg"), 'uploads/' . $propertyId . '/orig-' . $generatedFileName . "." . $ext);
             if ($firstPhoto === TRUE) {
                 imagegif(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/thmb-' . $generatedFileName . "." . $ext);
@@ -95,7 +95,7 @@ function verifyUploadedHousePhoto($photo, &$filePath, $propertyId, $firstPhoto) 
             break;
         case 'image/png':
             $ext = "png";
-            imagepng(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . $generatedFileName . "." . $ext);
+            imagepng(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/640p-' . $generatedFileName . "." . $ext);
             imagepng(resizeImage($photo, $info[0], $info[1], "jpg"), 'uploads/' . $propertyId . '/orig-' . $generatedFileName . "." . $ext);
             if ($firstPhoto === TRUE) {
                 imagepng(resizeImage($photo, 640, 480, "jpg"), 'uploads/' . $propertyId . '/thmb-' . $generatedFileName . "." . $ext);
@@ -105,7 +105,7 @@ function verifyUploadedHousePhoto($photo, &$filePath, $propertyId, $firstPhoto) 
             return "Internal Error.";
     }
 
-    $filePath = "uploads/" . $propertyId . "/" . $generatedFileName . "." . $ext;
+    $filePath = $generatedFileName . "." . $ext;
 
     return TRUE;
 }
@@ -349,7 +349,7 @@ function verifyPostalCode($postalCode) { //TEST REGEX
     if ($postalCode == "") {
         return TRUE;
     }
-    if (!preg_match('/[a-zA-Z][0-9][a-zA-Z][\ ]{0,1}[0-9][a-zA-z][0-9]/', $postalCode)) {
+    if (!preg_match('/^[a-zA-Z][0-9][a-zA-Z][\ ]{0,1}[0-9][a-zA-z][0-9]$/', $postalCode)) {
         return "Postal code must be in the following format: H9X3L9.";
     }
     return TRUE;

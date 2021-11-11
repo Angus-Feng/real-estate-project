@@ -78,10 +78,10 @@ $(document).ready(function(){
             <div id="reorderHelper" class="light_box" style="display:none;">1. Drag photos to reorder.<br>2. Click 'Save Reordering' when finished.</div>
             <div class="gallery">
                 <ul class="reorder_ul reorder-photos-list">
-                    {% for key, value in fileNameList %}
-                        <li id="image_li_{{value}}" class="ui-sortable-handle">
+                    {% for photo in propertyPhotos %}
+                        <li id="image_li_{{photo.ordinalINT}}" class="ui-sortable-handle">
                             <a href="javascript:void(0);" style="float:none;" class="image_link">
-                                <img src="../../../uploads/{{propertyId}}/640p-{{key}}" alt="">
+                                <img src="../../../uploads/{{propertyId}}/640p-{{photo.photoFilePath}}" alt="">
                             </a>
                         </li>
                     {% endfor %}

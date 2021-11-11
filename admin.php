@@ -623,12 +623,13 @@ $app->get('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $ar
         // $response = $response->withStatus(404);
         return $this->view->render($response, '404_error.html.twig');
     }
-    $fileNameList = array();
-    foreach($propertyPhotos as $propertyPhoto) {
-        $fileName = explode("/", $propertyPhoto['photoFilePath'], 3);
-        $fileNameList[$fileName[2]] = $propertyPhoto['ordinalINT'];
-    }
-    return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker, 'propertyPhotos' => $propertyPhotos, 'fileNameList' => $fileNameList, 'propertyId' => $property['id']]);
+    // $fileNameList = array();
+    // foreach($propertyPhotos as $propertyPhoto) {
+    //     $fileName = explode("/", $propertyPhoto['photoFilePath'], 3);
+    //     $fileNameList[$fileName[2]] = $propertyPhoto['ordinalINT'];
+    // }
+    // return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker, 'propertyPhotos' => $propertyPhotos, 'fileNameList' => $fileNameList, 'propertyId' => $property['id']]);
+    return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker, 'propertyPhotos' => $propertyPhotos, 'propertyId' => $property['id']]);
 });
 
 // Edit property: POST
@@ -772,6 +773,18 @@ $app->post('/admin/property/edit/reorder', function ($request, $response, $args)
         ], "id=%d", $photo['id']);
         $counter++;
     }
+
+    $newPhotoFilePath = DB::queryFirstRow("SELECT * FROM propertyphotos WHERE propertyId=%d ORDER BY ordinalINT ASC", $propertyId);
+    $newFileName = '/thmb-' . $newPhotoFilePath['photoFilePath'];
+
+    $files = glob('uploads/' . $propertyId . '/*');
+    foreach($files as $file){
+        if(strpos($file, 'thmb-') !== false) {
+            unlink($file);
+        }
+    }
+
+    copy('uploads/' . $propertyId . '/640p-' . $newPhotoFilePath['photoFilePath'], 'uploads/' . $propertyId . $newFileName);
 });
 
 // Delete property: GET

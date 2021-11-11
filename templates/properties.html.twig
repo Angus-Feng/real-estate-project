@@ -46,7 +46,13 @@
 								<img class='like' id='{{property.id}}' src='images/addFavourite.png' title='add favourite' width="30px"></div>
 							{% endif %}
 						{% endif %}
-							<img src="/images/ninja.png" class="card-img-top" alt="property photo" width="150px">
+							<img src="
+							{% if property.photoFilePath %}
+								uploads/{{property.id}}/thmb-{{property.photoFilePath}}
+							{% else %}
+								images/defaultproperty.jpg
+							{% endif %}
+							" class="card-img-top" alt="property photo" width="150px">
 							<div class="card-body">
 								<h5 class="card-title">${{property.price}}</h5>
 								<p class="card-text">

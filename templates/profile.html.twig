@@ -88,7 +88,11 @@
                         var property = favList[i];
                         body += '<div class="col-3"><div class="p-3 border bg-light">';
                         body += '<div class="card">';
-                        body += '<img src="/images/ninja.png" class="card-img-top" alt="property photo">';
+                        if (property.photoFilePath) {
+                            body += '<img src="/uploads/' + property.id + '/thmb-' + property.photoFilePath + '" class="card-img-top" alt="property photo">';
+                        } else {
+                            body += '<img src="/images/defaultproperty.jpg" class="card-img-top" alt="property photo">';
+                        }
                         body += '<div class="card-body">';
                         body += '<h5 class="card-title">' + property.price + '</h5>';
                         body += '<p class="card-text">' + (property.appartmentNo ? "#" + property.appartmentNo + " " : "") + property.streetAddress + ', ' + property.city + ', ' + property.province + '</p>';
