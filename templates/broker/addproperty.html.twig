@@ -53,25 +53,32 @@
                 <div class="form-group row">
                     <label for="">Title</label>
                     <input type="text" name="title" value="{{ values.title }}" />
+                    {# <span id="errorMsgtitle" class="errorMsg"></span> #}
                 </div>
                 <div class="form-group">
                     <label for="">Price</label>
                     <input type="number" name="price" step="0.01" value="{{ values.price }}" />
+                    {# <span id="errorMsgPrice" class="errorMsg"></span> #}
                     <label for="">Bedrooms</label>
                     <input type="number" name="bedrooms" value="{{ values.bedrooms }}" />
+                    {# <span id="errorMsgBedrooms" class="errorMsg"></span> #}
                     <label for="">Bathrooms</label>
                     <input type="number" name="bathrooms" value="{{ values.bathrooms }}" />
+                    {# <span id="errorMsgBathrooms" class="errorMsg"></span> #}
                     <label for="">Year built</label>
-                    <input type="number" name="buildingYear" value="{{ values.buildingYear }}" />
+                    <input type="text" name="buildingYear" value="{{ values.buildingYear }}" />
+                    {# <span id="errorMsgbuildingYear" class="errorMsg"></span> #}
                     <label for="">Lot area (sqft)</label>
                     <input type="number" name="lotArea" value="{{ values.lotArea }}" />
+                    {# <span id="errorMsgLotArea" class="errorMsg"></span> #}
                 </div>
                 <div class="form-group row">
                     <label for="">Description</label>
                     <textarea name="description" cols="30" rows="10" class="form-control">{{ values.description }}</textarea>
+                    {# <span id="errorMsgDescription" class="errorMsg"></span> #}
                 </div>
                 <div>
-                    <button class="btn btn-primary next" type="button">Next</button>
+                    <button id="step1" class="btn btn-primary next" type="button">Next</button>
                 </div>
             </fieldset>
             <!-- FORM STEP-2 -->
@@ -93,7 +100,7 @@
                 </div>
                 <div>
                     <button class="btn btn-primary prev" type="button">Previous</button>
-                    <button class="btn btn-primary next" type="button">Next</button>
+                    <button id="next2" class="btn btn-primary next" type="button">Next</button>
                 </div>
             </fieldset>
             <!-- FORM STEP-3 -->
