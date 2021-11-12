@@ -1,3 +1,36 @@
+2021/11/12
+
+Nari
+1. Done / not done since last scrum:
+- addproperty form validations and post request
+- DOM manipulation with jQuery
+2. To do until next Scrum:
+- working on master html page and index
+3. Need assistance / figure things out
+- nothing for now
+
+Chris
+1. Done / not done since last scrum:
+- Finished all pagination for admin 
+- Added better error handling + CSS in admin
+- Research on Google Maps API
+2. To do until next Scrum:
+- Start implementing Google Maps portion 
+- Spend some time to finalize admin CSS
+3. Need assistance / figure things out
+- Nothing for now
+
+Feng
+1. Done / not done since last scrum:
+- search function is done
+2. To do until next Scrum:
+- finishe all the left over pages except map api
+- refine the front-end design with a template
+3. Need assistance / figure things out
+- Not for now
+
+----------------------------------------------------------------------------------------------
+
 2021/11/11
 
 Nari
