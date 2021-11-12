@@ -33,8 +33,10 @@ $(document).ready(function() {
 			success: function(propertyId) {
 				$("#submitStep").hide();
 				$("#lastStep").show();
-				$("#linkToProp").attr("href", )
-				$("a").attr("href", `myproperty/${propertyId}`);
+				const html = '<p>A new property added successfully!</p>'
+									+ `<div><a href=myproperty/${propertyId}>`
+									+ '<button class="btn btn-primary" type="button">View the Property</button></div>';
+				$("#lastStep").append(html);
 			}
 		});
 	});
