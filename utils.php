@@ -252,6 +252,7 @@ function verifyLicenseNoUpdate($licenseNo, $id) {
     return TRUE;
 }
 
+function verifyFirstName($firstName) {
     if (strlen($firstName) < 1 || strlen($firstName) > 100) {
         return "First name must be between 1 - 100 characters long.";
     } else if (!preg_match('/[a-zA-Z\.\'\-]+/', $firstName)) {
@@ -260,6 +261,7 @@ function verifyLicenseNoUpdate($licenseNo, $id) {
     return TRUE;
 }
 
+function verifyLastName($lastName) {
     if (strlen($lastName) < 1 || strlen($lastName) > 100) {
         return "Last name must be between 1 - 100 characters long.";
     } else if (!preg_match('/[a-zA-Z\.\'\-]+/', $lastName)) {
@@ -268,6 +270,7 @@ function verifyLicenseNoUpdate($licenseNo, $id) {
     return TRUE;
 }
 
+function verifyPhone($phone) {
     if ($phone == "") {
         return TRUE;
     }
@@ -277,6 +280,7 @@ function verifyLicenseNoUpdate($licenseNo, $id) {
     return TRUE;
 }
 
+function verifyCompany($company) {
     if (strlen($company) < 1 || strlen($company) > 100) {
         return "Company name must be between 1 - 100 characters long.";
     } else if (!preg_match('/[a-zA-Z\.\'\-\s]/', $company)) {
@@ -285,6 +289,7 @@ function verifyLicenseNoUpdate($licenseNo, $id) {
     return TRUE;
 }
 
+function verifyJobTitle($jobTitle) {
     if ($jobTitle == "") {
         return TRUE;
     }
@@ -358,6 +363,7 @@ function verifyPostalCode($postalCode) { //TEST REGEX
 }
 
 function verifyPostalCodeManditory($postalCode) { // TEMP FUNCTION
+    if (!preg_match('/^[a-zA-Z][0-9][a-zA-Z][\ ]{0,1}[0-9][a-zA-z][0-9]$/', $postalCode)) {
         return "Postal code must be in the following format: H9X3L9.";
     }
     return TRUE;
@@ -378,7 +384,6 @@ function verifyTitle($title) {
 }
 
 function verifyBedrooms($bedrooms) {
-        return "Bedrooms should be between 0 - 2000.";
     if ($bedrooms < 1 || $bedrooms > 2000) {
         return "Bedrooms should be between 1 - 2000.";
     }
@@ -386,6 +391,8 @@ function verifyBedrooms($bedrooms) {
 }
 
 function verifyBathrooms($bathrooms) {
+    if ($bathrooms < 1 || $bathrooms > 1000) {
+        return "Bathrooms should be between 1 - 1000.";
     }
     return TRUE;
 }
@@ -404,7 +411,7 @@ function verifyLotArea($lotArea) {
     return TRUE;
 }
 
-function verifyStreetAddress($streetAddress) { //TEST REGEX
+function verifyStreetAddress($streetAddress) {
     if (!preg_match('/^[a-zA-Z0-9\.\'\-\s]+$/', $streetAddress) || strlen($streetAddress) < 1 || strlen($streetAddress) > 320) {
         return "Street address must be between 1 - 320 characters long and can only contain letters, numbers, periods, apostrophes, spaces and hyphens.";
     }
