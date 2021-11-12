@@ -8,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 
 // Define routes
-
 // GET '/addproperty'
 $app->get('/addproperty', function ($request, $response, $args) {
     if (@$_SESSION['user']['role'] !== 'broker') {
@@ -17,9 +16,7 @@ $app->get('/addproperty', function ($request, $response, $args) {
     return $this->view->render($response, 'broker/addproperty.html.twig');
 });
 
-// POST '/addproperty'
 $app->group('/ajax/addpropertyval', function (App $app) use ($log) {
-
     // Form step - 1
     $app->post('/details', function (Request $request, Response $response, array $args) use ($log) {
         $json = $request->getBody();
@@ -33,6 +30,7 @@ $app->group('/ajax/addpropertyval', function (App $app) use ($log) {
         $lotArea = $details['lotArea'];
         $description = $details['description'];
         
+        // Validate
         $errorList = [];
         $result = false;
 
@@ -57,12 +55,11 @@ $app->group('/ajax/addpropertyval', function (App $app) use ($log) {
         if (verifyDescription($description) !== TRUE) {
             $errorList['description'] = verifyDescription($description);
         }
-        if ($errorList) {
+        if ($errorList) { // Validation failed
             $response = $response->withStatus(400);
             $response->getBody()->write(json_encode($errorList));
             return $response;
-        } else {
-            // FIXME: if validation passes, keep data? 
+        } else { // Validation passes
             $result = true;
             $response = $response->withStatus(200);
             $response->getBody()->write(json_encode($result));
@@ -80,6 +77,7 @@ $app->group('/ajax/addpropertyval', function (App $app) use ($log) {
         $province = $location['province'];
         $postalCode = $location['postalCode'];
         
+        // Validate
         $errorList = [];
         $result = false;
 
@@ -100,15 +98,12 @@ $app->group('/ajax/addpropertyval', function (App $app) use ($log) {
         if (verifyPostalCode($postalCode) !== TRUE) {
             $errorList['postalCode'] = verifyPostalCode($postalCode);
         }
-        // strip the space in postal code.
-        $postalCode = str_replace(' ', '', $postalCode);
-
-        if ($errorList) {
+        
+        if ($errorList) { // Validation failed 
             $response = $response->withStatus(400);
             $response->getBody()->write(json_encode($errorList));
             return $response;
-        } else {
-            // FIXME: if validation passes, keep data? 
+        } else { // Validation passes
             $result = true;
             $response = $response->withStatus(200);
             $response->getBody()->write(json_encode($result));
@@ -116,11 +111,12 @@ $app->group('/ajax/addpropertyval', function (App $app) use ($log) {
         }
     });
     // Form step - 3
-    $app->post('/images', function (Request $request, Response $response, array $args) use ($log) {
+    // $app->post('/images', function (Request $request, Response $response, array $args) use ($log) {
 
-    });
+    // });
 });
 
+// POST '/addproperty'
 $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     $brokerId = @$_SESSION['user']['id'];
     if (@$_SESSION['user']['role'] !== 'broker') {
@@ -165,8 +161,12 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     if (verifyDescription($description) !== TRUE) {
         $errorList['description'] = verifyDescription($description);
     }
-    if (verifyAppartmentNo($appartmentNo) !== TRUE) {
-        $errorList['appartmentNo'] = verifyAppartmentNo($appartmentNo);
+    if ($appartmentNo) {
+        if (verifyAppartmentNo($appartmentNo) !== TRUE) {
+            $errorList['appartmentNo'] = verifyAppartmentNo($appartmentNo);
+        }
+    } else {
+        $appartmentNo = null;
     }
     if (verifyStreetAddress($streetAddress) !== TRUE) {
         $errorList['streetAddress'] = verifyStreetAddress($streetAddress);
@@ -193,39 +193,28 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
         'lotArea' => $lotArea,
         'description' => $description,
         'streetAddress' => $streetAddress,
+        'appartmentNo' => $appartmentNo,
         'city' => $city,
         'province' => $province,
         'postalCode' => $postalCode
     ];
 
     if ($errorList) {
-        return $this->view->render($response, 'broker/addproperty.html.twig', 
-            ['errorList' => $errorList, 'values' => $valueList]);
+        $response = $response->withStatus(500);
+        $response->getBody()->write(json_encode($errorList));
+        return $response;
     } else {
         DB::insert('properties', $valueList);
+        $id = DB::insertID();
         $log->debug(sprintf(
             "new property created with id=%s",
-            DB::insertID()
+            $id
         ));
-        // FIXME: render the added property view
-        return $response->write('Property is added successfully.');
-        // return $this->view->render($response, 'broker/addproperty.html.twig');
+        $response = $response->withStatus(201);
+        $response->getBody()->write(json_encode($id));
+        return $response;
     }
 });
-
-// function verifyStreetName($streetName) { //TEST REGEX
-//     if (!preg_match('/^[a-zA-Z\.\'\-]+$/', $streetName) || strlen($streetName) < 1 || strlen($streetName) > 100) {
-//         return "Street name must be between 1 - 100 characters long and can only contain letters, periods, apostrophes and hyphens.";
-//     }
-//     return TRUE;
-// }
-
-// function verifyTitle($title) { //TEST REGEX
-//     if (!preg_match('/^[a-zA-Z\- ]+$/', $title) || strlen($title) < 5 || strlen($title) > 100) {
-//         return "Title must be between 5 - 100 characters long and can only contain letters and hyphens.";
-//     }
-//     return TRUE;
-// }
 
 // GET '/mypropertylist'
 $app->get('/mypropertylist', function ($request, $response, $args) {
@@ -245,7 +234,6 @@ $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use (
     if ($_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
-    // FIXME: plug in the brokerId
     $id = $args['id'];
     $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $id, $brokerId);
     $log->debug(sprintf("Fetch a property data with id=%s", $id));
