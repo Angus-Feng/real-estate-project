@@ -1,7 +1,7 @@
 <script>
 	$(document).ready(function() {
 		//add/remove favourite
-		$('.corner').on('click', function(e){
+		$('.fav-corner').on('click', function(e){
 			e.preventDefault();
 			var userId = $(this).attr('userId');
 			var propertyId = $(this).attr('propertyId');
@@ -25,40 +25,76 @@
 	}) 
 </script>
 <div class="sticky-sm-top text-primary" propCount="{{properties|length}}">{{properties|length}} properties found</div>
+<section class="property-grid grid">
+    <div class="container">
+      <div class="row">
 {% for property in properties %}
-				<div class="col-3" >
-					<div class="p-3 border bg-light">
-						<div class="card">
-						{% if userSession.role == 'buyer' %}
+	<div class="col-md-4">
+        <div class="card-box-a card-shadow">
+            <div class="img-box-a">
+              <img src="
+			  	{% if property.photoFilePath %}
+					uploads/{{property.id}}/thmb-{{property.photoFilePath}}
+				{% else %}
+					images/defaultproperty.jpg
+				{% endif %}
+			  "class="img-a img-fluid" alt="property photo">
+            </div>
+            <div class="card-overlay">
+              <div class="card-overlay-a-content">
+                <div class="card-header-a">
+                  <h2 class="card-title-a">
+                    <a href="/properties/{{property.id}}">
+						{% if property.appartmentNo %}#
+						{% endif %}
+						{{property.appartmentNo}}
+						{{property.streetAddress}},
+						{{property.city}}
+					</a>
+                  </h2>
+                </div>
+                <div class="card-body-a">
+                  <div class="price-box d-flex">
+                    <span class="price-a">${{property.price}}</span>
+                  </div>
+                  <a href="/properties/{{property.id}}" class="link-a">Click here to view
+                    <span class="ion-ios-arrow-forward"></span>
+                  </a>
+                </div>
+                <div class="card-footer-a">
+                  <ul class="card-info d-flex justify-content-around">
+                    <li>
+                      <h4 class="card-info-title">Lot area</h4>
+                      <span>{{property.lotArea}}M
+                        <sup>2</sup>
+                      </span>
+                    </li>
+                    <li>
+                      <h4 class="card-info-title">Beds</h4>
+                      <span>{{property.bedrooms}}</span>
+                    </li>
+                    <li>
+                      <h4 class="card-info-title">Baths</h4>
+                      <span>{{property.bathrooms}}</span>
+                    </li>
+                    <li>
+                      	{% if userSession.role == 'buyer' %}
 							{% if property.id in favProperties %}
-								<div class='btn corner' method='unlike' propertyId="{{property.id}}" userId='{{userSession.id}}'> 
+								<div class='fav-corner card-info-title' method='unlike' propertyId="{{property.id}}" userId='{{userSession.id}}'> 
 								<img class='unlike' id='{{property.id}}' src='images/addedFavourite.png' title='remove favourite' width="30px"></div>
 							{% else %}
-								<div class='btn corner' method='like' propertyId="{{property.id}}" userId='{{userSession.id}}'> 
+								<div class='fav-corner card-info-title' method='like' propertyId="{{property.id}}" userId='{{userSession.id}}'> 
 								<img class='like' id='{{property.id}}' src='images/addFavourite.png' title='add favourite' width="30px"></div>
 							{% endif %}
-						{% endif %}
-							<img src="
-							{% if property.photoFilePath %}
-								uploads/{{property.id}}/thmb-{{property.photoFilePath}}
-							{% else %}
-								images/defaultproperty.jpg
-							{% endif %}
-							" class="card-img-top" alt="property photo" width="150px">
-							<div class="card-body">
-								<h5 class="card-title">${{property.price}}</h5>
-								<p class="card-text">
-									{% if property.appartmentNo %}#
-									{% endif %}
-									{{property.appartmentNo}}
-									{{property.streetAddress}},
-									{{property.city}},
-									{{property.province}}</p>
-								<p class="card-text">{{property.bedrooms}}bedroom(s) +
-									{{property.bathrooms}}bathroom(s)</p>
-								<a href="#" class="btn btn-primary">View details</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			{% endfor %}
+						{% endif %}>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+{% endfor %}
+      </div>
+    </div>
+</section>
