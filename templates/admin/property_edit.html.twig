@@ -38,6 +38,7 @@ $(document).ready(function(){
             e.preventDefault();
         });
     });
+    
 });
 </script>
 
@@ -45,32 +46,8 @@ $(document).ready(function(){
 
 {% block content %}
 
-    {% if errorList %}
-        <ul>
-        {% for error in errorList %}
-            <li>{{ error }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-
-    {# Form for adding a property #}
-    <form method="post" enctype="multipart/form-data">
-        Broker License: <input name="licenseNo" type="text" value="{{broker.licenseNo}}"><br>
-        Price: <input name="price" type="number" min="0" step=".01" value="{{property.price}}"><br>
-        Title: <input name="title" type="text" value="{{property.title}}"><br>
-        Bedrooms: <input name="bedrooms" type="number" min="0" value="{{property.bedrooms}}"><br>
-        Bathrooms: <input name="bathrooms" type="number" min="0" value="{{property.bathrooms}}"><br>
-        Building Year: <input name="buildingYear" type="number" min="0" value="{{property.buildingYear}}"><br>
-        Lot Area: <input name="lotArea" type="number" min="0" step=".01" value="{{property.lotArea}}"><br>
-        House Description: <textarea name="description" cols="60" row="10">{{property.description}}</textarea><br>
-        Appartment Number: <input name="appartmentNo" type="number" value="{{property.appartmentNo}}"><br>
-        Street Address: <input name="streetAddress" type="text" value="{{property.streetAddress}}"><br>
-        City: <input name="city" type="text" value="{{property.city}}"><br>
-        Province: <input name="province" type="text" value="{{property.province}}"><br>
-        Postal Code: <input name="postalCode" type="text" value="{{property.postalCode}}"><br>
-        Upload More Images: <input type="file" id="files" name="photos[]" multiple><br>
-        <input type="submit" value="Update Property">
-    </form>
+    <div class="container">
+    <h2 class="text-center">Edit Property</h2>
 
     {% if propertyPhotos %}
         <div class="reorder-container">
@@ -90,5 +67,38 @@ $(document).ready(function(){
         </div>
         <span id="propertyId" style="display:none;">{{propertyId}}</span>
     {% endif %}
+
+    {# Form for adding a property #}
+    <form method="post" enctype="multipart/form-data">
+        Broker License: <input class="form-control" name="licenseNo" type="text" value="{{broker.licenseNo}}">
+        <div class="err-msg">{{errors.licenseNo}}</div><br>
+        Price: <input class="form-control" name="price" type="number" min="0" step=".01" value="{{property.price}}">
+        <div class="err-msg">{{errors.price}}</div><br>
+        Title: <input class="form-control" name="title" type="text" value="{{property.title}}">
+        <div class="err-msg">{{errors.title}}</div><br>
+        Bedrooms: <input class="form-control" name="bedrooms" type="number" min="0" value="{{property.bedrooms}}">
+        <div class="err-msg">{{errors.bedrooms}}</div><br>
+        Bathrooms: <input class="form-control" name="bathrooms" type="number" min="0" value="{{property.bathrooms}}">
+        <div class="err-msg">{{errors.bathrooms}}</div><br>
+        Building Year: <input class="form-control" name="buildingYear" type="number" min="0" value="{{property.buildingYear}}">
+        <div class="err-msg">{{errors.buildingYear}}</div><br>
+        Lot Area: <input class="form-control" name="lotArea" type="number" min="0" step=".01" value="{{property.lotArea}}">
+        <div class="err-msg">{{errors.lotArea}}</div><br>
+        House Description: <textarea class="form-control" name="description" cols="60" row="10">{{property.description}}</textarea>
+        <div class="err-msg">{{errors.description}}</div><br>
+        Appartment Number: <input class="form-control" name="appartmentNo" type="number" value="{{property.appartmentNo}}">
+        <div class="err-msg">{{errors.appartmentNo}}</div><br>
+        Street Address: <input class="form-control" name="streetAddress" type="text" value="{{property.streetAddress}}">
+        <div class="err-msg">{{errors.streetAddress}}</div><br>
+        City: <input class="form-control" name="city" type="text" value="{{property.city}}">
+        <div class="err-msg">{{errors.city}}</div><br>
+        Province: <input class="form-control" name="province" type="text" value="{{property.province}}">
+        {# <div class="err-msg">{{errors.province}}</div> #}<br>
+        Postal Code: <input class="form-control" name="postalCode" type="text" value="{{property.postalCode}}">
+        <div class="err-msg">{{errors.postalCode}}</div><br>
+        Upload More Images: <input class="form-control" type="file" id="files" name="photos[]" multiple>
+        <div class="err-msg">{{errors.uploadedPhotos}}</div><br>
+        <input class="btn btn-primary form-control" type="submit" value="Update Property">
+    </form>
 
 {% endblock content %}

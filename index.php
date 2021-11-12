@@ -13,8 +13,8 @@ require_once 'broker.php';
 require_once 'property.php';
 
 // Define app routes
-$app->get('/hello/{name}', function ($request, $response, $args) {
-    return $response->write("Hello " . $args['name']);
+$app->get('/map', function ($request, $response, $args) {
+    return $this->view->render($response, 'testmap.html.twig');
 });
 
 // Test index page + master.html.twig

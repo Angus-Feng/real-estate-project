@@ -19,10 +19,49 @@ $app->get('/admin/interface', function ($request, $response, $args) {
 
 // Users (Buyers/Brokers)
 
-// View a list of all users and their information
-$app->get('/admin/users/list', function ($request, $response, $args) {
-    $userList = DB::query("SELECT * FROM users");
-    return $this->view->render($response, 'admin/users_list.html.twig', ['usersList' => $userList]);
+// View a list of all buyers and their information
+$itemsPerPage = 8;
+$app->get('/admin/buyer/list[/{pageNo:[0-9]+}]', function ($request, $response, $args) {
+    global $itemsPerPage;
+    $pageNo = $args['pageNo'] ?? 1;
+    $pendingCount = DB::queryFirstField("SELECT COUNT(*) AS COUNT FROM users WHERE role=%s", "buyer");
+    $maxPages = ceil($pendingCount / $itemsPerPage);
+    return $this->view->render($response, 'admin/buyer_list_interface.html.twig', [
+        'maxPages' => $maxPages,
+        'pageNo' => $pageNo,
+    ]);
+});
+
+$app->get('/buyerdata/{pageNo:[0-9]+}', function ($request, $response, $args) {
+    global $itemsPerPage;
+    $pageNo = $args['pageNo'] ?? 1;
+    $buyerList = DB::query("SELECT * FROM users WHERE role=%s ORDER BY id ASC LIMIT %d OFFSET %d",
+            "buyer", $itemsPerPage, ($pageNo - 1) * $itemsPerPage);
+    return $this->view->render($response, 'admin/load_pagination_data.html.twig', [
+            'buyerList' => $buyerList
+        ]);
+});
+
+// View a list of all brokers and their information
+$app->get('/admin/broker/list[/{pageNo:[0-9]+}]', function ($request, $response, $args) {
+    global $itemsPerPage;
+    $pageNo = $args['pageNo'] ?? 1;
+    $pendingCount = DB::queryFirstField("SELECT COUNT(*) AS COUNT FROM users WHERE role=%s", "broker");
+    $maxPages = ceil($pendingCount / $itemsPerPage);
+    return $this->view->render($response, 'admin/broker_list_interface.html.twig', [
+        'maxPages' => $maxPages,
+        'pageNo' => $pageNo,
+    ]);
+});
+
+$app->get('/brokerdata/{pageNo:[0-9]+}', function ($request, $response, $args) {
+    global $itemsPerPage;
+    $pageNo = $args['pageNo'] ?? 1;
+    $brokerList = DB::query("SELECT * FROM users WHERE role=%s ORDER BY id ASC LIMIT %d OFFSET %d",
+            "broker", $itemsPerPage, ($pageNo - 1) * $itemsPerPage);
+    return $this->view->render($response, 'admin/load_pagination_data.html.twig', [
+            'brokerList' => $brokerList
+        ]);
 });
 
 // Add user: GET
@@ -474,12 +513,11 @@ $app->post('/admin/users/delete/{id:[0-9]+}', function ($request, $response, $ar
 // Properties
 
 // View a list of all properties and their information
-$propertiesPerPage = 8;
 $app->get('/admin/property/list[/{pageNo:[0-9]+}]', function ($request, $response, $args) {
-    global $propertiesPerPage;
+    global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $propertiesCount = DB::queryFirstField("SELECT COUNT(*) AS COUNT FROM properties");
-    $maxPages = ceil($propertiesCount / $propertiesPerPage);
+    $maxPages = ceil($propertiesCount / $itemsPerPage);
     return $this->view->render($response, 'admin/property_list_interface.html.twig', [
         'maxPages' => $maxPages,
         'pageNo' => $pageNo,
@@ -487,10 +525,10 @@ $app->get('/admin/property/list[/{pageNo:[0-9]+}]', function ($request, $respons
 });
 
 $app->get('/propertydata/{pageNo:[0-9]+}', function ($request, $response, $args) {
-    global $propertiesPerPage;
+    global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $propertyList = DB::query("SELECT * FROM properties ORDER BY id ASC LIMIT %d OFFSET %d",
-             $propertiesPerPage, ($pageNo - 1) * $propertiesPerPage);
+             $itemsPerPage, ($pageNo - 1) * $itemsPerPage);
     return $this->view->render($response, 'admin/load_pagination_data.html.twig', [
             'propertyList' => $propertyList
         ]);
@@ -520,50 +558,70 @@ $app->post('/admin/property/add', function ($request, $response, $args) {
     $uploadedPhotos = $request->getUploadedFiles()['photos'];
 
     $errorList = [];
+    $errors = array(
+        'licenseNo' => "", 'price' => "", 'title' => "",
+        'bedrooms' => "", 'bathrooms' => "", 'buildingYear' => "", 'lotArea' => "",
+        'description' => "", 'appartmentNo' => "", 'streetAddress' => "", 'city' => "",
+        'province' => "", 'postalCode' => "", 'uploadedPhotos' => ""
+    );
 
     $errorPhotoCount = 1;
     foreach ($uploadedPhotos as $photo) {
         if ($photo->getError() !== UPLOAD_ERR_OK) {
             $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
+            $errors['uploadedPhotos'] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
             $errorPhotoCount++;
         }
         $result = verifyFileExt($photo);
         if (!$result) {
             $errorList[] = $result;
+            $errors['uploadedPhotos'] = $result;
         }
+    }
+    $licenseCheck = DB::queryFirstRow("SELECT * FROM users WHERE licenseNo=%s", $licenseNo);
+    if (!$licenseCheck['licenseNo']) {
+        $errors['licenseNo'] = "You did not enter a valid broker license.";
     }
     $verifyPrice = verifyPrice($price);
     if ($verifyPrice !== TRUE) {
         $errorList[] = $verifyPrice;
+        $errors['price'] = $verifyPrice;
     }
     $verifyTitle = verifyTitle($title);
     if ($verifyTitle !== TRUE) {
         $errorList[] = $verifyTitle;
+        $errors['title'] = $verifyTitle;
     }
     $verifyBedrooms = verifyBedrooms($bedrooms);
     if ($verifyBedrooms !== TRUE) {
         $errorList[] = $verifyBedrooms;
+        $errors['bedrooms'] = $verifyBedrooms;
     }
     $verifyBathrooms = verifyBathrooms($bathrooms);
     if ($verifyBathrooms !== TRUE) {
         $errorList[] = $verifyBathrooms;
+        $errors['bathrooms'] = $verifyBathrooms;
     }
     $verifyBuildingYear = verifyBuildingYear($buildingYear);
     if ($verifyBuildingYear !== TRUE) {
         $errorList[] = $verifyBuildingYear;
+        $errors['buildingYear'] = $verifyBuildingYear;
     }
     $verifyLotArea = verifyLotArea($lotArea);
     if ($verifyLotArea !== TRUE) {
         $errorList[] = $verifyLotArea;
+        $errors['lotArea'] = $verifyLotArea;
     }
     $verifyDescription = verifyDescription($description);
     if ($verifyDescription !== TRUE) {
         $errorList[] = $verifyDescription;
+        $errors['description'] = $verifyDescription;
     }
     if ($appartmentNo !== "") {
         $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
         if ($verifyAppartmentNo !== TRUE) {
             $errorList[] = $verifyAppartmentNo;
+            $errors['appartmentNo'] = $verifyAppartmentNo;
         }
     } else {
         $appartmentNo = NULL;
@@ -571,22 +629,25 @@ $app->post('/admin/property/add', function ($request, $response, $args) {
     $verifyStreetAddress = verifyStreetAddress($streetAddress);
     if ($verifyStreetAddress !== TRUE) {
         $errorList[] = $verifyStreetAddress;
+        $errors['streetAddress'] = $verifyStreetAddress;
     }
-    $verifyCityName = verifyCityName($city);
+    $verifyCityName = verifyCityNameManditory($city);
     if ($verifyCityName !== TRUE) {
         $errorList[] = $verifyCityName;
+        $errors['city'] = $verifyCityName;
     }
     // $verifyProvince = verifyProvince($province);
     // if ($verifyProvince !== TRUE) {
     //     $errorList[] = $verifyProvince;
     // }
-    $verifyPostalCode = verifyPostalCode($postalCode);
+    $verifyPostalCode = verifyPostalCodeManditory($postalCode);
     if ($verifyPostalCode !== TRUE) {
         $errorList[] = $verifyPostalCode;
+        $errors['postalCode'] = $verifyPostalCode;
     }
 
     if ($errorList) {
-        return $this->view->render($response, 'admin/property_add.html.twig', ['errorList' => $errorList]);
+        return $this->view->render($response, 'admin/property_add.html.twig', ['errorList' => $errorList, 'errors' => $errors]);
     }
 
     $brokerId = DB::queryFirstRow("SELECT id FROM users WHERE licenseNo=%s", $licenseNo);
@@ -640,12 +701,6 @@ $app->get('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $ar
         // $response = $response->withStatus(404);
         return $this->view->render($response, '404_error.html.twig');
     }
-    // $fileNameList = array();
-    // foreach($propertyPhotos as $propertyPhoto) {
-    //     $fileName = explode("/", $propertyPhoto['photoFilePath'], 3);
-    //     $fileNameList[$fileName[2]] = $propertyPhoto['ordinalINT'];
-    // }
-    // return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker, 'propertyPhotos' => $propertyPhotos, 'fileNameList' => $fileNameList, 'propertyId' => $property['id']]);
     return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker, 'propertyPhotos' => $propertyPhotos, 'propertyId' => $property['id']]);
 });
 
@@ -667,50 +722,72 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
     $uploadedPhotos = $request->getUploadedFiles()['photos'];
 
     $errorList = [];
+    $errors = array(
+        'licenseNo' => "", 'price' => "", 'title' => "",
+        'bedrooms' => "", 'bathrooms' => "", 'buildingYear' => "", 'lotArea' => "",
+        'description' => "", 'appartmentNo' => "", 'streetAddress' => "", 'city' => "",
+        'province' => "", 'postalCode' => "", 'uploadedPhotos' => ""
+    );
 
-    $errorPhotoCount = 1;
-    foreach ($uploadedPhotos as $photo) {
-        if ($photo->getError() !== UPLOAD_ERR_OK) {
-            $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
-            $errorPhotoCount++;
+    if (is_object($uploadedPhotos)) {
+        $errorPhotoCount = 1;
+        foreach ($uploadedPhotos as $photo) {
+            if ($photo->getError() !== UPLOAD_ERR_OK) {
+                $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
+                $errorPhotoCount++;
+            }
+            $result = verifyFileExt($photo);
+            if (!$result) {
+                $errorList[] = $result;
+                $errors['uploadedPhotos'] = $result;
+            }
         }
-        $result = verifyFileExt($photo);
-        if (!$result) {
-            $errorList[] = $result;
-        }
+    }
+
+    $licenseCheck = DB::queryFirstRow("SELECT * FROM users WHERE licenseNo=%s", $licenseNo);
+    if (!$licenseCheck['licenseNo']) {
+        $errors['licenseNo'] = "You did not enter a valid broker license.";
     }
     $verifyPrice = verifyPrice($price);
     if ($verifyPrice !== TRUE) {
         $errorList[] = $verifyPrice;
+        $errors['price'] = $verifyPrice;
     }
     $verifyTitle = verifyTitle($title);
     if ($verifyTitle !== TRUE) {
         $errorList[] = $verifyTitle;
+        $errors['title'] = $verifyTitle;
     }
     $verifyBedrooms = verifyBedrooms($bedrooms);
     if ($verifyBedrooms !== TRUE) {
         $errorList[] = $verifyBedrooms;
+        $errors['bedrooms'] = $verifyBedrooms;
     }
     $verifyBathrooms = verifyBathrooms($bathrooms);
     if ($verifyBathrooms !== TRUE) {
         $errorList[] = $verifyBathrooms;
+        $errors['bathrooms'] = $verifyBathrooms;
     }
     $verifyBuildingYear = verifyBuildingYear($buildingYear);
     if ($verifyBuildingYear !== TRUE) {
         $errorList[] = $verifyBuildingYear;
+        $errors['buildingYear'] = $verifyBuildingYear;
     }
     $verifyLotArea = verifyLotArea($lotArea);
     if ($verifyLotArea !== TRUE) {
         $errorList[] = $verifyLotArea;
+        $errors['lotArea'] = $verifyLotArea;
     }
     $verifyDescription = verifyDescription($description);
     if ($verifyDescription !== TRUE) {
         $errorList[] = $verifyDescription;
+        $errors['description'] = $verifyDescription;
     }
     if ($appartmentNo !== "") {
         $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
         if ($verifyAppartmentNo !== TRUE) {
             $errorList[] = $verifyAppartmentNo;
+            $errors['appartmentNo'] = $verifyAppartmentNo;
         }
     } else {
         $appartmentNo = NULL;
@@ -718,10 +795,12 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
     $verifyStreetAddress = verifyStreetAddress($streetAddress);
     if ($verifyStreetAddress !== TRUE) {
         $errorList[] = $verifyStreetAddress;
+        $errors['streetAddress'] = $verifyStreetAddress;
     }
     $verifyCityName = verifyCityName($city);
     if ($verifyCityName !== TRUE) {
         $errorList[] = $verifyCityName;
+        $errors['city'] = $verifyCityName;
     }
     // $verifyProvince = verifyProvince($province);
     // if ($verifyProvince !== TRUE) {
@@ -730,10 +809,15 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
     $verifyPostalCode = verifyPostalCode($postalCode);
     if ($verifyPostalCode !== TRUE) {
         $errorList[] = $verifyPostalCode;
+        $errors['postalCode'] = $verifyPostalCode;
     }
 
     if ($errorList) {
-        return $this->view->render($response, 'admin/property_edit.html.twig', ['errorList' => $errorList]);
+        $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%d", $args['id']);
+        $brokerId = DB::queryFirstRow("SELECT brokerId FROM properties WHERE id=%d", $args['id']);
+        $broker = DB::queryFirstRow("SELECT licenseNo, firstName, lastName FROM users WHERE id=%d", $brokerId['brokerId']);
+        $propertyPhotos = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%d ORDER BY ordinalINT ASC", $property['id']);
+        return $this->view->render($response, 'admin/property_edit.html.twig', ['property' => $property, 'broker' => $broker, 'propertyPhotos' => $propertyPhotos, 'propertyId' => $property['id'], 'errorList' => $errorList, 'errors' => $errors]);
     }
 
     DB::update('properties', [
@@ -751,10 +835,16 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
         'postalCode' => $postalCode
     ], "id=%d", $args['id']);
 
+
     $previousOrdinal = DB::queryFirstRow("SELECT ordinalINT FROM propertyphotos WHERE propertyId=%d ORDER BY ordinalINT DESC", $args['id']);
-    $photoNo = $previousOrdinal['ordinalINT'] + 1;
+    print_r($previousOrdinal['ordinalINT']);
+    $photoNo = 0;
+    $firstPhoto = TRUE;
+    if ($previousOrdinal) {
+        $photoNo = $previousOrdinal['ordinalINT'] + 1;
+        $firstPhoto = FALSE;
+    }
     $photoPathArray = [];
-    $firstPhoto = FALSE;
     $photoFilePath = null;
 
     foreach ($uploadedPhotos as $photo) {
@@ -768,6 +858,7 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
         DB::insert('propertyphotos', ['propertyId' => $args['id'], 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);
         $photoNo++;
     }
+  
 
     return $this->view->render($response, 'admin/modification_success.html.twig');
 });
@@ -838,15 +929,11 @@ $app->post('/admin/property/delete/{id:[0-9]+}', function ($request, $response, 
 // Pending Brokers
 
 // View a list of all pending brokers and their information
-$pendingPerPage = 8;
 $app->get('/admin/pending/list[/{pageNo:[0-9]+}]', function ($request, $response, $args) {
-    // $pendingUserList = DB::query("SELECT * FROM brokerpendinglist");
-    // return $this->view->render($response, 'admin/pending_list.html.twig', ['list' => $pendingUserList]);
-
-    global $pendingPerPage;
+    global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $pendingCount = DB::queryFirstField("SELECT COUNT(*) AS COUNT FROM brokerpendinglist");
-    $maxPages = ceil($pendingCount / $pendingPerPage);
+    $maxPages = ceil($pendingCount / $itemsPerPage);
     return $this->view->render($response, 'admin/pending_list_interface.html.twig', [
         'maxPages' => $maxPages,
         'pageNo' => $pageNo,
@@ -854,10 +941,10 @@ $app->get('/admin/pending/list[/{pageNo:[0-9]+}]', function ($request, $response
 });
 
 $app->get('/pendingdata/{pageNo:[0-9]+}', function ($request, $response, $args) {
-    global $pendingPerPage;
+    global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $pendingList = DB::query("SELECT * FROM brokerpendinglist ORDER BY id ASC LIMIT %d OFFSET %d",
-             $pendingPerPage, ($pageNo - 1) * $pendingPerPage);
+             $itemsPerPage, ($pageNo - 1) * $itemsPerPage);
     return $this->view->render($response, 'admin/load_pagination_data.html.twig', [
             'pendingList' => $pendingList
         ]);

@@ -4,31 +4,42 @@
 
 {% block content %}
 
-    {% if errorList %}
-        <ul>
-        {% for error in errorList %}
-            <li>{{ error }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="container">
+    <h2 class="text-center">Add Property</h2>
 
     {# Form for adding a property #}
-    <form method="post" enctype="multipart/form-data">
-        Broker License: <input name="licenseNo" type="text"><br>
-        Price: <input name="price" type="number" min="0" step=".01"><br>
-        Title: <input name="title" type="text"><br>
-        Bedrooms: <input name="bedrooms" type="number" min="0"><br>
-        Bathrooms: <input name="bathrooms" type="number" min="0"><br>
-        Building Year: <input name="buildingYear" type="number" min="0"><br>
-        Lot Area: <input name="lotArea" type="number" min="0" step=".01"><br>
-        House Description: <textarea name="description" cols="60" row="10"></textarea><br>
-        Appartment Number: <input name="appartmentNo" type="number"><br>
-        Street Address: <input name="streetAddress" type="text"><br>
-        City: <input name="city" type="text"><br>
-        Province: <input name="province" type="text"><br>
-        Postal Code: <input name="postalCode" type="text"><br>
-        Upload Images: <input type="file" id="files" name="photos[]" multiple><br>
-        <input type="submit" value="Add Property">
-    </form>
+        <form method="post" enctype="multipart/form-data">
+            Broker License: <input class="form-control" name="licenseNo" type="text">
+            <div class="err-msg">{{errors.licenseNo}}</div><br>
+            Price: <input class="form-control" name="price" type="number" min="0" step=".01">
+            <div class="err-msg">{{errors.price}}</div><br>
+            Title: <input class="form-control" name="title" type="text">
+            <div class="err-msg">{{errors.title}}</div><br>
+            Bedrooms: <input class="form-control" name="bedrooms" type="number" min="0">
+            <div class="err-msg">{{errors.bedrooms}}</div><br>
+            Bathrooms: <input class="form-control" name="bathrooms" type="number" min="0">
+            <div class="err-msg">{{errors.bathrooms}}</div><br>
+            Building Year: <input class="form-control" name="buildingYear" type="number" min="0">
+            <div class="err-msg">{{errors.buildingYear}}</div><br>
+            Lot Area: <input class="form-control" name="lotArea" type="number" min="0" step=".01">
+            <div class="err-msg">{{errors.lotArea}}</div><br>
+            House Description: <textarea class="form-control" name="description" cols="60" row="10"></textarea>
+            <div class="err-msg">{{errors.description}}</div><br>
+            Appartment Number: <input class="form-control" name="appartmentNo" type="number">
+            <div class="err-msg">{{errors.appartmentNo}}</div><br>
+            Street Address: <input class="form-control" name="streetAddress" type="text">
+            <div class="err-msg">{{errors.streetAddress}}</div><br>
+            City: <input class="form-control" name="city" type="text">
+            <div class="err-msg">{{errors.city}}</div><br>
+            Province: <input class="form-control" name="province" type="text"><br>
+            {# <div class="err-msg">{{errors.province}}</div> #}
+            Postal Code: <input class="form-control" name="postalCode" type="text">
+            <div class="err-msg">{{errors.postalCode}}</div><br>
+            Upload Images: <input class="form-control" type="file" id="files" name="photos[]" multiple>
+            <div class="err-msg">{{errors.uploadedPhotos}}</div><br>
+            <input class="btn btn-primary form-control" type="submit" value="Add Property">
+        </form>
+
+    </div>
 
 {% endblock content %}

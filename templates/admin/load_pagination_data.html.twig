@@ -32,6 +32,7 @@
 
 {% endif %}
 
+{# ----------------------------------------------------------------------------------------------------------- #}
 
 {% if pendingList %}
 
@@ -47,6 +48,74 @@
         <td>{{p.lastName}}</td>
         <td>{{p.company}}</td>
     </tr>
+{% endfor %}
+
+{% endif %}
+
+{# ----------------------------------------------------------------------------------------------------------- #}
+
+{% if buyerList %}
+
+{% for b in buyerList %}
+<tr>
+    <td>
+        <a href="/admin/users/edit/{{b.id}}">
+            <div class="admin-edit-square">
+                <i class="fas fa-edit admin-edit-icon"></i>
+            </div>
+        </a>
+        <a href="/admin/users/delete/{{b.id}}">
+            <div class="admin-delete-square">
+                <i class="fas fa-trash admin-delete-icon"></i>
+            </div>
+        </a>
+    </td>
+    <td>{{b.id}}</td>
+    <td>{{b.email}}</td>
+    <td>{{b.firstName}}</td>
+    <td>{{b.lastName}}</td>
+    <td>{{b.phone}}</td>
+    <td>{{b.streetAddress}}</td>
+    <td>{{b.city}}</td>
+    <td>{{b.province}}</td>
+    <td>{{b.postalCode}}</td>
+</tr>
+{% endfor %}
+
+{% endif %}
+
+{# ----------------------------------------------------------------------------------------------------------- #}
+
+{% if brokerList %}
+
+{% for b in brokerList %}
+<tr>
+    <td>
+        <a href="/admin/users/edit/{{b.id}}">
+            <div class="admin-edit-square">
+                <i class="fas fa-edit admin-edit-icon"></i>
+            </div>
+        </a>
+        <a href="/admin/users/delete/{{b.id}}">
+            <div class="admin-delete-square">
+                <i class="fas fa-trash admin-delete-icon"></i>
+            </div>
+        </a>
+    </td>
+    <td>{{b.id}}</td>
+    <td>{{b.email}}</td>
+    <td>{{b.licenseNo}}</td>
+    <td>{{b.firstName}}</td>
+    <td>{{b.lastName}}</td>
+    <td>{{b.company}}</td>
+    <td>{{b.jobTitle}}</td>
+    <td>{{b.phone}}</td>
+    <td>{{b.appartmentNo}}</td>
+    <td>{{b.streetAddress}}</td>
+    <td>{{b.city}}</td>
+    <td>{{b.province}}</td>
+    <td>{{b.postalCode}}</td>
+</tr>
 {% endfor %}
 
 {% endif %}

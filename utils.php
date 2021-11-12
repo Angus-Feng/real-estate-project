@@ -252,7 +252,6 @@ function verifyLicenseNoUpdate($licenseNo, $id) {
     return TRUE;
 }
 
-function verifyFirstName($firstName) { //TEST REGEX
     if (strlen($firstName) < 1 || strlen($firstName) > 100) {
         return "First name must be between 1 - 100 characters long.";
     } else if (!preg_match('/[a-zA-Z\.\'\-]+/', $firstName)) {
@@ -261,7 +260,6 @@ function verifyFirstName($firstName) { //TEST REGEX
     return TRUE;
 }
 
-function verifyLastName($lastName) { //TEST REGEX
     if (strlen($lastName) < 1 || strlen($lastName) > 100) {
         return "Last name must be between 1 - 100 characters long.";
     } else if (!preg_match('/[a-zA-Z\.\'\-]+/', $lastName)) {
@@ -270,7 +268,6 @@ function verifyLastName($lastName) { //TEST REGEX
     return TRUE;
 }
 
-function verifyPhone($phone) { //TEST REGEX
     if ($phone == "") {
         return TRUE;
     }
@@ -280,7 +277,6 @@ function verifyPhone($phone) { //TEST REGEX
     return TRUE;
 }
 
-function verifyCompany($company) { //TEST REGEX
     if (strlen($company) < 1 || strlen($company) > 100) {
         return "Company name must be between 1 - 100 characters long.";
     } else if (!preg_match('/[a-zA-Z\.\'\-\s]/', $company)) {
@@ -289,7 +285,6 @@ function verifyCompany($company) { //TEST REGEX
     return TRUE;
 }
 
-function verifyJobTitle($jobTitle) { //TEST REGEX
     if ($jobTitle == "") {
         return TRUE;
     }
@@ -299,10 +294,10 @@ function verifyJobTitle($jobTitle) { //TEST REGEX
     return TRUE;
 }
 
-function verifyAppartmentNo($appartmentNo) { //TEST REGEX
-    // if ($appartmentNo == "") {
-    //     return TRUE;
-    // }
+function verifyAppartmentNo($appartmentNo) {
+    if ($appartmentNo == "") {
+        return TRUE;
+    }
     if (!preg_match('/^[0-9]+/', $appartmentNo)) {
         return "Appartment number can only be made up of numbers.";
     }
@@ -310,27 +305,34 @@ function verifyAppartmentNo($appartmentNo) { //TEST REGEX
 }
 
 
-function verifyUserStreetAddress($streetAddress) { //TEST REGEX
-    // if ($streetAddress == "") {
-    //     return TRUE;
-    // }
+function verifyUserStreetAddress($streetAddress) {
+    if ($streetAddress == "") {
+        return TRUE;
+    }
     if (!preg_match('/[a-zA-Z0-9\.\'\-\s]+/', $streetAddress) || strlen($streetAddress) < 1 || strlen($streetAddress) > 100) {
         return "Street name must be between 1 - 100 characters long and can only contain letters, periods, apostrophes and hyphens.";
     }
     return TRUE;
 }
 
-function verifyCityName($city) { //TEST REGEX
-    // if ($city == "") {
-    //     return TRUE;
-    // }
+function verifyCityName($city) {
+    if ($city == "") {
+        return TRUE;
+    }
     if (!preg_match('/[a-zA-Z\.\'\-\s]+/', $city) || strlen($city) < 1 || strlen($city) > 100) {
         return "City name must be between 1 - 100 characters long and can only contain letters, periods, apostrophes and hyphens.";
     }
     return TRUE;
 }
 
-function verifyProvince($province) { //TEST REGEX
+function verifyCityNameManditory($city) { // TEMP FUNCTION
+    if (!preg_match('/[a-zA-Z\.\'\-\s]+/', $city) || strlen($city) < 1 || strlen($city) > 100) {
+        return "City name must be between 1 - 100 characters long and can only contain letters, periods, apostrophes and hyphens.";
+    }
+    return TRUE;
+}
+
+function verifyProvince($province) {
     // if ($province == "") {
     //     return TRUE;
     // }
@@ -355,14 +357,20 @@ function verifyPostalCode($postalCode) { //TEST REGEX
     return TRUE;
 }
 
-function verifyPrice($price) {
-    if ($price < 1 && $price > 1000000000) {
-        return "The price of the home must range from 1 - 1,000,000,000 CAD.";
+function verifyPostalCodeManditory($postalCode) { // TEMP FUNCTION
+        return "Postal code must be in the following format: H9X3L9.";
     }
     return TRUE;
 }
 
-function verifyTitle($title) { //TEST REGEX
+function verifyPrice($price) {
+    if ($price < 1.00 || $price > 1000000000.00) {
+        return "The price of the home must range from 1.00 CAD - 1,000,000,000.00 CAD.";
+    }
+    return TRUE;
+}
+
+function verifyTitle($title) {
     if (!preg_match('/^[a-zA-Z\.\'\-\s]+$/', $title) || strlen($title) < 1 || strlen($title) > 100) {
         return "Title must be between 1 - 100 characters long and can only contain letters, periods, apostrophes and hyphens.";
     }
@@ -370,15 +378,14 @@ function verifyTitle($title) { //TEST REGEX
 }
 
 function verifyBedrooms($bedrooms) {
-    if ($bedrooms < 0 || $bedrooms > 2000) {
         return "Bedrooms should be between 0 - 2000.";
+    if ($bedrooms < 1 || $bedrooms > 2000) {
+        return "Bedrooms should be between 1 - 2000.";
     }
     return TRUE;
 }
 
 function verifyBathrooms($bathrooms) {
-    if ($bathrooms < 0 || $bathrooms > 1000) {
-        return "Bathrooms should be between 0 - 1000.";
     }
     return TRUE;
 }
@@ -404,7 +411,7 @@ function verifyStreetAddress($streetAddress) { //TEST REGEX
     return TRUE;
 }
 
-function verifyDescription($description) { //TEST REGEX
+function verifyDescription($description) {
     if (strlen($description) < 1 || strlen($description) > 2000) {
         return "Description must be between 1 - 2000 characters long.";
     }
