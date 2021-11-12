@@ -2,15 +2,26 @@
 {% block title %}
 	Sign in
 {% endblock %}
-{% block header %}
-	<h1>Log In</h1>
-	<div class="err-msg">{{er}}</div>
-{% endblock %}
-
 
 {% block content %}
+<!--/ Intro Single star /-->
+  <section class="intro-single">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-lg-8">
+          <div class="title-single-box">
+            <h4 class="title-single">Please login with your email and password</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--/ Intro Single End /-->
+<section class="section-about">
+	<div class="container">
 	<form method="post">
 		<div class="row g-3">
+			<div class="err-msg">{{er}}</div>
 			<div class="col-12">
 				<label for="email" class="form-label">Email address</label>
 				<input type="email" name="email" class="form-control" {% if email %}value="{{email}}"{% else %}value="{{data}}"{% endif %}>
@@ -26,4 +37,6 @@
 			<button type="submit" class="btn btn-primary" name="submit">Submit</button>
 		</div>
 	</form>
-	{% endblock %}
+	</div>
+</section>
+{% endblock %}

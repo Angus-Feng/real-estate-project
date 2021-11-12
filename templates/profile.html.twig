@@ -97,7 +97,7 @@
                         } else {
                             body += '<img src="/images/defaultproperty.jpg" class="img-a img-fluid" alt="property photo">';
                         }
-                        body += '</div><div class="card-overlay"><div class="card-overlay-a-content"><div class="card-header-a"><h2 class="card-title-a">';
+                        body += '</div><div class="card-overlay"><div class="card-overlay-a-content"><div class="card-header-a"><h4 class="card-title-a">';
                         body += '<a href="/properties/{{property.id}}">' + (property.appartmentNo ? "#" + property.appartmentNo + " " : "") + property.streetAddress + ', ' + property.city + '</a></h2></div>';
                         body += '<div class="card-body-a"><div class="price-box d-flex">';
                         body += '<span class="price-a">$' + property.price + '</span></div>';
@@ -131,10 +131,26 @@
 {% endblock %}
 
 {% block content %}
+<!--/ Intro Single star /-->
+  <section class="intro-single">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-lg-8">
+          <div class="title-single-box">
+            <h4 class="title-single">Your Profile</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--/ Intro Single End /-->
+  <section class="section-about">
+	<div class="container">
     {% if user.role is same as("broker") %}
         {% include "profile-broker.html.twig" %}
     {% else %}
         {% include "profile-buyer.html.twig" %}
     {% endif %}
-    
+    </div>
+</section>
 {% endblock %}

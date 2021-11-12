@@ -19,17 +19,30 @@
                 data: {userId: userId, propertyId: propertyId, method: method},
                 cache: false,
                 success: function(data){
-                }
+              }
 			});
 		});
+
+    var size = $('.row .col-md-4').size();
+    var x = 9;
+    $('.row .col-md-4:lt('+x+')').show();
+    $('#loadMore').click(function() {
+      x = (x + 6 <= size) ? x + 6 : size;
+      $('.row .col-md-4:lt('+x+')').show();
+      if (x == size) {
+        $('#loadMore').hide();
+      }
+    })
+
 	}) 
+  
 </script>
 <div class="sticky-sm-top text-primary" propCount="{{properties|length}}">{{properties|length}} properties found</div>
 <section class="property-grid grid">
     <div class="container">
       <div class="row">
 {% for property in properties %}
-	<div class="col-md-4">
+	<div class="col-md-4" style="display: none;">
         <div class="card-box-a card-shadow">
             <div class="img-box-a">
               <img src="
@@ -96,5 +109,8 @@
         </div>
 {% endfor %}
       </div>
+    </div>
+    <div class="text-center">
+      <button class="btn-primary" id="loadMore">Load More</button>
     </div>
 </section>

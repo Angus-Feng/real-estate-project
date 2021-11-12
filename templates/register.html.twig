@@ -2,11 +2,40 @@
 {% block title %}
 Register
 {% endblock %}
-{% block header %}
-    <h1>Sign Up</h1>
+{% block addHead %}
+    <script>
+
+        $(document).ready(function() {
+
+            $('.reg-broker').hide();
+            
+            $('input[name=isBroker]').on('click', function() {
+                if($(this).is(':checked')) {
+                    $('.reg-broker').show();
+                } else {
+                    $('.reg-broker').hide();
+                }
+            })
+        })
+    </script>
 {% endblock %}
 
 {% block content %}
+<!--/ Intro Single star /-->
+  <section class="intro-single">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-lg-8">
+          <div class="title-single-box">
+            <h4 class="title-single">Sign up as buyer or broker</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--/ Intro Single End /-->
+  <section class="section-about">
+	<div class="container">
     <form method="post">
         <div class="row g-3">
             <div class="col-12">
@@ -23,11 +52,12 @@ Register
                 <label for="pwRepeat" class="form-label">Re-enter password</label>
                 <input type="password" name="pwRepeat" class="form-control">
                 <div class="err-msg">{{er.pwRepeat}}</div>
-            </div>
-            <div class="mb-3 form-check">
+            </div><br>
+            <div class="col-12 form-check">
                 <input type="checkbox" class="form-check-input" name="isBroker">
                 <label class="form-check-label" for="isBroker">I'm a broker</label>
             </div>
+            <div class="reg-broker row g-3">
             <div class="col-sm-6">
                 <label for="brokerFirstName" class="form-label">First Name</label>
                 <input type="text" class="form-control" name="brokerFirstName" value="{{data.firstName}}">
@@ -48,7 +78,10 @@ Register
                 <input type="text" name="company" class="form-control" value="{{data.company}}">
                 <div class="err-msg">{{er.company}}</div>
             </div>
+            </div>
         <button type="submit" class="btn btn-primary" name="submit">Submit</button>
     </div>
     </form>
+    </div>
+</section>
 {% endblock %}
