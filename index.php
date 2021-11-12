@@ -22,5 +22,10 @@ $app->get('/', function ($request, $response, $args) {
     return $this->view->render($response, 'index.html.twig');
 })->setName('index');
 
+// About page
+$app->get('/about', function ($request, $response, $args) {
+    return $this->view->render($response, 'about.html.twig');
+});
+
 // Run app
 $app->run();
