@@ -837,7 +837,6 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
 
 
     $previousOrdinal = DB::queryFirstRow("SELECT ordinalINT FROM propertyphotos WHERE propertyId=%d ORDER BY ordinalINT DESC", $args['id']);
-    print_r($previousOrdinal['ordinalINT']);
     $photoNo = 0;
     $firstPhoto = TRUE;
     if ($previousOrdinal) {
