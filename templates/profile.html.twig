@@ -28,7 +28,7 @@
         $('#changePass').click(function() {
             
             $('.profile').hide();
-            $('.viewFav').hide();
+            $('.view-fav').hide();
             $('#profile-success').html("");
             $('.changePass').show();
             
@@ -64,7 +64,7 @@
             
             $('.profile').show();
             $('.changePass').hide();
-            $('.viewFav').hide();
+            $('.view-fav').hide();
             $('#profile-success').html("");
         });
 
@@ -79,7 +79,7 @@
         $('.profile').hide();
             $('.changePass').hide();
             $('#profile-success').html("");
-            $('.viewFav').show();
+            $('.view-fav').show();
 
             $.ajax({
                 url: '/profile/viewFav',
@@ -89,21 +89,26 @@
                     var body = "";
                     for (var i = 0; i < favList.length; i++) {
                         var property = favList[i];
-                        body += '<div class="col-3"><div class="p-3 border bg-light">';
-                        body += '<div class="card">';
+                        body += '<div class="col-md-4">';
+                        body += '<div class="card-box-a card-shadow">';
+                        body += '<div class="img-box-a">';
                         if (property.photoFilePath) {
-                            body += '<img src="/uploads/' + property.id + '/thmb-' + property.photoFilePath + '" class="card-img-top" alt="property photo">';
+                            body += '<img src="/uploads/' + property.id + '/thmb-' + property.photoFilePath + '" class="img-a img-fluid" alt="property photo">';
                         } else {
-                            body += '<img src="/images/defaultproperty.jpg" class="card-img-top" alt="property photo">';
+                            body += '<img src="/images/defaultproperty.jpg" class="img-a img-fluid" alt="property photo">';
                         }
-                        body += '<div class="card-body">';
-                        body += '<h5 class="card-title">' + property.price + '</h5>';
-                        body += '<p class="card-text">' + (property.appartmentNo ? "#" + property.appartmentNo + " " : "") + property.streetAddress + ', ' + property.city + ', ' + property.province + '</p>';
-                        body += '<p class="card-text">' +property.bedrooms + 'bedroom(s)' + ' + ' + property.bathrooms + 'bathroom(s)</p>';
-                        body += '<a href="#" class="btn btn-primary">View details</a><a href="#" class="btn btn-danger" onclick="deleteFav(' + property.id + ')">remove</a>';
-                        body += '</div></div></div></div>';
+                        body += '</div><div class="card-overlay"><div class="card-overlay-a-content"><div class="card-header-a"><h2 class="card-title-a">';
+                        body += '<a href="/properties/{{property.id}}">' + (property.appartmentNo ? "#" + property.appartmentNo + " " : "") + property.streetAddress + ', ' + property.city + '</a></h2></div>';
+                        body += '<div class="card-body-a"><div class="price-box d-flex">';
+                        body += '<span class="price-a">$' + property.price + '</span></div>';
+                        body += '<a href="/properties/{{property.id}}" class="link-a">Click here to view</a></div>';
+                        body += '<div class="card-footer-a"><ul class="card-info d-flex justify-content-around"><li><h4 class="card-info-title">Lot area</h4><span>' + property.lotArea + 'M<sup>2</sup></span></li>';
+                        body += '<li><h4 class="card-info-title">Beds</h4><span>' +property.bedrooms + '</span></li>';
+                        body += '<li><h4 class="card-info-title">Baths</h4><span>' +property.bathrooms + '</span></li>';
+                        body += '<li><a href="#" class="btn btn-danger" onclick="deleteFav(' + property.id + ')">remove</a></li>';
+                        body += '</ul></div></div></div></div></div>';
                     }
-                    $('.viewFav div:first-child').html(body);
+                    $('.viewFav').html(body);
                 }
             })
     }

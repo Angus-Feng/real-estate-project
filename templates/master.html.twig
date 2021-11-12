@@ -39,86 +39,88 @@
 
 	<!--/ Form Search Start /-->
 	<div class="box-collapse">
-		<div class="title-box-d">
-			<h3 class="title-d">Search Property</h3>
-		</div>
-		<span class="close-box-collapse right-boxed ion-ios-close"></span>
-		<div class="box-collapse-wrap form">
-			<form class="form-a">
-				<div class="row">
-					<div class="col-md-12 mb-2">
-						<div class="form-group">
-							<label for="Type">Keyword</label>
-							<input type="text" class="form-control form-control-lg form-control-a" id="keyword" placeholder="search properties">
-						</div>
-					</div>
-					<div class="col-md-6 mb-2">
-						<div class="form-group">
-							<label for="Type">Min price</label>
-							<select class="form-control form-control-lg form-control-a" id="min-price">
-								<option value="0">0</option>
-								<option value="50000">50,000</option>
-								<option value="100000">100,000</option>
-								<option value="200000">200,000</option>
-								<option value="500000">500,000</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-6 mb-2">
-						<div class="form-group">
-							<label for="city">Max price</label>
-							<select class="form-control form-control-lg form-control-a" id="max-price">
-								<option value="1000000000">Unlimited</option>
-								<option value="1000000">1,000,000</option>
-								<option value="500000">500,000</option>
-								<option value="200000">200,000</option>
-								<option value="100000">100,000</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-6 mb-2">
-						<div class="form-group">
-							<label for="bedrooms">Bedrooms</label>
-							<select class="form-control form-control-lg form-control-a" id="beds">
-								<option value=">=0" selected>No limit</option>
-								<option value="=1">1</option>
-								<option value=">=1">1+</option>
-								<option value="=2">2</option>
-								<option value=">=2">2+</option>
-								<option value="=3">3</option>
-								<option value=">=3">3+</option>
-								<option value="=4">4</option>
-								<option value=">=4">4+</option>
-								<option value="=5">5</option>
-								<option value=">=5">5+</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-6 mb-2">
-						<div class="form-group">
-							<label for="garages">Bathrooms</label>
-							<select class="form-control form-control-lg form-control-a" id="baths">
-								<option value=">=0" selected>No limit</option>
-								<option value="=1">1</option>
-								<option value=">=1">1+</option>
-								<option value="=2">2</option>
-								<option value=">=2">2+</option>
-								<option value="=3">3</option>
-								<option value=">=3">3+</option>
-								<option value="=4">4</option>
-								<option value=">=4">4+</option>
-								<option value="=5">5</option>
-								<option value=">=5">5+</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-12">
-						<button type="submit" class="btn btn-b" name="propSearch">Search Property</button>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
+    <div class="title-box-d">
+      <h3 class="title-d">Search Property</h3>
+    </div>
+    <span class="close-box-collapse right-boxed ion-ios-close"></span>
+    <div class="box-collapse-wrap form">
+      <form class="form-a">
+        <div class="row">
+          <div class="col-md-12 mb-2">
+            <div class="form-group">
+              <label for="Type">Keyword</label>
+              <input type="text" class="form-control form-control-lg form-control-a" id="keyword"
+              value="{{searchVals.keyword}}"  placeholder="search properties">
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <div class="form-group">
+              <label for="Type">Min price</label>
+              <select class="form-control form-control-lg form-control-a" id="min-price">
+                <option value="0" selected>No limit</option>
+                <option value="0" {% if searchVals.minPrice is same as ('0') %} selected="selected" {% endif %}>0</option>
+                <option value="50000" {% if searchVals.minPrice is same as ('50000') %} selected="selected" {% endif %}>50,000</option>
+                <option value="100000" {% if searchVals.minPrice is same as ('100000') %} selected="selected" {% endif %}>100,000</option>
+                <option value="200000" {% if searchVals.minPrice is same as ('200000') %} selected="selected" {% endif %}>200,000</option>
+                <option value="500000" {% if searchVals.minPrice is same as ('500000') %} selected="selected" {% endif %}>500,000</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <div class="form-group">
+              <label for="city">Max price</label>
+              <select class="form-control form-control-lg form-control-a" id="max-price">
+                <option value="1000000000" selected>No limit</option>
+                <option value="1000000" {% if searchVals.maxPrice is same as ('1000000') %} selected="selected" {% endif %}>1,000,000</option>
+                <option value="500000" {% if searchVals.maxPrice is same as ('500000') %} selected="selected" {% endif %}>500,000</option>
+                <option value="200000" {% if searchVals.maxPrice is same as ('200000') %} selected="selected" {% endif %}>200,000</option>
+                <option value="100000" {% if searchVals.maxPrice is same as ('100000') %} selected="selected" {% endif %}>100,000</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <div class="form-group">
+              <label for="bedrooms">Bedrooms</label>
+              <select class="form-control form-control-lg form-control-a" id="beds">
+                <option value=">=0" selected>No limit</option>
+                <option value="=1" {% if searchVals.beds is same as ('=1') %} selected="selected" {% endif %}>1</option>
+                <option value=">=1" {% if searchVals.beds is same as ('>=1') %} selected="selected" {% endif %}>1+</option>
+                <option value="=2" {% if searchVals.beds is same as ('=2') %} selected="selected" {% endif %}>2</option>
+                <option value=">=2" {% if searchVals.beds is same as ('>=2') %} selected="selected" {% endif %}>2+</option>
+                <option value="=3" {% if searchVals.beds is same as ('=3') %} selected="selected" {% endif %}>3</option>
+                <option value=">=3" {% if searchVals.beds is same as ('>=3') %} selected="selected" {% endif %}>3+</option>
+                <option value="=4" {% if searchVals.beds is same as ('=4') %} selected="selected" {% endif %}>4</option>
+                <option value=">=4" {% if searchVals.beds is same as ('>=4') %} selected="selected" {% endif %}>4+</option>
+                <option value="=5" {% if searchVals.beds is same as ('=5') %} selected="selected" {% endif %}>5</option>
+                <option value=">=5" {% if searchVals.beds is same as ('>=5') %} selected="selected" {% endif %}>5+</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 mb-2">
+            <div class="form-group">
+              <label for="garages">Bathrooms</label>
+              <select class="form-control form-control-lg form-control-a" id="baths">
+                <option value=">=0" selected>No limit</option>
+                <option value="=1" {% if searchVals.baths is same as ('=1') %} selected="selected" {% endif %}>1</option>
+                <option value=">=1" {% if searchVals.baths is same as ('>=1') %} selected="selected" {% endif %}>1+</option>
+                <option value="=2" {% if searchVals.baths is same as ('=2') %} selected="selected" {% endif %}>2</option>
+                <option value=">=2" {% if searchVals.baths is same as ('>=2') %} selected="selected" {% endif %}>2+</option>
+                <option value="=3" {% if searchVals.baths is same as ('=3') %} selected="selected" {% endif %}>3</option>
+                <option value=">=3" {% if searchVals.baths is same as ('>=3') %} selected="selected" {% endif %}>3+</option>
+                <option value="=4" {% if searchVals.baths is same as ('=4') %} selected="selected" {% endif %}>4</option>
+                <option value=">=4" {% if searchVals.baths is same as ('>=4') %} selected="selected" {% endif %}>4+</option>
+                <option value="=5" {% if searchVals.baths is same as ('=5') %} selected="selected" {% endif %}>5</option>
+                <option value=">=5" {% if searchVals.baths is same as ('>=5') %} selected="selected" {% endif %}>5+</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <button type="submit" class="btn btn-b" name="propSearch">Search Property</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 	<!--/ Form Search End /-->
 
 	<!--/ Nav Start /-->
@@ -137,7 +139,7 @@
 			<div class="navbar-collapse collapse justify-content-center" id="navbarDefault">
 				<ul class="navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link active" href="/">Home</a>
+					<a class="nav-link" href="/">Home</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="/register">Sign up</a>
@@ -160,11 +162,13 @@
 		</div>
 	</nav>
 	<!--/ Nav End /-->
-	
+	<header class="text-center">
+    {% block header %}{% endblock %}
+  </header>
 	<!--/ Main Content Start /-->
 	{% block content %}{% endblock %}
 	<!--/ Main Content End /-->
-
+  
   <!--/ Footer Start /-->
 	<section class="section-footer">
 		<div class="container">
@@ -326,6 +330,6 @@
 
 	<!-- Template Main Javascript File -->
 	<script src="/js/main.js"></script>
-
+  <script src="/js/search.js"></script>
 </body>
 </html>

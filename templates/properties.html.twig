@@ -27,16 +27,6 @@
 
 		})
 
-		//search
-		$('button[name=propSearch]').click(function() {
-			minPrice = $("#min-price option:selected").val();
-			maxPrice = $('#max-price option:selected').val();
-			beds = $('#beds option:selected').val();
-			baths = $('#baths option:selected').val();
-			keyword = $('#keyword').val();
-			loadPropList();
-		})
-
     }) // document ready
 
 	function loadPropList() {
@@ -47,7 +37,7 @@
 </script>
 {% endblock %}
 {% block header %}
-	<div class="row row-cols-lg-auto g-3 align-items-center">
+	<div class="row row-cols-lg-auto g-3 align-items-center" style="display: none;">
         <div class="col-12">
             <input class="form-control form-control-md" type="text" id="keyword" placeholder="search properties" value="{{searchVals.keyword}}">
         </div>
@@ -109,7 +99,20 @@
         <div class="col-12">
           <button class="btn btn-primary" name="propSearch">search</button>
         </div>
-    </div><br>
+  </div>
+  <!--/ Intro Single star /-->
+  <section class="intro-single">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-lg-8">
+          <div class="title-single-box">
+            <h1 class="title-single">Our Amazing Properties</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--/ Intro Single End /-->
 	<ul class="nav nav-pills">
   		<li class="nav-item">
     		<a class="nav-link active" aria-current="page" href="#">Gallery</a>
