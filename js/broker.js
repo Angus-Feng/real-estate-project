@@ -34,8 +34,8 @@ $(document).ready(function() {
 				$("#submitStep").hide();
 				$("#lastStep").show();
 				const html = '<p>A new property added successfully!</p>'
-									+ `<div><a href=myproperty/${propertyId}>`
-									+ '<button class="btn btn-primary" type="button">View the Property</button></div>';
+							+ `<div><a href=myproperty/${propertyId}>`
+							+ '<button class="btn btn-primary" type="button">View the Property</button></div>';
 				$("#lastStep").append(html);
 			}
 		});
@@ -125,7 +125,7 @@ function showErrorMsg(jqxhr) {
 		// TODO: add red outline in input box
 		// Create error message nodes and display it under its input box
 		for (const error in errorList) {
-			let errorMsg = `<span id="errorMsg${error[0].toUpperCase() + error.slice(1)}" class="errorMsg">${errorList[error]}</span>`;
+			let errorMsg = `<span id="errorMsg${error[0].toUpperCase() + error.slice(1)}" class="errorMsg err-msg">${errorList[error]}</span>`;
 			if (error === 'description') {
 				$('textarea[name=description]').after(errorMsg);
 			}
