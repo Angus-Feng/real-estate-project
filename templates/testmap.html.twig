@@ -1,7 +1,6 @@
 {% extends "master.html.twig" %}
 {% block addHead %}
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-
 <script>
     let map;
 
@@ -18,10 +17,10 @@
 {% endblock %}
 
 {% block content %}
-    <div id="map" styles="height: 1000px; width: 1000px;"></div>
-{% endblock %}
-{% block bodyScript %}
+    <div id="map" style="height 1000px; width: 1000px;"></div>
+
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCflFmMrn2tJfZDEn8eIokkKldXJlTU19Q&callback=initMap"
-    async defer></script>
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCflFmMrn2tJfZDEn8eIokkKldXJlTU19Q&callback=initMap">
+    </script> 
 {% endblock %}
