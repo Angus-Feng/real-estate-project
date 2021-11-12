@@ -4,6 +4,7 @@ require_once 'vendor/autoload.php';
 
 require_once 'init.php';
 
+use Slim\App;
 
 $app->get('/register', function ($request, $response, $args) {
     return $this->view->render($response, 'register.html.twig');
@@ -119,170 +120,197 @@ $app->post('/login', function ($request, $response, $args) use ($log) {
     }
 });
 
-$app->get('/profile', function ($request, $response, $args) {
-    $id = @$_SESSION['user']['id'];
-    if (!$id) {
-        return $response->withRedirect($this->router->pathFor('login'));
-    } else {
-        $result = DB::queryFirstRow("SELECT * FROM users WHERE id = $id");
-        unset($result['password']);
-        return $this->view->render($response, 'profile.html.twig', ['user' => $result]);
-    }
-})->setName('profile');
+$app->group('/profile', function (App $app) use ($log) {
 
-$app->post('/profile', function ($request, $response, $args) {
+    $app->get('', function ($request, $response, $args) {
+        $id = @$_SESSION['user']['id'];
+        if (!$id) {
+            return $response->withRedirect($this->router->pathFor('login'));
+        } else {
+            $result = DB::queryFirstRow("SELECT * FROM users WHERE id = $id");
+            unset($result['password']);
+            return $this->view->render($response, 'profile.html.twig', ['user' => $result]);
+        }
+    })->setName('profile');
 
-    $id = $_SESSION['user']['id'];
-    $email = $request->getParam('email');
-    $licenseNo = $request->getParam('licenseNo');
-    $firstName = $request->getParam('firstName');
-    $lastName = $request->getParam('lastName');
-    $phone = $request->getParam('phone');
-    $company = $request->getParam('company');
-    $jobTitle = $request->getParam('jobTitle');
-    $appartmentNo = $request->getParam('appartmentNo');
-    $streetAddress = $request->getParam('streetAddress');
-    $city = $request->getParam('city');
-    $province = $request->getParam('province');
-    $postalCode = $request->getParam('postalCode');
-    // error msg
-    $errors = array(
-        'licenseNo' => "", 'firstName' => "", 'lastName' => "", 'phone' => "", 'company' => "",
-        'jobTitle' => "", 'appartmentNo' => "", 'streetAddress' => "", 'city' => "", 'postalCode' => ""
-    );
-    //success msg
-    $success = "";
-    // Verify
-    if (verifyPhone($phone) !== TRUE) {
-        $errors['phone'] = verifyPhone($phone);
-    }
-    if (verifyCityName($city) !== TRUE) {
-        $errors['city'] = verifyCityName($city);
-    }
-    if (verifyPostalCode($postalCode) !== TRUE) {
-        $errors['postalCode'] = verifyPostalCode($postalCode);
-    }
-    if (verifyJobTitle($jobTitle) !== TRUE) {
-        $errors['jobTitle'] = verifyJobTitle($jobTitle);
-    }
-    if (verifyAppartmentNo($appartmentNo) !== TRUE) {
-        $errors['appartmentNo'] = verifyAppartmentNo($appartmentNo);
-    }
-    if (verifyUserStreetAddress($streetAddress) !== TRUE) {
-        $errors['streetAddress'] = verifyUserStreetAddress($streetAddress);
-    }
-    // strip the space in postal code.
-    $postalCode = str_replace(' ', '', $postalCode);
-    // put all values in value list
-    $valueList = [
-        'email' => $email, 'firstName' => $firstName, 'lastName' => $lastName,
-        'phone' => $phone, 'company' => $company, 'jobTitle' => $jobTitle, 'appartmentNo' => $appartmentNo,
-        'streetAddress' => $streetAddress, 'city' => $city, 'province' => $province, 'postalCode' => $postalCode
-    ];
+    $app->post('', function ($request, $response, $args) {
 
-    if ($_SESSION['user']['role'] == 'buyer' || $_SESSION['user']['role'] == 'broker-check') {
-        echo $_SESSION['user']['role'];
-        $becomeBroker = $request->getParam('becomeBroker');
-        if ($becomeBroker) {
-            if (verifyLicenseNo($licenseNo) !== TRUE) {
-                $errors['licenseNo'] = verifyLicenseNo($licenseNo);
-            }
-            if (verifyFirstName($firstName) !== TRUE) {
-                $errors['firstName'] = verifyFirstName($firstName);
-            }
-            if (verifyLastName($lastName) !== TRUE) {
-                $errors['lastName'] = verifyLastName($lastName);
-            }
-            if (verifyCompany($company) !== TRUE) {
-                $errors['company'] = verifyCompany($company);
+        $id = $_SESSION['user']['id'];
+        $email = $request->getParam('email');
+        $licenseNo = $request->getParam('licenseNo');
+        $firstName = $request->getParam('firstName');
+        $lastName = $request->getParam('lastName');
+        $phone = $request->getParam('phone');
+        $company = $request->getParam('company');
+        $jobTitle = $request->getParam('jobTitle');
+        $appartmentNo = $request->getParam('appartmentNo');
+        $streetAddress = $request->getParam('streetAddress');
+        $city = $request->getParam('city');
+        $province = $request->getParam('province');
+        $postalCode = $request->getParam('postalCode');
+        // error msg
+        $errors = array(
+            'licenseNo' => "", 'firstName' => "", 'lastName' => "", 'phone' => "", 'company' => "",
+            'jobTitle' => "", 'appartmentNo' => "", 'streetAddress' => "", 'city' => "", 'postalCode' => ""
+        );
+        //success msg
+        $success = "";
+        // Verify
+        if (verifyPhone($phone) !== TRUE) {
+            $errors['phone'] = verifyPhone($phone);
+        }
+        if (verifyCityName($city) !== TRUE) {
+            $errors['city'] = verifyCityName($city);
+        }
+        if (verifyPostalCode($postalCode) !== TRUE) {
+            $errors['postalCode'] = verifyPostalCode($postalCode);
+        }
+        if (verifyJobTitle($jobTitle) !== TRUE) {
+            $errors['jobTitle'] = verifyJobTitle($jobTitle);
+        }
+        if (verifyAppartmentNo($appartmentNo) !== TRUE) {
+            $errors['appartmentNo'] = verifyAppartmentNo($appartmentNo);
+        }
+        if (verifyUserStreetAddress($streetAddress) !== TRUE) {
+            $errors['streetAddress'] = verifyUserStreetAddress($streetAddress);
+        }
+        // strip the space in postal code.
+        $postalCode = str_replace(' ', '', $postalCode);
+        // put all values in value list
+        $valueList = [
+            'email' => $email, 'firstName' => $firstName, 'lastName' => $lastName,
+            'phone' => $phone, 'company' => $company, 'jobTitle' => $jobTitle, 'appartmentNo' => $appartmentNo,
+            'streetAddress' => $streetAddress, 'city' => $city, 'province' => $province, 'postalCode' => $postalCode
+        ];
+
+        if ($_SESSION['user']['role'] == 'buyer' || $_SESSION['user']['role'] == 'broker-check') {
+            
+            $becomeBroker = $request->getParam('becomeBroker');
+            if ($becomeBroker) {
+                if (verifyLicenseNo($licenseNo) !== TRUE) {
+                    $errors['licenseNo'] = verifyLicenseNo($licenseNo);
+                }
+                if (verifyFirstName($firstName) !== TRUE) {
+                    $errors['firstName'] = verifyFirstName($firstName);
+                }
+                if (verifyLastName($lastName) !== TRUE) {
+                    $errors['lastName'] = verifyLastName($lastName);
+                }
+                if (verifyCompany($company) !== TRUE) {
+                    $errors['company'] = verifyCompany($company);
+                }
+                if (!array_filter($errors)) {
+                    DB::insert('brokerpendinglist', [
+                        'userId' => $id, 'licenseNo' => $licenseNo,
+                        'firstName' => $firstName, 'lastName' => $lastName, 'company' => $company
+                    ]);
+                    DB::update('users', ['role' => 'broker-check'], "id=%s", $id);
+                    DB::update('users', $valueList, "id=%s", $id);
+                    $success = "Request submitted.";
+                    $valueList['licenseNo'] = $licenseNo;
+                    return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'success' => $success]);
+                }
             }
             if (!array_filter($errors)) {
-                DB::insert('brokerpendinglist', [
-                    'userId' => $id, 'licenseNo' => $licenseNo,
-                    'firstName' => $firstName, 'lastName' => $lastName, 'company' => $company
-                ]);
-                DB::update('users', ['role' => 'broker-check'], "id=%s", $id);
                 DB::update('users', $valueList, "id=%s", $id);
-                $success = "Request submitted.";
+                $success = "Profile updated.";
                 $valueList['licenseNo'] = $licenseNo;
                 return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'success' => $success]);
             }
-        }
-        if (!array_filter($errors)) {
-            DB::update('users', $valueList, "id=%s", $id);
-            $success = "Profile updated.";
             $valueList['licenseNo'] = $licenseNo;
-            return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'success' => $success]);
-        }
-        $valueList['licenseNo'] = $licenseNo;
-        return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'er' => $errors]);
-    } else if ($_SESSION['user']['role'] == 'broker') {
-        if (!array_filter($errors)) {
-            DB::update('users', $valueList, "id=%s", $id);
-            $success = "Profile updated.";
-            $valueList['licenseNo'] = $licenseNo;
-            $valueList['role'] = 'broker';
-            return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'success' => $success]);
-        } else {
-            $valueList['licenseNo'] = $licenseNo;
-            $valueList['role'] = 'broker';
             return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'er' => $errors]);
+        } else if ($_SESSION['user']['role'] == 'broker') {
+            if (!array_filter($errors)) {
+                DB::update('users', $valueList, "id=%s", $id);
+                $success = "Profile updated.";
+                $valueList['licenseNo'] = $licenseNo;
+                $valueList['role'] = 'broker';
+                return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'success' => $success]);
+            } else {
+                $valueList['licenseNo'] = $licenseNo;
+                $valueList['role'] = 'broker';
+                return $this->view->render($response, 'profile.html.twig', ['user' => $valueList, 'er' => $errors]);
+            }
         }
-    }
-});
+    });
 
-$app->post('/profile/uploadPhoto', function ($request, $response, $args) {
+    $app->post('/uploadPhoto', function ($request, $response, $args) {
 
-    if (!($id = @$_SESSION['user']['id'])) {
-        return $response->write("Please login first.");
-    }
-    $broker = DB::queryFirstRow("SELECT licenseNo FROM users WHERE id = %i", $id);
-    $photo = $request->getUploadedFiles()['image'];
-    $photoFilePath = NULL;
-    $retVal = 1;
-    if (verifyUploadedBrokerProfilePhoto($photo, $photoFilePath, $broker['licenseNo']) !== TRUE) {
-        $retVal = verifyUploadedBrokerProfilePhoto($photo, $photoFilePath, $broker['licenseNo']);
-    } else {
-        $photo->moveTo($photoFilePath);
-        DB::update('users', ['photoFilePath' => $photoFilePath], 'id=%i', $id);
-    }
-    $response->write($retVal);
-    return $response;
-});
+        if (!($id = @$_SESSION['user']['id'])) {
+            return $response->write("Please login first.");
+        }
+        $broker = DB::queryFirstRow("SELECT licenseNo FROM users WHERE id = %i", $id);
+        $photo = $request->getUploadedFiles()['image'];
+        $photoFilePath = NULL;
+        $retVal = 1;
+        if (verifyUploadedBrokerProfilePhoto($photo, $photoFilePath, $broker['licenseNo']) !== TRUE) {
+            $retVal = verifyUploadedBrokerProfilePhoto($photo, $photoFilePath, $broker['licenseNo']);
+        } else {
+            $photo->moveTo($photoFilePath);
+            DB::update('users', ['photoFilePath' => $photoFilePath], 'id=%i', $id);
+        }
+        $response->write($retVal);
+        return $response;
+    });
 
-$app->post('/profile/changepass', function ($request, $response, $args) use($log) {
+    $app->post('/changepass', function ($request, $response, $args) use ($log) {
 
-    if (!($id = @$_SESSION['user']['id'])) {
-        return $response->getBody()->write(json_encode("Please login first."));
-    }
-    $retVal = 1;
-    $json = $request->getBody();
-    $passList = json_decode($json, TRUE);
-    $origPw = $passList['origPw'];
-    $newPw = $passList['newPw'];
-    $newPwRepeat = $passList['newPwRepeat'];
-    $result = DB::queryFirstRow("SELECT `password` FROM users WHERE id =%i", $id);
-    $loginCheck = ($result != NULL) && (password_verify($origPw, $result['password'])); 
-    if (!$loginCheck) {
-        $retVal = "The original password is incorrect.";
+        if (!($id = @$_SESSION['user']['id'])) {
+            return $response->getBody()->write(json_encode("Please login first."));
+        }
+        $retVal = 1;
+        $json = $request->getBody();
+        $passList = json_decode($json, TRUE);
+        $origPw = $passList['origPw'];
+        $newPw = $passList['newPw'];
+        $newPwRepeat = $passList['newPwRepeat'];
+        $result = DB::queryFirstRow("SELECT `password` FROM users WHERE id =%i", $id);
+        $loginCheck = ($result != NULL) && (password_verify($origPw, $result['password']));
+        if (!$loginCheck) {
+            $retVal = "The original password is incorrect.";
+            $response->getBody()->write(json_encode($retVal));
+            return $response;
+        }
+        if (verifyPasswords($newPw) !== TRUE) {
+            $retVal = verifyPasswords($newPw);
+        }
+        if ($newPw !== $newPwRepeat) {
+            $retVal = 'Please enter the same password in repeat.';
+        }
+        if (!$retVal) {
+            if ($_SESSION['user']['role'] == 'broker') {
+                $password = password_hash($newPw, PASSWORD_DEFAULT, ['cost' => 12]);
+            } else {
+                $password = password_hash($newPw, PASSWORD_DEFAULT);
+            }
+            DB::update('users', ['password' => $password], "id=%i", $id);
+            $log->debug(sprintf("user password changed id=%s", $id));
+        }
         $response->getBody()->write(json_encode($retVal));
         return $response;
-    }
-    if(verifyPasswords($newPw) !== TRUE) {
-        $retVal = verifyPasswords($newPw);
-    }
-    if($newPw !== $newPwRepeat) {
-        $retVal = 'Please enter the same password in repeat.';
-    }
-    if (!$retVal) {
-        if ($_SESSION['user']['role'] == 'broker') {
-            $password = password_hash($newPw, PASSWORD_DEFAULT, ['cost' => 12]);
-        } else {
-            $password = password_hash($newPw, PASSWORD_DEFAULT);
+    });
+
+    $app->get('/viewFav', function ($request, $response, $args) {
+
+        $userId = $_SESSION['user']['id'];
+        $favList = DB::query("SELECT * FROM favourites f, properties p WHERE f.propertyId = p.id AND f.userId = %i ORDER BY f.id DESC", $userId);
+        foreach ($favList as &$property) {
+            $photo = DB::queryFirstRow("SELECT photoFilePath FROM propertyphotos WHERE ordinalINT = 0 AND propertyId = %i", $property['id']);
+            $property['photoFilePath'] = @$photo['photoFilePath'];
         }
-        DB::update('users', ['password' => $password], "id=%i", $id);
-        $log->debug(sprintf("user password changed id=%s", $id));
-    }
-    $response->getBody()->write(json_encode($retVal));
-    return $response;
-});
+        $favList = utf8ize($favList);
+        $response->getBody()->write(json_encode($favList));
+        return $response;
+    });
+    
+    $app->delete('/removeFav/{id:[0-9]+}', function ($request, $response, $args) {
+    
+        $propertyId = $args['id'];
+        $userId = $_SESSION['user']['id'];
+        DB::query("DELETE FROM favourites WHERE userId=%i AND propertyId=%i", $userId, $propertyId);
+        return $response->withJson(['success' => 2], 200);
+    });
+
+}); // profile group
+
+

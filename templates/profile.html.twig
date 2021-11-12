@@ -29,6 +29,7 @@
             
             $('.profile').hide();
             $('.viewFav').hide();
+            $('#profile-success').html("");
             $('.changePass').show();
             
         });
@@ -64,6 +65,7 @@
             $('.profile').show();
             $('.changePass').hide();
             $('.viewFav').hide();
+            $('#profile-success').html("");
         });
 
         $('#viewFav').click(function() {
@@ -76,6 +78,7 @@
 
         $('.profile').hide();
             $('.changePass').hide();
+            $('#profile-success').html("");
             $('.viewFav').show();
 
             $.ajax({
@@ -119,7 +122,7 @@
 
 {% block header %}
     <h1>Profile</h1>
-    <h3>{{success}}</h3>
+    <h3 id="profile-success">{{success}}</h3>
 {% endblock %}
 
 {% block content %}
