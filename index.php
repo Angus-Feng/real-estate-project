@@ -17,9 +17,16 @@ $app->get('/map', function ($request, $response, $args) {
     return $this->view->render($response, 'testmap.html.twig');
 });
 
-// Test index page + master.html.twig
-$app->get('/', function ($request, $response, $args) {
-    return $this->view->render($response, 'index.html.twig');
+// Index page
+$app->get('/', function ($request, $response, $args) use ($log) {
+    $numOfItems = 3;
+    $propertyList = DB::query("SELECT * FROM properties LIMIT %i", $numOfItems);
+    $log->debug(sprintf("Fetch %s property data", $numOfItems));
+
+    $brokerList = DB::query("SELECT * FROM users WHERE `role`='broker' LIMIT %i", $numOfItems);
+    $log->debug(sprintf("Fetch %s broker data", $numOfItems));
+    
+    return $this->view->render($response, 'index.html.twig', ['propertyList' => $propertyList, 'brokerList' => $brokerList]);
 })->setName('index');
 
 // About page
