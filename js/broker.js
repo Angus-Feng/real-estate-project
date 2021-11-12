@@ -5,39 +5,51 @@ $(document).ajaxError(function () {
 $(document).ready(function() {
 	showProvinces();
 
-	var validationCount = 0;
-	// console.log(validationCount);
-	
-	// $(".next").click(function() {
-	// 	currentStep = $(this).parents('.form-step');
-	// 	nextStep = $(this).parents().next();
-	// 	nextStep.show();
-	// 	currentStep.hide();
-	// });
-
 	$(".prev").click(function() {
-		currentStep = $(this).parents('.form-step');
-		prevStep = $(this).parents().prev();
+		const currentStep = $(this).parents('.form-step');
+		const prevStep = $(this).parents().prev();
 		prevStep.show();
 		currentStep.hide();
 	});
 
 	$("#step1").click(function (e) {
 		validateDetails(e);
-		// validationCount += 1;
-		// console.log(validationCount);
 	});
 
 	$("#step2").click(function (e) {
 		validateLocation(e);
-		// validationCount += 1;
-		// console.log(validationCount);
+	});
+
+	$("form").submit(function(e) {
+		e.preventDefault();
+		const values = $(this).serialize();
+		$.ajax({
+			url: `/addproperty`,
+			type: "POST",
+			data: values,
+			error: function(jqxhr, status, errorThrown) {
+				httpErrorHandler(jqxhr, status, errorThrown);
+			},
+			success: function(propertyId) {
+				$("#submitStep").hide();
+				$("#lastStep").show();
+				$("#linkToProp").attr("href", )
+				$("a").attr("href", `myproperty/${propertyId}`);
+			}
+		});
 	});
 	
 	// TODO: 
 	// 1. implement progress bar
-	// 2. handle internal errors (no validation errors)
 });
+
+function httpErrorHandler(jqxhr, status, errorThrown) {
+	if (jqxhr.status == 403) { // authentication failed
+		alert("Authentication failed");
+	} else { // other error - inform the user
+		alert("AJAX error: " + jqxhr.responseText + ", status: " + jqxhr.status);
+	}
+}
 
 function validateDetails(e) {
 	const title = $("input[name=title]").val();
@@ -59,7 +71,7 @@ function validateDetails(e) {
 		description: description
 	};
 	const jsonString = JSON.stringify(detailsObj);
-	ajaxPostRequest('details', jsonString, e);
+	ajaxValidationRequest('details', jsonString, e);
 }
 
 function validateLocation(e) {
@@ -68,7 +80,6 @@ function validateLocation(e) {
 	const city = $("input[name=city]").val();
 	const province = $("select[name=province] option:selected").val();
 	const postalCode = $("input[name=postalCode]").val();
-	// console.log(province);
 
 	const locationObj = {
 		streetAddress: streetAddress,
@@ -78,10 +89,10 @@ function validateLocation(e) {
 		postalCode: postalCode
 	};
 	const jsonString = JSON.stringify(locationObj);
-	ajaxPostRequest('location', jsonString, e);
+	ajaxValidationRequest('location', jsonString, e);
 }
 
-function ajaxPostRequest(endpoint, jsonString, e) {
+function ajaxValidationRequest(endpoint, jsonString, e) {
 	$.ajax({
 		url: `/ajax/addpropertyval/${endpoint}`,
 		type: "POST",
