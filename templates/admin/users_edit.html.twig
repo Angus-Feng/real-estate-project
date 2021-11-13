@@ -4,13 +4,13 @@
 
 {% block content %}
 
-    {% if errorList %}
+    {# {% if errorList %}
         <ul>
         {% for error in errorList %}
             <li>{{ error }}</li>
         {% endfor %}
         </ul>
-    {% endif %}
+    {% endif %} #}
 
     {# Form for buyers #}
     {% if user.role is same as("buyer")%}
