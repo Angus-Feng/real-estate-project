@@ -13,10 +13,6 @@ require_once 'broker.php';
 require_once 'property.php';
 
 // Define app routes
-$app->get('/map', function ($request, $response, $args) {
-    return $this->view->render($response, 'testmap.html.twig');
-});
-
 // Index page
 $app->get('/', function ($request, $response, $args) use ($log) {
     $numOfItems = 3;
