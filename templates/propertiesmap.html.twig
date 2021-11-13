@@ -8,9 +8,7 @@
 	position: fixed;
 	background-color: white;
 	transition: 0.4s;
-	/* z-index: 1;
-	top: 0;
-	overflow-x: hidden; */
+	overflow-y: scroll;
 }
 
 .sideMenuImage {
@@ -66,9 +64,19 @@
 	}
 
     $(document).ready(function() {
+
+		var urlSearchParams = new URLSearchParams(window.location.search);
+		var params = Object.fromEntries(urlSearchParams.entries());
+
+		minPrice = params.minPrice;
+		maxPrice = params.maxPrice;
+		beds = params.beds;
+		baths = params.baths;
+		keyword = params.keyword;
+
 		 $.ajax({
 			url: '/ajax/properties/map?sortBy=' + sortOrder + '&minPrice=' + minPrice + '&maxPrice=' + maxPrice + '&beds=' + beds + 
-					'&baths=' + baths + '&keyword=' + keyword,
+				'&baths=' + baths + '&keyword=' + keyword,
 			type: 'GET',
 			dataType: 'json',
                 error: function(jqxhr, status, errorThrown) {
@@ -84,6 +92,7 @@
 							url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + propertyListData[i]['postalCode'] + '&key=AIzaSyCflFmMrn2tJfZDEn8eIokkKldXJlTU19Q',
 							type: 'GET'
 						}).done(function(geolocationData) {
+							console.log(propertyListData);
 							if (geolocationData.status === "OK") {
 								var lat = geolocationData.results[0].geometry.location.lat;
 								var lng = geolocationData.results[0].geometry.location.lng;

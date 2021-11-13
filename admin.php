@@ -8,14 +8,8 @@ require_once 'init.php';
 
 // Default admin page
 $app->get('/admin', function ($request, $response, $args) {
-    return $this->view->render($response, 'admin/index_admin.html.twig'); // COMMENTED OUT FOR TESTING.
+    return $this->view->render($response, 'admin/index_admin.html.twig');
 })->setName('admin');
-
-// Test interface
-$app->get('/admin/interface', function ($request, $response, $args) {
-    return $this->view->render($response, 'admin/interface_admin.html.twig');
-})->setName('admin');
-
 
 // Users (Buyers/Brokers)
 
