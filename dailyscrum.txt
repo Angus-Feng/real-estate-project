@@ -1,3 +1,35 @@
+2021/11/13
+
+Nari
+1. Done / not done since last scrum:
+- styles on master, about, broker property list, property detail pages
+- implement property detail PHP logic and create page
+2. To do until next Scrum:
+- add a location map in property detail page
+- apply styles on all pages
+3. Need assistance / figure things out
+- figure out how to add google location
+
+Chris
+1. Done / not done since last scrum:
+- Started implementation of property map
+2. To do until next Scrum:
+- Finish property map
+- Fix any small missing features
+- Start prepping for presentation
+3. Need assistance / figure things out
+- Nothing for now
+
+Feng
+1. Done / not done since last scrum:
+- Moved search bar to nav, refined front end design of some pages
+2. To do until next Scrum:
+- Start to do ppt
+3. Need assistance / figure things out
+- Nothing for now
+
+----------------------------------------------------------------------------------------------
+
 2021/11/12
 
 Nari
