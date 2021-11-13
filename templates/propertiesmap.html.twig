@@ -127,6 +127,31 @@
 								counter: counter
 								// ,icon: image, // TODO?: add an image variable with a custom image here
 								});
+								var id = propertyListData[counter].id;
+								var fileName = propertyListData[counter].photoFilePath;
+								var price = propertyListData[counter].price;
+								var streetAddress = propertyListData[counter].streetAddress;
+								var city = propertyListData[counter].city;
+								var province = propertyListData[counter].province;
+								var bedrooms = propertyListData[counter].bedrooms;
+								var bathrooms = propertyListData[counter].bathrooms;
+								var contentString = `
+									<a href="/properties/${id}">
+										<div class="propertyCard">
+											<img class="smImage" src="../uploads/${id}/thmb-${fileName}" style="height: 130px;">
+											<div class="smPrice">$${price}</div>
+											<div class="smFullAddress">
+											<span class="smStreetAddress">${streetAddress}, </span><span class="smCity">${city}, </span><span class="smProvince">${province}</span>
+											</div>
+											<div class="smBedBath">
+											<span class="smBedrooms">${bedrooms}</span>&nbsp;<i class="fas fa-bed"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="smBathrooms">${bathrooms}</span>&nbsp;<i class="fas fa-bath"></i>
+											</div>
+										</div>
+									</a>
+								`;
+								var infowindow = new google.maps.InfoWindow({
+									content: contentString,
+								});
 
 								marker.addListener("click", () => {
 									if ($(".sidemenu").css("width") === "0px") {
@@ -134,6 +159,11 @@
 									} else {
 										closeSM();
 									}
+									infowindow.open({
+										anchor: marker,
+										map,
+										shouldFocus: true,
+									});
 								});
 
 								markers.push(marker);
