@@ -11,7 +11,20 @@
 			<div class="col-md-12 col-lg-8">
 				<div class="title-single-box">
 					<h1 class="title-single">Property Listing</h1>
+					<span class="color-text-a">My Properties</span>
 				</div>
+			</div>
+			<div class="col-md-12 col-lg-4">
+				<nav aria-label="breadcrumb" class="breadcrumb-box d-flex justify-content-lg-end">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="#">Home</a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">
+							Property Listing
+						</li>
+					</ol>
+				</nav>
 			</div>
 		</div>
 	</div>
@@ -49,7 +62,7 @@
 								<div class="price-box d-flex">
 									<span class="price-a">$ {{property.price}}</span>
 								</div>
-								<a href="/properties/{{property.id}}" class="link-a">Click here to view
+								<a href="/myproperty/{{property.id}}" class="link-a">Click here to view
 									<span class="ion-ios-arrow-forward"></span>
 								</a>
 							</div>
@@ -80,7 +93,7 @@
 	</div>
 	{# FIXME: show Load More if there are more properties to display #}
 	<div class="text-center">
-		<button class="btn-primary" id="loadMore">Load More</button>
+		<button class="btn btn-a" id="loadMore">Load More</button>
 	</div>
 </section>
 
