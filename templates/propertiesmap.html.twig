@@ -19,6 +19,16 @@
 	margin-right: auto;
 }
 
+.propertyCard {
+	margin: 10px;
+	border: 2px solid black;
+	height: 200px;
+}
+
+.smImage {
+	height: 130px;
+}
+
 </style>
 <script>
 
@@ -51,16 +61,31 @@
 		document.getElementById("map").style.width = "100%";
 	}
 
-	function clearSideBarData() {
-		$("#sideMenuImage").attr("src", "#");
-		$("#sideMenuTitle").text("");
-		$("#sideMenuPrice").text("");
-		$("#sideMenuBedrooms").text("");
-		$("#sideMenuBathrooms").text("");
-		$("#sideMenuStreetAddress").text("");
-		$("#sideMenuCity").text("");
-		$("#sideMenuProvince").text("");
-		$("#sideMenuPostalCode").text("");
+	function loadPropList() {
+		for (var i = 0; i < propertyList.length; i++) {
+			var id = propertyList[i].id;
+			var fileName = propertyList[i].photoFilePath;
+			var price = propertyList[i].price;
+			var streetAddress = propertyList[i].streetAddress;
+			var city = propertyList[i].city;
+			var province = propertyList[i].province;
+			var bedrooms = propertyList[i].bedrooms;
+			var bathrooms = propertyList[i].bathrooms;
+			$("#mySidemenu").append(`
+				<a href="/properties/${id}">
+					<div class="propertyCard">
+						<img class="smImage" src="../uploads/${id}/thmb-${fileName}" style="height: 130px;">
+						<div class="smPrice">$${price}</div>
+						<div class="smFullAddress">
+						<span class="smStreetAddress">${streetAddress}, </span><span class="smCity">${city}, </span><span class="smProvince">${province}</span>
+						</div>
+						<div class="smBedBath">
+						<span class="smBedrooms">${bedrooms}</span>&nbsp;<i class="fas fa-bed"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="smBathrooms">${bathrooms}</span>&nbsp;<i class="fas fa-bath"></i>
+						</div>
+					</div>
+				</a>
+			`);
+		}
 	}
 
     $(document).ready(function() {
@@ -92,7 +117,6 @@
 							url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + propertyListData[i]['postalCode'] + '&key=AIzaSyCflFmMrn2tJfZDEn8eIokkKldXJlTU19Q',
 							type: 'GET'
 						}).done(function(geolocationData) {
-							console.log(propertyListData);
 							if (geolocationData.status === "OK") {
 								var lat = geolocationData.results[0].geometry.location.lat;
 								var lng = geolocationData.results[0].geometry.location.lng;
@@ -105,21 +129,9 @@
 								});
 
 								marker.addListener("click", () => {
-									clearSideBarData();
-
 									if ($(".sidemenu").css("width") === "0px") {
-										$("#sideMenuImage").attr("src", "../uploads/" + marker.data.id + "/thmb-" + marker.data.photoFilePath);
-										$("#sideMenuTitle").text(marker.data.title);
-										$("#sideMenuPrice").text("Price: " + marker.data.price);
-										$("#sideMenuBedrooms").text("Bedrooms: " + marker.data.bedrooms);
-										$("#sideMenuBathrooms").text("Bathrooms: " + marker.data.bathrooms);
-										$("#sideMenuStreetAddress").text("Street Address: " + marker.data.streetAddress);
-										$("#sideMenuCity").text("City: " + marker.data.city);
-										$("#sideMenuProvince").text("Province: " + marker.data.province);
-										$("#sideMenuPostalCode").text("Postal Code: " + marker.data.postalCode);
 										openSM();
 									} else {
-										clearSideBarData();
 										closeSM();
 									}
 								});
@@ -132,28 +144,17 @@
 						});
 
 				}
-				// console.log(propertyList);
-				// console.log(markers);
+				loadPropList();
 				initMap();
             });
 
-    }); // document ready
+    });
 
 </script>
 {% endblock %}
 
 {% block content %}
-	<div id="mySidemenu" class="sidemenu">
-		<img id="sideMenuImage" class="sideMenuImage" alt="Property Photo">
-		<p id="sideMenuTitle"></p>
-		<p id="sideMenuPrice"></p>
-		<p id="sideMenuBedrooms"></p>
-		<p id="sideMenuBathrooms"></p>
-		<p id="sideMenuStreetAddress"></p>
-		<p id="sideMenuCity"></p>
-		<p id="sideMenuProvince"></p>
-		<p id="sideMenuPostalCode"></p>
-	</div>
+	<div id="mySidemenu" class="sidemenu"></div>
 
     <div id="map" style="height: 100vh; width: 100%; float: right; transition: 0.4s;"></div>
 
