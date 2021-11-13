@@ -1,34 +1,87 @@
 {% extends "master.html.twig" %}
 
-{% block header %}
-    <h1>My listing</h1>
-{% endblock %}
+{% block title %}Property Listing{% endblock %}
 
 {% block content %}
 
-    {% for property in propertyList %}
+<!--/ Intro Single star /-->
+<section class="intro-single">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 col-lg-8">
+				<div class="title-single-box">
+					<h1 class="title-single">Property Listing</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!--/ Intro Single End /-->
 
-    <!-- FIXME: remove style tag -->
-    <article class="card" style="width: 18rem; display: inline-block;">
-        <a href="myproperty/{{property.id}}">
-            <!-- FIXME: change to main property photo -->
-            <img class="card-img-top" src="../../images/ninja.png" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">{{ property.title }}</h5>
-                <p class="card-text">${{ property.price }}</p>
-                <address>
-                    <p class="card-text">{{ property.streetAddress }}, {{ property.city }}, {{ property.province }}</p>
-                </address>
-                <a href="myproperty/edit/{{ property.id }}">
-                    <button class="btn btn-primary">Edit</button>
-                </a>
-                <a href="myproperty/delete/{{ property.id }}">
-                    <button class="btn btn-primary">Delete</button>
-                </a>
-            </div>
-        </a>
-    </article>
-
-    {% endfor %}
+<!--/ Property Listing Start /-->
+<section class="property-grid grid">
+	<div class="container">
+		<div class="row">
+			{% for property in propertyList %}
+			<div class="col-md-4">
+				<div class="card-box-a card-shadow">
+					<div class="img-box-a">
+					{% if property.photoFilePath %}
+						<img class="img-a img-fluid" alt="property photo" src="uploads/{{property.id}}/thmb-{{property.photoFilePath}}">
+					{% else %}
+						<img class="img-a img-fluid" alt="property photo" src="images/defaultproperty.jpg">
+					{% endif %}
+					</div>
+					<div class="card-overlay">
+						<div class="card-overlay-a-content">
+							<div class="card-header-a">
+								<h2 class="card-title-a">
+									<a href="/myproperty/{{property.id}}">
+									{% if property.appartmentNo %}
+										{{property.appartmentNo}}
+									{% endif %}
+									{{property.streetAddress}},
+									{{property.city}}
+									</a>
+								</h2>
+							</div>
+							<div class="card-body-a">
+								<div class="price-box d-flex">
+									<span class="price-a">$ {{property.price}}</span>
+								</div>
+								<a href="/properties/{{property.id}}" class="link-a">Click here to view
+									<span class="ion-ios-arrow-forward"></span>
+								</a>
+							</div>
+							<div class="card-footer-a">
+								<ul class="card-info d-flex justify-content-around">
+									<li>
+										<h4 class="card-info-title">Lot area</h4>
+										<span>{{property.lotArea}}m
+											<sup>2</sup>
+										</span>
+									</li>
+									<li>
+										<h4 class="card-info-title">Beds</h4>
+										<span>{{property.bedrooms}}</span>
+									</li>
+									<li>
+										<h4 class="card-info-title">Baths</h4>
+										<span>{{property.bathrooms}}</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	{# FIXME: show Load More if there are more properties to display #}
+	<div class="text-center">
+		<button class="btn-primary" id="loadMore">Load More</button>
+	</div>
+</section>
 
 {% endblock %}
