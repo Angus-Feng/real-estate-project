@@ -5,12 +5,28 @@ require_once 'init.php';
 
 
 // define routes
-// FIXME: endpoint /broker -> /borker/id
 $app->get('/properties', function ($request, $response, $args) {
 
     $queryParams = $request->getQueryParams();
 
     return $this->view->render($response, 'properties.html.twig', ['searchVals' => $queryParams]);
+});
+
+// GET '/properties/propertyID'
+$app->get('/properties/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+    $id = $args['id'];
+    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s", $id);
+    $log->debug(sprintf("Fetch a property data with id=%s", $id));
+
+    $brokerId = $property['brokerId'];
+    $broker = DB::queryFirstRow("SELECT * FROM users WHERE id=%s", $brokerId);
+    $log->debug(sprintf("Fetch a broker data with id=%s", $id));
+
+    if (!$property) { // not found - cause 404 here
+        throw new \Slim\Exception\NotFoundException($request, $response);
+    } else {
+        return $this->view->render($response, 'property.html.twig', ['property' => $property, 'broker' => $broker]);
+    }
 });
 
 $app->get('/ajax/properties', function ($request, $response, $args) {
