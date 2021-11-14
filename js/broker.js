@@ -8,11 +8,8 @@ $(document).ready(function() {
 	showProvinces();
 	console.log();
 	
-	$(".prev").click(function() {
-		const currentStep = $(this).parents('.form-step');
-		const prevStep = $(this).parents().prev();
-		prevStep.show();
-		currentStep.hide();
+	$(".prev").click(function(e) {
+		showPrevStep(e);
 	});
 
 	$("#step1").click(function (e) {
@@ -136,6 +133,13 @@ function showNextStep(e) {
 	// move active pills tab
 	$(`#${targetId}-tab`).removeClass('active');
 	$(`#${targetId}-tab`).parents().next('.nav-item').children('a').removeClass('disabled').addClass('active');
+}
+
+function showPrevStep(e) {
+	const currentStep = $(e.target).parents('.tab-pane');
+	const prevStep = $(e.target).parents('.tab-pane').prev();
+	currentStep.removeClass('show active').addClass('fade');
+	prevStep.removeClass('fade').addClass('show active');
 }
 
 function showErrorMsg(jqxhr) {
