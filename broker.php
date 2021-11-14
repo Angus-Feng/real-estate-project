@@ -112,7 +112,23 @@ $app->group('/ajax/addpropertyval', function (App $app) use ($log) {
     });
     // Form step - 3
     // $app->post('/images', function (Request $request, Response $response, array $args) use ($log) {
+        // $json = $request->getBody();
+        // $propertyImages = json_decode($json, TRUE);
+        // print_r($propertyImages);
 
+        // $errorPhotoCount = 1;
+        // foreach ($propertyImages as $photo) {
+        //     if ($photo->getError() !== UPLOAD_ERR_OK) {
+        //         $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
+        //         $errors['uploadedPhotos'] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
+        //         $errorPhotoCount++;
+        //     }
+        //     $result = verifyFileExt($photo);
+        //     if (!$result) {
+        //         $errorList[] = $result;
+        //         $errors['uploadedPhotos'] = $result;
+        //     }
+        // }
     // });
 });
 
@@ -136,6 +152,7 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     $city = $request->getParam('city');
     $province = $request->getParam('province');
     $postalCode = $request->getParam('postalCode');
+    $uploadedPhotos = $request->getUploadedFiles()['propertyImages'];
 
     // validation
     $errorList = [];
@@ -180,6 +197,13 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     if (verifyPostalCode($postalCode) !== TRUE) {
         $errorList['postalCode'] = verifyPostalCode($postalCode);
     }
+
+    if ($errorList) {
+        $response = $response->withStatus(500);
+        $response->getBody()->write(json_encode($errorList));
+        return $response;
+    } 
+
     // strip the space in postal code.
     $postalCode = str_replace(' ', '', $postalCode);
 
@@ -199,21 +223,31 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
         'postalCode' => $postalCode
     ];
 
-    if ($errorList) {
-        $response = $response->withStatus(500);
-        $response->getBody()->write(json_encode($errorList));
-        return $response;
-    } else {
-        DB::insert('properties', $valueList);
-        $id = DB::insertID();
-        $log->debug(sprintf(
-            "new property created with id=%s",
-            $id
-        ));
-        $response = $response->withStatus(201);
-        $response->getBody()->write(json_encode($id));
-        return $response;
+    DB::insert('properties', $valueList);
+    $propertyId = DB::insertID();
+    $log->debug(sprintf("new property created with id=%s", $propertyId));
+
+    // insert property images
+    $photoPathArray = [];
+    $firstPhoto = TRUE;
+    $photoFilePath = null;
+
+    foreach ($uploadedPhotos as $photo) {
+        $result = verifyUploadedHousePhoto($photo, $photoFilePath, $propertyId, $firstPhoto);
+        if ($result === TRUE) {
+            $photoPathArray[] = $photoFilePath;
+            $firstPhoto = FALSE;
+        }
     }
+
+    $photoNo = 0;
+    foreach ($photoPathArray as $photoFilePath) {
+        DB::insert('propertyphotos', ['propertyId' => $propertyId, 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);
+        $photoNo++;
+    }
+    $response = $response->withStatus(201);
+    $response->getBody()->write(json_encode($propertyId));
+    return $response;
 });
 
 // GET '/mypropertylist'
