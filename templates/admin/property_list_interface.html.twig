@@ -42,9 +42,8 @@
 
 {% block content %}
 
-	<p>
-		<a href="/admin/property/add">Add a new property</a>
-	</p>
+	<button class="btn btn-primary adminBlueButton" onclick="window.location='/admin/property/add';">Add New Property</button>
+
 			<div class="pageNavigation">
 			<span id="pageNavPrev" onclick="loadPage(currPageNo-1)">Previous</span>
 			{% for no in 1 .. maxPages %}

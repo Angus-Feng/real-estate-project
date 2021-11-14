@@ -3,15 +3,6 @@
 require_once 'vendor/autoload.php';
 require_once 'init.php';
 
-
-// define routes
-// $app->get('/properties', function ($request, $response, $args) {
-
-//     $queryParams = $request->getQueryParams();
-
-//     return $this->view->render($response, 'properties.html.twig', ['searchVals' => $queryParams]);
-// });
-
 $app->get('/properties[/{mapCheck:map}]', function ($request, $response, $args) {
     $mapCheck = FALSE;
     if ($args['mapCheck'] == 'map') {
@@ -111,15 +102,5 @@ $app->get('/ajax/properties/map', function ($request, $response, $args) {
         $photo = DB::queryFirstRow("SELECT photoFilePath FROM propertyphotos WHERE ordinalINT = 0 AND propertyId = %i", $property['id']);
         $property['photoFilePath'] = @$photo['photoFilePath'];
     }
-
-    if (@$_SESSION['user']) {
-        $favourites = DB::query("SELECT * FROM favourites WHERE userId=%i", $_SESSION['user']['id']);
-        $propertyList = [];
-        foreach ($favourites as $favourite) {
-            $propertyList[] = $favourite['propertyId'];
-        }
-        return $this->view->render($response, 'ajax.properties.html.twig', ['properties' => $properties, 'favProperties' => $propertyList]);
-    }
-    // return $this->view->render($response, 'ajax.properties.html.twig', ['properties' => $properties]);
     $response->getBody()->write(json_encode($properties, JSON_PRETTY_PRINT));
 });

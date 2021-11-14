@@ -8,14 +8,20 @@ require_once 'init.php';
 
 // Default admin page
 $app->get('/admin', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     return $this->view->render($response, 'admin/index_admin.html.twig');
 })->setName('admin');
 
 // Users (Buyers/Brokers)
 
 // View a list of all buyers and their information
-$itemsPerPage = 8;
+$itemsPerPage = 7;
 $app->get('/admin/buyer/list[/{pageNo:[0-9]+}]', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $pendingCount = DB::queryFirstField("SELECT COUNT(*) AS COUNT FROM users WHERE role=%s", "buyer");
@@ -27,6 +33,9 @@ $app->get('/admin/buyer/list[/{pageNo:[0-9]+}]', function ($request, $response, 
 });
 
 $app->get('/buyerdata/{pageNo:[0-9]+}', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $buyerList = DB::query("SELECT * FROM users WHERE role=%s ORDER BY id ASC LIMIT %d OFFSET %d",
@@ -38,6 +47,9 @@ $app->get('/buyerdata/{pageNo:[0-9]+}', function ($request, $response, $args) {
 
 // View a list of all brokers and their information
 $app->get('/admin/broker/list[/{pageNo:[0-9]+}]', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $pendingCount = DB::queryFirstField("SELECT COUNT(*) AS COUNT FROM users WHERE role=%s", "broker");
@@ -49,6 +61,9 @@ $app->get('/admin/broker/list[/{pageNo:[0-9]+}]', function ($request, $response,
 });
 
 $app->get('/brokerdata/{pageNo:[0-9]+}', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $brokerList = DB::query("SELECT * FROM users WHERE role=%s ORDER BY id ASC LIMIT %d OFFSET %d",
@@ -60,6 +75,9 @@ $app->get('/brokerdata/{pageNo:[0-9]+}', function ($request, $response, $args) {
 
 // Add user: GET
 $app->get('/admin/users/add/{userType:buyer|broker}', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     $userType = $args['userType'];
     return $this->view->render($response, 'admin/users_add.html.twig', ['userType' => $userType]);
 });
@@ -74,7 +92,10 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
     $firstName = $request->getParam('firstName');
     $lastName = $request->getParam('lastName');
     $phone = $request->getParam('phone');
-    $uploadedPhoto= $request->getUploadedFiles()['photoFilePath'];
+    $uploadedPhoto = NULL;
+    if (isset($request->getUploadedFiles()['photoFilePath'])) {
+        $uploadedPhoto = $request->getUploadedFiles()['photoFilePath'];
+    }
     $appartmentNo = $request->getParam('appartmentNo');
     $streetAddress = $request->getParam('streetAddress');
     $city = $request->getParam('city');
@@ -88,23 +109,33 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
     }
 
     $errorList = [];
+    $errors = array(
+        'email' => "", 'password1' => "", 'password2' => "",
+        'firstName' => "", 'lastName' => "", 'phone' => "", 'uploadedPhoto' => "",
+        'appartmentNo' => "", 'streetAddress' => "", 'city' => "", 'province' => "",
+        'postalCode' => "", 'licenseNo' => "", 'company' => "", 'jobTitle' => "",
+    );
 
     $emailVerification = verfiyEmail($email);
     if ($emailVerification !== TRUE) {
         $errorList[] = $emailVerification;
+        $errors['email'] = $emailVerification;
     }
     $verifyPasswords = verifyPasswords($password1);
     if ($verifyPasswords !== TRUE) {
         $errorList[] = $verifyPasswords;
+        $errors['password1'] = $verifyPasswords;
     }
     if ($password1 !== $password2) {
         $errorList[] = 'The passwords you have entered do not match.';
+        $errors['password2'] = 'The passwords you have entered do not match.';
     }
 
     if ($appartmentNo !== "") {
         $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
         if ($verifyAppartmentNo !== TRUE) {
             $errorList[] = $verifyAppartmentNo;
+            $errors['appartmentNo'] = $verifyAppartmentNo;
         }
     } else {
         $appartmentNo = NULL;
@@ -114,6 +145,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         $verifyStreetAddress = verifyUserStreetAddress($streetAddress);
         if ($verifyStreetAddress !== TRUE) {
             $errorList[] = $verifyStreetAddress;
+            $errors['streetAddress'] = $verifyStreetAddress;
         }
     } else {
         $streetAddress = NULL;
@@ -123,6 +155,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         $verifyCityName = verifyCityName($city);
         if ($verifyCityName !== TRUE) {
             $errorList[] = $verifyCityName;
+            $errors['city'] = $verifyCityName;
         }
     } else {
         $city = NULL;
@@ -132,6 +165,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         $verifyPhone = verifyPhone($phone);
         if ($verifyPhone !== TRUE) {
             $errorList[] = $verifyPhone;
+            $errors['phone'] = $verifyPhone;
         }
     } else {
         $phone = NULL;
@@ -145,6 +179,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         $verifyPostalCode = verifyPostalCode($postalCode);
         if ($verifyPostalCode !== TRUE) {
             $errorList[] = $verifyPostalCode;
+            $errors['postalCode'] = $verifyPostalCode;
         }
     } else {
         $postalCode = NULL;
@@ -154,27 +189,32 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
         $verifyLicenseNo = verifyLicenseNo($licenseNo);
         if ($verifyLicenseNo !== TRUE) {
             $errorList[] = $verifyLicenseNo;
+            $errors['licenseNo'] = $verifyLicenseNo;
         }
 
         $verifyFirstName = verifyFirstName($firstName);
         if ($verifyFirstName !== TRUE) {
             $errorList[] = $verifyFirstName;
+            $errors['firstName'] = $verifyFirstName;
         }
 
         $verifyLastName = verifyLastName($lastName);
         if ($verifyLastName !== TRUE) {
             $errorList[] = $verifyLastName;
+            $errors['lastName'] = $verifyLastName;
         }
 
         $verifyCompany = verifyCompany($company);
         if ($verifyCompany !== TRUE) {
             $errorList[] = $verifyCompany;
+            $errors['company'] = $verifyCompany;
         }
 
         if ($jobTitle !== "") {
             $verifyJobTitle = verifyJobTitle($jobTitle);
             if ($verifyJobTitle !== TRUE) {
                 $errorList[] = $verifyJobTitle;
+                $errors['jobTitle'] = $verifyJobTitle;
             }
         } else {
             $jobTitle = NULL;
@@ -184,6 +224,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
             $verifyFirstName = verifyFirstName($firstName);
             if ($verifyFirstName !== TRUE) {
                 $errorList[] = $verifyFirstName;
+                $errors['firstName'] = $verifyFirstName;
             }
         } else {
             $firstName = NULL;
@@ -193,6 +234,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
             $verifyLastName = verifyLastName($lastName);
             if ($verifyLastName !== TRUE) {
                 $errorList[] = $verifyLastName;
+                $errors['lastName'] = $verifyLastName;
             }
         } else {
             $lastName = NULL;
@@ -206,11 +248,13 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
                 $result = verifyUploadedBrokerProfilePhoto($uploadedPhoto, $photoFilePath, $licenseNo);
                 if ($result !== TRUE) {
                     $errorList[] = $result;
+                    $errors['uploadedPhoto'] = $result;
                 }
             } else if ($userType === 'buyer') {
                 $result = verifyUploadedBuyerProfilePhoto($uploadedPhoto, $photoFilePath);
                 if ($result !== TRUE) {
                     $errorList[] = $result;
+                    $errors['uploadedPhoto'] = $result;
                 }
             }
         }
@@ -218,13 +262,13 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
 
 
     if ($errorList) {
-        return $this->view->render($response, 'admin/users_add.html.twig', ['errorList' => $errorList, 'userType' => $userType]);
+        return $this->view->render($response, 'admin/users_add.html.twig', ['errorList' => $errorList, 'userType' => $userType, 'errors' => $errors]);
     }
 
     if ($userType === 'buyer') {
         DB::insert('users', [
             'email' => $email,
-            'password' => $password1,
+            'password' => password_hash($password1, PASSWORD_DEFAULT),
             'role' => 'buyer',
             'firstName' => $firstName,
             'lastName' => $lastName,
@@ -239,7 +283,7 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
     } else {
         DB::insert('users', [
             'email' => $email,
-            'password' => $password1,
+            'password' => password_hash($password1, PASSWORD_DEFAULT, ['cost' => 12]),
             'role' => 'broker',
             'licenseNo' => $licenseNo,
             'firstName' => $firstName,
@@ -261,9 +305,11 @@ $app->post('/admin/users/add/{userType:buyer|broker}', function ($request, $resp
 
 // Edit user: GET
 $app->get('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     $user = DB::queryFirstRow("SELECT * FROM users WHERE id=%d", $args['id']);
     if (!$user) {
-        // $response = $response->withStatus(404);
         return $this->view->render($response, '404_error.html.twig');
     }
     return $this->view->render($response, 'admin/users_edit.html.twig', ['user' => $user]);
@@ -285,7 +331,10 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
     $firstName = $request->getParam('firstName');
     $lastName = $request->getParam('lastName');
     $phone = $request->getParam('phone');
-    $uploadedPhoto= $request->getUploadedFiles()['photoFilePath'];
+    $uploadedPhoto = NULL;
+    if (isset($request->getUploadedFiles()['photoFilePath'])) {
+        $uploadedPhoto = $request->getUploadedFiles()['photoFilePath'];
+    }
     $appartmentNo = $request->getParam('appartmentNo');
     $streetAddress = $request->getParam('streetAddress');
     $city = $request->getParam('city');
@@ -299,17 +348,30 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
     }
 
     $errorList = [];
+    $errors = array(
+        'email' => "", 'password1' => "", 'password2' => "",
+        'firstName' => "", 'lastName' => "", 'phone' => "", 'uploadedPhoto' => "",
+        'appartmentNo' => "", 'streetAddress' => "", 'city' => "", 'province' => "",
+        'postalCode' => "", 'licenseNo' => "", 'company' => "", 'jobTitle' => "",
+    );
 
     $emailVerification = verfiyEmailUpdate($email, $id);
     if ($emailVerification !== TRUE) {
         $errorList[] = $emailVerification;
+        $errors['email'] = $emailVerification;
     }
+    
     if ($password1 === "" && $password2 === "") {
         $password1 = $user['password'];
-    } else {
+    } else if ($password1 !== $password2) {
         $errorList[] = verifyPasswords($password1);
-        if ($password1 !== $password2) {
-            $errorList[] = 'The passwords you have entered do not match.';
+        $errorList[] = 'The passwords you have entered do not match.';
+        $errors['password2'] = 'The passwords you have entered do not match.';
+    } else {
+        if ($user['role'] === 'buyer') {
+            $password1 = password_hash($password1, PASSWORD_DEFAULT);
+        } else {
+            $password1 = password_hash($password1, PASSWORD_DEFAULT, ['cost' => 12]);
         }
     }
 
@@ -317,6 +379,7 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
         $verifyAppartmentNo = verifyAppartmentNo($appartmentNo);
         if ($verifyAppartmentNo !== TRUE) {
             $errorList[] = $verifyAppartmentNo;
+            $errors['appartmentNo'] = $verifyAppartmentNo;
         }
     } else {
         $appartmentNo = NULL;
@@ -326,6 +389,7 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
         $verifyStreetAddress = verifyUserStreetAddress($streetAddress);
         if ($verifyStreetAddress !== TRUE) {
             $errorList[] = $verifyStreetAddress;
+            $errors['streetAddress'] = $verifyStreetAddress;
         }
     } else {
         $streetAddress = NULL;
@@ -335,6 +399,7 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
         $verifyCityName = verifyCityName($city);
         if ($verifyCityName !== TRUE) {
             $errorList[] = $verifyCityName;
+            $errors['city'] = $verifyCityName;
         }
     } else {
         $city = NULL;
@@ -344,6 +409,7 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
         $verifyPhone = verifyPhone($phone);
         if ($verifyPhone !== TRUE) {
             $errorList[] = $verifyPhone;
+            $errors['phone'] = $verifyPhone;
         }
     } else {
         $phone = NULL;
@@ -357,6 +423,7 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
         $verifyPostalCode = verifyPostalCode($postalCode);
         if ($verifyPostalCode !== TRUE) {
             $errorList[] = $verifyPostalCode;
+            $errors['postalCode'] = $verifyPostalCode;
         }
     } else {
         $postalCode = NULL;
@@ -366,26 +433,31 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
         $verifyLicenseNo = verifyLicenseNoUpdate($licenseNo, $id);
         if ($verifyLicenseNo !== TRUE) {
             $errorList[] = $verifyLicenseNo;
+            $errors['licenseNo'] = $verifyLicenseNo;
         }
 
         $verifyFirstName = verifyFirstName($firstName);
         if ($verifyFirstName !== TRUE) {
             $errorList[] = $verifyFirstName;
+            $errors['firstName'] = $verifyFirstName;
         }
 
         $verifyLastName = verifyLastName($lastName);
         if ($verifyLastName !== TRUE) {
             $errorList[] = $verifyLastName;
+            $errors['lastName'] = $verifyLastName;
         }
 
         $verifyCompany = verifyCompany($company);
         if ($verifyCompany !== TRUE) {
             $errorList[] = $verifyCompany;
+            $errors['company'] = $verifyCompany;
         }
         if ($jobTitle !== "") {
             $verifyJobTitle = verifyJobTitle($jobTitle);
             if ($verifyJobTitle !== TRUE) {
                 $errorList[] = $verifyJobTitle;
+                $errors['jobTitle'] = $verifyJobTitle;
             }
         } else {
             $jobTitle = NULL;
@@ -395,6 +467,7 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
             $verifyFirstName = verifyFirstName($firstName);
             if ($verifyFirstName !== TRUE) {
                 $errorList[] = $verifyFirstName;
+                $errors['firstName'] = $verifyFirstName;
             }
         } else {
             $firstName = NULL;
@@ -404,6 +477,7 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
             $verifyLastName = verifyLastName($lastName);
             if ($verifyLastName !== TRUE) {
                 $errorList[] = $verifyLastName;
+                $errors['lastName'] = $verifyLastName;
             }
         } else {
             $lastName = NULL;
@@ -417,11 +491,13 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
                 $result = verifyUploadedBrokerProfilePhoto($uploadedPhoto, $photoFilePath, $licenseNo);
                 if ($result !== TRUE) {
                     $errorList[] = $result;
+                    $errors['uploadedPhoto'] = $result;
                 }
             } else if ($user['role'] === 'buyer') {
                 $result = verifyUploadedBuyerProfilePhoto($uploadedPhoto, $photoFilePath);
                 if ($result !== TRUE) {
                     $errorList[] = $result;
+                    $errors['uploadedPhoto'] = $result;
                 }
             }
         }
@@ -432,7 +508,7 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
             $response = $response->withStatus(404);
             return $this->view->render($response, '404_error.html.twig');
         }
-        return $this->view->render($response, 'admin/users_edit.html.twig', ['errorList' => $errorList, 'user' => $user]);
+        return $this->view->render($response, 'admin/users_edit.html.twig', ['errorList' => $errorList, 'user' => $user, 'errors' => $errors]);
     }
 
     if ($user['role'] === 'buyer') {
@@ -473,15 +549,12 @@ $app->post('/admin/users/edit/{id:[0-9]+}', function ($request, $response, $args
 
 // Delete user: GET
 $app->get('/admin/users/delete/{id:[0-9]+}', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     $id = $args['id'];
-    // if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 'admin') {
-    //     $app->redirect('/forbidden');
-    //     return;
-    // }
-
     $user = DB::queryFirstRow("SELECT * FROM users WHERE id=%i", $id);
     if (!$user) {
-        // $response = $response->withStatus(404);
         return $this->view->render($response, '404_error.html.twig');
     }
     return $this->view->render($response, 'admin/users_delete.html.twig', ['user' => $user]);
@@ -491,8 +564,7 @@ $app->get('/admin/users/delete/{id:[0-9]+}', function ($request, $response, $arg
 $app->post('/admin/users/delete/{id:[0-9]+}', function ($request, $response, $args) {
     $user = DB::queryFirstRow("SELECT * FROM users WHERE id=%d", $args['id']);
 
-    // Check if id is an admin and stop it from being editable 
-    if ($user['role'] === 'admin') { // TODO
+    if ($user['role'] === 'admin') {
         return $this->view->render($response, '404_error.html.twig');
     }
 
@@ -508,6 +580,9 @@ $app->post('/admin/users/delete/{id:[0-9]+}', function ($request, $response, $ar
 
 // View a list of all properties and their information
 $app->get('/admin/property/list[/{pageNo:[0-9]+}]', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $propertiesCount = DB::queryFirstField("SELECT COUNT(*) AS COUNT FROM properties");
@@ -519,6 +594,9 @@ $app->get('/admin/property/list[/{pageNo:[0-9]+}]', function ($request, $respons
 });
 
 $app->get('/propertydata/{pageNo:[0-9]+}', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $propertyList = DB::query("SELECT * FROM properties ORDER BY id ASC LIMIT %d OFFSET %d",
@@ -530,6 +608,9 @@ $app->get('/propertydata/{pageNo:[0-9]+}', function ($request, $response, $args)
 
 // Add property: GET
 $app->get('/admin/property/add', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     return $this->view->render($response, 'admin/property_add.html.twig');
 });
 
@@ -686,7 +767,10 @@ $app->post('/admin/property/add', function ($request, $response, $args) {
 });
 
 // Edit property: GET
-$app->get('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $args) { // TODO
+$app->get('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%d", $args['id']);
     $brokerId = DB::queryFirstRow("SELECT brokerId FROM properties WHERE id=%d", $args['id']);
     $broker = DB::queryFirstRow("SELECT licenseNo, firstName, lastName FROM users WHERE id=%d", $brokerId['brokerId']);
@@ -699,7 +783,7 @@ $app->get('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $ar
 });
 
 // Edit property: POST
-$app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $args) { // TODO
+$app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $args) {
     $licenseNo = $request->getParam('licenseNo');
     $price = $request->getParam('price');
     $title = $request->getParam('title');
@@ -857,7 +941,7 @@ $app->post('/admin/property/edit/{id:[0-9]+}', function ($request, $response, $a
 });
 
 // Edit Property Image: POST
-$app->post('/admin/property/edit/reorder', function ($request, $response, $args) { // TODO
+$app->post('/admin/property/edit/reorder', function ($request, $response, $args) {
 
     $values = json_decode($request->getBody(), true);
     $propertyId = $values['propertyId'];
@@ -890,12 +974,10 @@ $app->post('/admin/property/edit/reorder', function ($request, $response, $args)
 
 // Delete property: GET
 $app->get('/admin/property/delete/{id:[0-9]+}', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     $id = $args['id'];
-    // if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 'admin') {
-    //     $app->redirect('/forbidden');
-    //     return;
-    // }
-
     $property = DB::queryFirstRow("SELECT p.id, u.firstName, u.lastName, u.licenseNo, p.price, p.title, p.streetAddress, p.postalCode 
         FROM properties AS p, users AS u WHERE u.id=p.brokerId AND p.id=%d", $id);
 
@@ -923,6 +1005,9 @@ $app->post('/admin/property/delete/{id:[0-9]+}', function ($request, $response, 
 
 // View a list of all pending brokers and their information
 $app->get('/admin/pending/list[/{pageNo:[0-9]+}]', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $pendingCount = DB::queryFirstField("SELECT COUNT(*) AS COUNT FROM brokerpendinglist");
@@ -934,6 +1019,9 @@ $app->get('/admin/pending/list[/{pageNo:[0-9]+}]', function ($request, $response
 });
 
 $app->get('/pendingdata/{pageNo:[0-9]+}', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     global $itemsPerPage;
     $pageNo = $args['pageNo'] ?? 1;
     $pendingList = DB::query("SELECT * FROM brokerpendinglist ORDER BY id ASC LIMIT %d OFFSET %d",
@@ -944,6 +1032,9 @@ $app->get('/pendingdata/{pageNo:[0-9]+}', function ($request, $response, $args) 
 });
 
 $app->get('/admin/pending/{choice:accept|decline}/{id:[0-9]+}', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
     $choice = $args['choice'];
     $userId = $args['id'];
     $pendingUser = DB::queryFirstRow("SELECT * FROM brokerpendinglist WHERE userId=%d", $userId);

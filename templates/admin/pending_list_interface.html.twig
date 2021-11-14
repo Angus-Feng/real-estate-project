@@ -41,7 +41,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="pageNavigation">
+    <div class="pageNavigation brokerNavigation">
         <span id="pageNavPrev" onclick="loadPage(currPageNo-1)">Previous</span>
         {% for no in 1 .. maxPages %}
             <span id="pageNav{{no}}" onclick="loadPage({{no}})">{{no}}</span>
