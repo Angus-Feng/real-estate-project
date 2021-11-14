@@ -6,7 +6,8 @@ $(document).ajaxError(function () {
 
 $(document).ready(function() {
 	showProvinces();
-  
+	console.log();
+	
 	$(".prev").click(function() {
 		const currentStep = $(this).parents('.form-step');
 		const prevStep = $(this).parents().prev();
@@ -44,6 +45,8 @@ $(document).ready(function() {
 				// move active pills tab
 				$('#pills-images-tab').removeClass('active');
 				$('#pills-submit-tab').removeClass('disabled').addClass('active');
+				// disabled all tabs except last one 
+				$('.form-nav-list li a').not(":last").addClass('disabled');
 			}
 		});
 	});
@@ -112,27 +115,27 @@ function ajaxValidationRequest(endpoint, jsonString, e) {
 		success: function(result) {
 			if (result) {
 				showNextStep(e);
-				// display next step
-				$(e.target).parents().next('.fade').removeClass('fade');
-				// move active pills tab
-				const id = $(e.target).parents('.tab-pane').attr('id');
-				$(`#${id}-tab`).removeClass('active');
-				$(`#${id}-tab`).parents().next('.nav-item').children('a').removeClass('disabled').addClass('active');
+				removeErrorMsg();
 			}
 		}
 	});
 }
 
 function showNextStep(e) {
-	console.log('hi');
 	console.log(validationCount);
 	validationCount++;
 	console.log(validationCount);
-	const currentStep = $(e.target).parents('.form-step');
-	const nextStep = $(e.target).parents().next();
 	
-	nextStep.show();
-	currentStep.hide();
+	const targetId = $(e.target).parents('.tab-pane').attr('id');
+			
+	// display next step
+	$(`#${targetId}`).removeClass('show active');
+	$(`#${targetId}`).next().removeClass('fade').addClass('show active');
+	// $(e.target).parents().next('.fade').removeClass('fade').addClass('active show');
+	
+	// move active pills tab
+	$(`#${targetId}-tab`).removeClass('active');
+	$(`#${targetId}-tab`).parents().next('.nav-item').children('a').removeClass('disabled').addClass('active');
 }
 
 function showErrorMsg(jqxhr) {

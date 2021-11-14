@@ -378,10 +378,6 @@
 
 /* add property */
 
-#property-form fieldset:not(:first-of-type) {
-    display: none;
-}
-
 .form-nav-list {
     justify-content: space-evenly;
 }
