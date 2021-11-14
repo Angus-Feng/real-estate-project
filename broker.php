@@ -198,6 +198,20 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
         $errorList['postalCode'] = verifyPostalCode($postalCode);
     }
 
+    $errorPhotoCount = 1;
+    foreach ($uploadedPhotos as $photo) {
+        if ($photo->getError() !== UPLOAD_ERR_OK) {
+            $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
+            $errors['uploadedPhotos'] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
+            $errorPhotoCount++;
+        }
+        $result = verifyFileExt($photo);
+        if (!$result) {
+            $errorList[] = $result;
+            $errors['uploadedPhotos'] = $result;
+        }
+    }
+
     if ($errorList) {
         $response = $response->withStatus(500);
         $response->getBody()->write(json_encode($errorList));
@@ -244,6 +258,8 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
     foreach ($photoPathArray as $photoFilePath) {
         DB::insert('propertyphotos', ['propertyId' => $propertyId, 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);
         $photoNo++;
+        $propertyphotosId = DB::insertID();
+        $log->debug(sprintf("property photos added with id=%s to proeprtyId=%s", $propertyphotosId, $propertyId));
     }
     $response = $response->withStatus(201);
     $response->getBody()->write(json_encode($propertyId));

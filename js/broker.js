@@ -22,11 +22,12 @@ $(document).ready(function() {
 
 	$("form").submit(function(e) {
 		e.preventDefault();
-		const values = $(this).serialize();
 		$.ajax({
 			url: `/addproperty`,
 			type: "POST",
-			data: values,
+			data: new FormData(this),
+			processData: false,
+			contentType: false,
 			error: function(jqxhr, status, errorThrown) {
 				httpErrorHandler(jqxhr, status, errorThrown);
 			},
