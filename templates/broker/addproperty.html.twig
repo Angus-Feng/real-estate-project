@@ -1,106 +1,124 @@
 {% extends "master.html.twig" %}
 
 {% block addHead %}
-    <script src="../../js/broker.js"></script>
-{% endblock %}
-
-{% block header %}
-    <h1>Add a property</h1>
+    <script src="js/broker.js"></script>
 {% endblock %}
 
 {% block content %}
-    <!-- FORM CONTAINER -->
-    <div class="form-container">
-        <!-- PROGRESS BAR -->
-        <div class="form-progress">
-            <div class="step">
-                <div class="circle-container">
-                    <i class="bi bi-house-door-fill"></i>
-                </div>
-                <p>Property Details</p>
-            </div>
-            <div class="step">
-                <div class="circle-container">
-                    <i class="bi bi-geo-alt"></i>
-                </div>
-                <p>Property Location</p>
-            </div>
-            <div class="step">
-                <div class="circle-container">
-                    <i class="bi bi-images"></i>
-                    <p>Property Images</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="circle-container">
-                    <i class="bi bi-check-lg"></i>
-                    <p>Submit</p>
-                </div>
-            </div>
-        </div>
-        <!-- FORMS -->
-        <form method="POST" enctype="multipart/form-data" id="property-form">
-            <!-- FORM STEP-1 -->
-            <fieldset class="form-step">
-                <div class="form-group row">
-                    <label for="">Title</label>
-                    <input type="text" name="title" value="{{ values.title }}" />
-                </div>
-                <div class="form-group">
-                    <label for="">Price</label>
-                    <input type="number" name="price" step="0.01" value="{{ values.price }}" />
-                    <label for="">Bedrooms</label>
-                    <input type="number" name="bedrooms" value="{{ values.bedrooms }}" />
-                    <label for="">Bathrooms</label>
-                    <input type="number" name="bathrooms" value="{{ values.bathrooms }}" />
-                    <label for="">Year built</label>
-                    <input type="text" name="buildingYear" value="{{ values.buildingYear }}" />
-                    <label for="">Lot area (sqft)</label>
-                    <input type="number" name="lotArea" value="{{ values.lotArea }}" />
-                </div>
-                <div class="form-group row">
-                    <label for="">Description</label>
-                    <textarea name="description" cols="30" rows="10" class="form-control">{{ values.description }}</textarea>
-                    {# <span id="errorMsgDescription" class="errorMsg"></span> #}
-                </div>
-                <div>
-                    <button id="step1" class="btn btn-primary next" type="button">Next</button>
-                </div>
-            </fieldset>
-            <!-- FORM STEP-2 -->
-            <fieldset class="form-step">
-                <label for="">Location</label>
-                <div class="form-group">
-                    <label for="">Stree address</label>
-                    <input type="text" name="streetAddress" value="{{ values.streetAddress }}" />
-                    <label for="">Appartment No.</label>
-                    <input type="number" name="appartmentNo" value="{{ values.appartmentNo }}" />
-                    <label for="">City</label>
-                    <input type="text" name="city" value="{{ values.city }}" />
-                    <label for="">Province</label>
-                    <select name="province" value="{{ values.province }}" id="provinceSelect"></select>
-                    <label for="">Postal code</label>
-                    <input type="text" name="postalCode" value="{{ values.postalCode }}" />
-                </div>
-                <div>
-                    <button class="btn btn-primary prev" type="button">Previous</button>
-                    <button id="step2" class="btn btn-primary next" type="button">Next</button>
-                </div>
-            </fieldset>
-            <!-- FORM STEP-3 -->
-            <fieldset class="form-step" id="submitStep">
-                <div class="form-group">
-                    <label for="">Upload property images</label>
-                    <input type="file" name="propertyImages[]" multiple class="form-control-file" />
-                </div>
-                <div>
-                    <button class="btn btn-primary prev" type="button">Previous</button>
-                    <input type="submit" name="submit" value="Create a property" class="btn btn-primary" />
-                </div>
-            </fieldset>
-            <!-- last page shows a success message with a button linked to the property page  -->
-            <fieldset class="form-step" id="lastStep"></fieldset>
-        </form>
-    </div>
-    
+<!--/ Header start /-->
+<section class="intro-single">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 col-lg-8">
+				<div class="title-single-box">
+					<h1 class="title-single">Add Property</h1>
+					<span class="color-text-a">Create a new property</span>
+				</div>
+			</div>
+			<div class="col-md-12 col-lg-4">
+				<nav aria-label="breadcrumb" class="breadcrumb-box d-flex justify-content-lg-end">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="/mypropertylist">Property Listing</a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">
+							Add Property
+						</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
+	</div>
+</section>
+<!--/ Header End /-->
+
+<section class="container justify-content-md-center form-container">
+	<!-- Progress Bar -->
+	<ul class="nav nav-pills-a nav-pills mb-3 section-t3 form-nav-list" id="pills-tab" role="tablist">
+		<li class="nav-item">
+			<a class="nav-link active" id="pills-details-tab" data-toggle="pill" href="#pills-details" role="tab"
+				aria-controls="pills-details" aria-selected="true">Details</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="pills-location-tab" data-toggle="pill" href="#pills-location" role="tab" aria-controls="pills-location"
+				aria-selected="false">Location</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="pills-images-tab" data-toggle="pill" href="#pills-images" role="tab" aria-controls="pills-images"
+				aria-selected="false">Images</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" id="pills-map-tab" data-toggle="pill" href="#pills-submit" role="tab" aria-controls="pills-submit"
+				aria-selected="false">Submit</a>
+		</li>
+	</ul>
+	<div class="tab-content form-tab" id="pills-tabContent">
+		<!-- Form Start -->
+		<form method="POST" enctype="multipart/form-data" id="property-form" class="form-a row">
+			<!-- FORM STEP-1 -->
+			<div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
+				<fieldset class="form-step">
+					<div class="form-group property-form-group">
+						<label for="">Title</label>
+						<input class="form-control form-control-lg form-control-a" type="text" name="title" value="{{ values.title }}" />
+						<label for="">Price</label>
+						<input class="form-control form-control-lg form-control-a" type="number" name="price" step="0.01" value="{{ values.price }}" />
+						<label class="" for="">Bedrooms</label>
+						<input class="form-control form-control-lg form-control-a invalid-feedback" type="number" name="bedrooms" value="{{ values.bedrooms }}" />
+						<label class="" for="">Bathrooms</label>
+						<input class="form-control form-control-lg form-control-a" type="number" name="bathrooms" value="{{ values.bathrooms }}" />
+						<label class="" for="">Year built</label>
+						<input class="form-control form-control-lg form-control-a" type="text" name="buildingYear" value="{{ values.buildingYear }}" />
+						<label class="" for="">Lot area (sqft)</label>
+						<input class="form-control form-control-lg form-control-a" type="number" name="lotArea" value="{{ values.lotArea }}" />
+						<label for="">Description</label>
+						<textarea name="description" cols="30" rows="10" class="form-control">{{ values.description }}</textarea>
+					</div>
+					<div class="btn-center">
+						<button id="step1" class="btn btn-a" type="button">Continue</button>
+					</div>
+				</fieldset>
+			</div>
+			<!-- FORM STEP-2 -->
+			<div class="tab-pane fade row" id="pills-location" role="tabpanel" aria-labelledby="pills-location-tab">
+				<fieldset class="form-step">
+					<div class="form-group property-form-group">
+						<label class="" for="">Stree address</label>
+						<input class="form-control form-control-lg form-control-a" type="text" name="streetAddress" value="{{ values.streetAddress }}" />
+						<label class="" for="">Appartment No.</label>
+						<input class="form-control form-control-lg form-control-a" type="number" name="appartmentNo" value="{{ values.appartmentNo }}" />
+						<label class="" for="">City</label>
+						<input class="form-control form-control-lg form-control-a" type="text" name="city" value="{{ values.city }}" />
+						<label class="" for="">Province</label>
+						<select class="form-control form-control-lg form-control-a" name="province" value="{{ values.province }}" id="provinceSelect"></select>
+						<label class="" for="">Postal code</label>
+						<input class="form-control form-control-lg form-control-a" type="text" name="postalCode" value="{{ values.postalCode }}" />
+					</div>
+						<div class="btn-center">
+							<button class="btn btn-a prev" type="button">Previous</button>
+							<button id="step2" class="btn btn-a" type="button">Continue</button>
+						</div>
+				</fieldset>
+			</div>
+			<!-- FORM STEP-3 -->
+			<div class="tab-pane fade" id="pills-images" role="tabpanel" aria-labelledby="pills-images-tab">
+				<fieldset class="form-step" id="submitStep">
+					<div class="form-group property-form-group">
+						<label for="">Upload property images</label>
+						<input class="form-control form-control-lg form-control-a" type="file" name="propertyImages[]" multiple class="form-control-file" />
+					</div>
+					<div class="btn-center">
+						<button class="btn btn-a prev" type="button">Previous</button>
+						<input type="submit" name="submit" value="Create a property" class="btn btn-a" />
+					</div>
+				</fieldset>
+			</div>
+			<div class="tab-pane fade" id="pills-submit" role="tabpanel" aria-labelledby="pills-submit-tab">
+				<!-- last page shows a success message with a button linked to the property page  -->
+				<fieldset class="form-step" id="lastStep"></fieldset>
+			</div>
+		</form>
+	</div>
+</section>
+
 {% endblock %}

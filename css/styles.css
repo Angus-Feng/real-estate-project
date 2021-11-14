@@ -378,10 +378,29 @@
 
 /* add property */
 
-.form-progress {
-    display: flex;
-}
-
 #property-form fieldset:not(:first-of-type) {
     display: none;
+}
+
+.form-nav-list {
+    justify-content: space-evenly;
+}
+
+.form-tab {
+    padding: 5% 10% 0 10%;
+}
+
+.property-form-group label {
+    padding: 15px 0 5px 0;
+    text-transform: uppercase;
+}
+
+.form-group .err-msg {
+    padding-top: 5px;
+    display: block;
+}
+
+.btn-center {
+    text-align: center;
+    padding-top: 50px;
 }

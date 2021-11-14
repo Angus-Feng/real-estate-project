@@ -34,15 +34,12 @@ $(document).ready(function() {
 				$("#submitStep").hide();
 				$("#lastStep").show();
 				const html = '<p>A new property added successfully!</p>'
-							+ `<div><a href=myproperty/${propertyId}>`
+							+ `<div class="btn-center"><a href=myproperty/${propertyId}>`
 							+ '<button class="btn btn-primary" type="button">View the Property</button></div>';
 				$("#lastStep").append(html);
 			}
 		});
 	});
-	
-	// TODO: 
-	// 1. implement progress bar
 });
 
 function httpErrorHandler(jqxhr, status, errorThrown) {
