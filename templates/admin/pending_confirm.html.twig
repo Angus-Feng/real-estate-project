@@ -11,7 +11,7 @@
         <p>Broker License: {{pendingUser.licenseNo}}</p>
         <p>Price: {{pendingUser.company}}</p>
         <form method="post">
-            <button onclick="window.location='/admin/pending/accept/{{u.id}}';">Accept</button>
+            <button class="btn btn-primary adminPendingBlueButton" onclick="window.location='/admin/pending/accept/{{u.id}}';">Accept</button>
         </form>
     {% endif %}
 
@@ -22,7 +22,7 @@
         <p>Broker License: {{pendingUser.licenseNo}}</p>
         <p>Company: {{pendingUser.company}}</p>
         <form method="post">
-            <button onclick="window.location='/admin/pending/decline/{{u.id}}';">Decline</button>
+            <button class="btn btn-primary adminPendingBlueButton" onclick="window.location='/admin/pending/decline/{{u.id}}';">Decline</button>
         </form>
     {% endif %}
 

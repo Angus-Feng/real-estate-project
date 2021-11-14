@@ -24,7 +24,7 @@
             $("#pageNavNext").toggle(newPageNo < {{maxPages}});
             $(".articlePreviewBox").load("/brokerdata/" + currPageNo);
             if (noHistory == false) {
-                history.pushState({page: currPageNo}, '', '/admin/brokers/list/' + currPageNo);
+                history.pushState({page: currPageNo}, '', '/admin/broker/list/' + currPageNo);
             }
         }
 
@@ -45,9 +45,8 @@
 
 {% block content %}
 
-	<p>
-		<a href="/admin/users/add/broker">Add a new broker</a>
-	</p>
+	<button class="btn btn-primary adminBlueButton" onclick="window.location='/admin/users/add/broker';">Add New Broker</button>
+
 			<div class="pageNavigation">
 			<span id="pageNavPrev" onclick="loadPage(currPageNo-1)">Previous</span>
 			{% for no in 1 .. maxPages %}

@@ -249,6 +249,40 @@
     margin: 0 auto;
 }
 
+.pageNavigation {
+    float: right;
+    position: relative;
+    bottom: -10px;
+}
+
+.pageNavigation > *{
+    text-decoration: underline;
+}
+
+.pageNavigation > *:hover{
+    color: rgb(45, 173, 216);
+    cursor: pointer;
+}
+
+.brokerNavigation {
+    bottom: -10px;
+}
+
+.adminBlueButton {
+    margin-top: 10px;
+    background-color: rgb(45, 173, 216);
+    border: none;
+}
+
+.adminPendingBlueButton {
+    background-color: rgb(45, 173, 216);
+    border: none;
+}
+
+.flexContainer {
+    display: flex;
+}
+
 /* Admin Interface END */
 
 .admin-edit-icon {

@@ -39,8 +39,8 @@
 {% for p in pendingList %}
     <tr>
         <td>
-            <button onclick="window.location='/admin/pending/accept/{{p.userId}}';">Accept</button>
-            <button onclick="window.location='/admin/pending/decline/{{p.userId}}';">Decline</button>
+            <button class="btn btn-primary adminPendingBlueButton" onclick="window.location='/admin/pending/accept/{{p.userId}}';">Accept</button>
+            <button class="btn btn-primary adminPendingBlueButton" onclick="window.location='/admin/pending/decline/{{p.userId}}';">Decline</button>
         </td>
         <td>{{p.userId}}</td>
         <td>{{p.licenseNo}}</td>

@@ -2,37 +2,62 @@
 
 {% block title %}Add User{% endblock %}
 
+{% block addHead %}
+
+    {% if userType is same as("buyer")%}
+        <style>
+            #sidebar-wrapper {
+                height: 1230px;
+            }
+        </style>
+    {% endif %} 
+
+    {% if userType is same as("broker")%}
+        <style>
+            #sidebar-wrapper {
+                height: 1488px;
+            }
+        </style>
+    {% endif %} 
+
+{% endblock %}
+
 {% block content %}
 
-    {% if errorList %}
-        <ul>
-        {% for error in errorList %}
-            <li>{{ error }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-
+    <div class="container">
     {# Form for buyers #}
     {% if userType is same as("buyer")%}
         <form method="post">
             <div>Required fields:</div>
             <br>
-            Email: <input name="email" type="email"><br>
-            Password: <input name="password1" type="password"><br>
-            Confirm Password: <input name="password2" type="password"><br>
+            Email: <input class="form-control" name="email" type="email">
+            <div class="err-msg">{{errors.email}}</div><br>
+            Password: <input class="form-control" name="password1" type="password">
+            <div class="err-msg">{{errors.password1}}</div><br>
+            Confirm Password: <input class="form-control" name="password2" type="password">
+            <div class="err-msg">{{errors.password2}}</div><br>
             <br>
             <div>Optional fields:</div>
             <br>
-            First Name: <input name="firstName" type="text"><br>
-            Last Name: <input name="lastName" type="text"><br>
-            Phone Number: <input name="phone" type="text"><br>
-            Image: <input type="file" name="photoFilePath"/><br>
-            Appartment Number: <input name="appartmentNo" type="number"><br>
-            Street Address: <input name="streetAddress" type="text"><br>
-            City: <input name="city" type="text"><br>
-            Province: <input name="province" type="text"><br>
-            Postal Code: <input name="postalCode" type="text"><br>
-            <input type="submit" value="Add User">
+            First Name: <input class="form-control" name="firstName" type="text">
+            <div class="err-msg">{{errors.firstName}}</div><br>
+            Last Name: <input class="form-control" name="lastName" type="text">
+            <div class="err-msg">{{errors.lastName}}</div><br>
+            Phone Number: <input class="form-control" name="phone" type="text">
+            <div class="err-msg">{{errors.phone}}</div><br>
+            Image: <input class="form-control" type="file" name="photoFilePath"/>
+            <div class="err-msg">{{errors.uploadedPhoto}}</div><br>
+            Appartment Number: <input class="form-control" name="appartmentNo" type="number">
+            <div class="err-msg">{{errors.appartmentNo}}</div><br>
+            Street Address: <input class="form-control" name="streetAddress" type="text">
+            <div class="err-msg">{{errors.streetAddress}}</div><br>
+            City: <input class="form-control" name="city" type="text">
+            <div class="err-msg">{{errors.city}}</div><br>
+            Province: <input class="form-control" name="province" type="text">
+            <div class="err-msg">{{errors.province}}</div><br>
+            Postal Code: <input class="form-control" name="postalCode" type="text">
+            <div class="err-msg">{{errors.postalCode}}</div><br>
+            <input class="btn btn-primary form-control" type="submit" value="Add User">
         </form>
     {% endif %}               
 
@@ -41,26 +66,42 @@
         <form method="post" enctype="multipart/form-data">
             <div>Required fields:</div>
             <br>
-            Email: <input name="email" type="email"><br>
-            Password: <input name="password1" type="password"><br>
-            Confirm Password: <input name="password2" type="password"><br>
-            License Number: <input name="licenseNo" type="text"><br>
-            First Name: <input name="firstName" type="text"><br>
-            Last Name: <input name="lastName" type="text"><br>
-            Company: <input name="company" type="text"><br>
+            Email: <input class="form-control" name="email" type="email">
+            <div class="err-msg">{{errors.email}}</div><br>
+            Password: <input class="form-control" name="password1" type="password">
+            <div class="err-msg">{{errors.password1}}</div><br>
+            Confirm Password: <input class="form-control" name="password2" type="password">
+            <div class="err-msg">{{errors.password2}}</div><br>
+            License Number: <input class="form-control" name="licenseNo" type="text">
+            <div class="err-msg">{{errors.licenseNo}}</div><br>
+            First Name: <input class="form-control" name="firstName" type="text">
+            <div class="err-msg">{{errors.firstName}}</div><br>
+            Last Name: <input class="form-control" name="lastName" type="text">
+            <div class="err-msg">{{errors.lastName}}</div><br>
+            Company: <input class="form-control" name="company" type="text">
+            <div class="err-msg">{{errors.company}}</div><br>
             <br>
             <div>Optional fields:</div>
             <br>
-            Phone Number: <input name="phone" type="text"><br>
-            Job Title: <input name="jobTitle" type="text"><br>
-            Image: <input type="file" name="photoFilePath"/><br>
-            Appartment Number: <input name="appartmentNo" type="number"><br>
-            Street Address: <input name="streetAddress" type="text"><br>
-            City: <input name="city" type="text"><br>
-            Province: <input name="province" type="text"><br>
-            Postal Code: <input name="postalCode" type="text"><br>
-            <input type="submit" value="Add User">
+            Phone Number: <input class="form-control" name="phone" type="text">
+            <div class="err-msg">{{errors.phone}}</div><br>
+            Job Title: <input class="form-control" name="jobTitle" type="text">
+            <div class="err-msg">{{errors.jobTitle}}</div><br>
+            Image: <input class="form-control" type="file" name="photoFilePath"/>
+            <div class="err-msg">{{errors.uploadedPhoto}}</div><br>
+            Appartment Number: <input class="form-control" name="appartmentNo" type="number">
+            <div class="err-msg">{{errors.appartmentNo}}</div><br>
+            Street Address: <input class="form-control" name="streetAddress" type="text">
+            <div class="err-msg">{{errors.streetAddress}}</div><br>
+            City: <input class="form-control" name="city" type="text">
+            <div class="err-msg">{{errors.city}}</div><br>
+            Province: <input class="form-control" name="province" type="text">
+            <div class="err-msg">{{errors.province}}</div><br>
+            Postal Code: <input class="form-control" name="postalCode" type="text">
+            <div class="err-msg">{{errors.postalCode}}</div><br>
+            <input class="btn btn-primary form-control" type="submit" value="Add User">
         </form>
     {% endif %}  
+    </div>
 
 {% endblock content %}

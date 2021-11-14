@@ -3,15 +3,18 @@
 {% block title %}Delete Confirmation{% endblock %}
 
 {% block content %}
-<h2>Are you sure that you want to delete this user?</h2>
-<h3>If the user is a broker, all properties and photos associated to this user will be deleted in the proccess.</h3>
-<br>
-<p>ID: {{user.id}}</p>
-<p>Email: {{user.email}}</p>
-<p>User Type: {{user.role}}</p>
+    <div class="container">
+        <h2>Are you sure that you want to delete this user?</h2>
+        <h3>If the user is a broker, all properties and photos associated to this user will be deleted in the proccess.</h3>
+        <br>
+        <p>ID: {{user.id}}</p>
+        <p>Email: {{user.email}}</p>
+        <p>User Type: {{user.role}}</p>
 
-<form method="post">
-    <input type="submit" value="Confirm Deletion">
-</form>
-<button onclick="window.location='/admin/users/list';">Stop Deletion</button>
+        <form method="post">
+            <input class="btn btn-primary form-control" type="submit" value="Confirm Deletion">
+        </form>
+        <br>
+        <button class="btn btn-primary form-control" onclick="window.location='/admin/users/list';">Stop Deletion</button>
+    </div>
 {% endblock %}

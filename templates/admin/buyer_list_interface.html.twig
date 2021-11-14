@@ -21,7 +21,7 @@
             $("#pageNavNext").toggle(newPageNo < {{maxPages}});
             $(".buyerTable").load("/buyerdata/" + currPageNo);
             if (noHistory == false) {
-                history.pushState({page: currPageNo}, '', '/admin/buyers/list/' + currPageNo);
+                history.pushState({page: currPageNo}, '', '/admin/buyer/list/' + currPageNo);
             }
         }
 
@@ -42,9 +42,8 @@
 
 {% block content %}
 
-	<p>
-		<a href="/admin/users/add/buyer">Add a new buyer</a>
-	</p>
+	<button class="btn btn-primary adminBlueButton" onclick="window.location='/admin/users/add/buyer';">Add New Buyer</button>
+
 			<div class="pageNavigation">
 			<span id="pageNavPrev" onclick="loadPage(currPageNo-1)">Previous</span>
 			{% for no in 1 .. maxPages %}
