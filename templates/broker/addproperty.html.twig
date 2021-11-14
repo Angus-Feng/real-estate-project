@@ -40,15 +40,15 @@
 				aria-controls="pills-details" aria-selected="true">Details</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" id="pills-location-tab" data-toggle="pill" href="#pills-location" role="tab" aria-controls="pills-location"
+			<a class="nav-link disabled" id="pills-location-tab" data-toggle="pill" href="#pills-location" role="tab" aria-controls="pills-location"
 				aria-selected="false">Location</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" id="pills-images-tab" data-toggle="pill" href="#pills-images" role="tab" aria-controls="pills-images"
+			<a class="nav-link disabled" id="pills-images-tab" data-toggle="pill" href="#pills-images" role="tab" aria-controls="pills-images"
 				aria-selected="false">Images</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" id="pills-map-tab" data-toggle="pill" href="#pills-submit" role="tab" aria-controls="pills-submit"
+			<a class="nav-link disabled" id="pills-submit-tab" data-toggle="pill" href="#pills-submit" role="tab" aria-controls="pills-submit"
 				aria-selected="false">Submit</a>
 		</li>
 	</ul>
@@ -64,7 +64,7 @@
 						<label for="">Price</label>
 						<input class="form-control form-control-lg form-control-a" type="number" name="price" step="0.01" value="{{ values.price }}" />
 						<label class="" for="">Bedrooms</label>
-						<input class="form-control form-control-lg form-control-a invalid-feedback" type="number" name="bedrooms" value="{{ values.bedrooms }}" />
+						<input class="form-control form-control-lg form-control-a" type="number" name="bedrooms" value="{{ values.bedrooms }}" />
 						<label class="" for="">Bathrooms</label>
 						<input class="form-control form-control-lg form-control-a" type="number" name="bathrooms" value="{{ values.bathrooms }}" />
 						<label class="" for="">Year built</label>
@@ -80,7 +80,7 @@
 				</fieldset>
 			</div>
 			<!-- FORM STEP-2 -->
-			<div class="tab-pane fade row" id="pills-location" role="tabpanel" aria-labelledby="pills-location-tab">
+			<div class="tab-pane fade" id="pills-location" role="tabpanel" aria-labelledby="pills-location-tab">
 				<fieldset class="form-step">
 					<div class="form-group property-form-group">
 						<label class="" for="">Stree address</label>

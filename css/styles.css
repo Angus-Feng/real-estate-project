@@ -404,3 +404,15 @@
     text-align: center;
     padding-top: 50px;
 }
+
+.form-container .tab-content .active {
+    display: block;
+}
+
+.form-container .tab-pane {
+    display: none;
+}
+
+.center-text {
+    text-align: center;
+}

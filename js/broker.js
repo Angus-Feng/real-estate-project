@@ -1,10 +1,12 @@
+var validationCount = 0;
+
 $(document).ajaxError(function () {
 	// alert("AJAX error");
 });
 
 $(document).ready(function() {
 	showProvinces();
-
+  
 	$(".prev").click(function() {
 		const currentStep = $(this).parents('.form-step');
 		const prevStep = $(this).parents().prev();
@@ -31,12 +33,17 @@ $(document).ready(function() {
 				httpErrorHandler(jqxhr, status, errorThrown);
 			},
 			success: function(propertyId) {
+				// display last step
+				$('#pills-submit').removeClass('fade');
 				$("#submitStep").hide();
-				$("#lastStep").show();
-				const html = '<p>A new property added successfully!</p>'
-							+ `<div class="btn-center"><a href=myproperty/${propertyId}>`
-							+ '<button class="btn btn-primary" type="button">View the Property</button></div>';
+				$("#pills-submit").show();
+				const html = '<p class="center-text">A new property added successfully!</p>'
+									+ `<div class="btn-center"><a href=myproperty/${propertyId}>`
+									+ '<button class="btn btn-a" type="button">View the Property</button></div>';
 				$("#lastStep").append(html);
+				// move active pills tab
+				$('#pills-images-tab').removeClass('active');
+				$('#pills-submit-tab').removeClass('disabled').addClass('active');
 			}
 		});
 	});
@@ -103,23 +110,34 @@ function ajaxValidationRequest(endpoint, jsonString, e) {
 			showErrorMsg(jqxhr);
 		},
 		success: function(result) {
-			if (result) showNextStep(e);
+			if (result) {
+				showNextStep(e);
+				// display next step
+				$(e.target).parents().next('.fade').removeClass('fade');
+				// move active pills tab
+				const id = $(e.target).parents('.tab-pane').attr('id');
+				$(`#${id}-tab`).removeClass('active');
+				$(`#${id}-tab`).parents().next('.nav-item').children('a').removeClass('disabled').addClass('active');
+			}
 		}
 	});
 }
 
 function showNextStep(e) {
+	console.log('hi');
+	console.log(validationCount);
+	validationCount++;
+	console.log(validationCount);
 	const currentStep = $(e.target).parents('.form-step');
 	const nextStep = $(e.target).parents().next();
+	
 	nextStep.show();
 	currentStep.hide();
 }
 
-// FIXME: error message for Price is not showing 
 function showErrorMsg(jqxhr) {
 	if (jqxhr.status == 400) { // validation failed
 		const errorList = jqxhr.responseJSON;
-		// TODO: add red outline in input box
 		// Create error message nodes and display it under its input box
 		for (const error in errorList) {
 			let errorMsg = `<span id="errorMsg${error[0].toUpperCase() + error.slice(1)}" class="errorMsg err-msg">${errorList[error]}</span>`;
