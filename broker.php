@@ -110,26 +110,6 @@ $app->group('/ajax/addpropertyval', function (App $app) use ($log) {
             return $response;
         }
     });
-    // Form step - 3
-    // $app->post('/images', function (Request $request, Response $response, array $args) use ($log) {
-        // $json = $request->getBody();
-        // $propertyImages = json_decode($json, TRUE);
-        // print_r($propertyImages);
-
-        // $errorPhotoCount = 1;
-        // foreach ($propertyImages as $photo) {
-        //     if ($photo->getError() !== UPLOAD_ERR_OK) {
-        //         $errorList[] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
-        //         $errors['uploadedPhotos'] = 'There was an error uploading photo ' . $errorPhotoCount . ".";
-        //         $errorPhotoCount++;
-        //     }
-        //     $result = verifyFileExt($photo);
-        //     if (!$result) {
-        //         $errorList[] = $result;
-        //         $errors['uploadedPhotos'] = $result;
-        //     }
-        // }
-    // });
 });
 
 // POST '/addproperty'
@@ -254,6 +234,10 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
         }
     }
 
+    // foreach ($photoFilePath as $filePath) {
+    //     $filePath->moveTo($photoFilePath);
+    // }
+
     $photoNo = 0;
     foreach ($photoPathArray as $photoFilePath) {
         DB::insert('propertyphotos', ['propertyId' => $propertyId, 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);
@@ -288,10 +272,17 @@ $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use (
     $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $id, $brokerId);
     $log->debug(sprintf("Fetch a property data with id=%s", $id));
 
+    $propertyImages = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%s ORDER BY ordinalINT ASC" , $id);
+    $log->debug(sprintf("Fetch property images with propertyId=%s", $id));
+
     if (!$property) { // not found - cause 404 here
         throw new \Slim\Exception\NotFoundException($request, $response);
     } else {
-        return $this->view->render($response, 'broker/myproperty.html.twig', ['property' => $property]);
+        return $this->view->render(
+            $response, 
+            'broker/myproperty.html.twig', 
+            ['property' => $property, 'propertyImageList' => $propertyImages]
+        );
     }
 })->setName('mypropertyEdit');;
 

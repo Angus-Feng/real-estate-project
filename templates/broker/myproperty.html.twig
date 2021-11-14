@@ -48,15 +48,13 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<div id="property-single-carousel" class="owl-carousel owl-arrow gallery-property">
+					{% for propertyImage in propertyImageList %}
+					<p>{{propertyImage.photoFilePath}}</p>
+					<p>{{propertyImage.photoFilePath}}</p>
 					<div class="carousel-item-b">
-						<img src="img/slide-2.jpg" alt="">
-					</div>
-					<div class="carousel-item-b">
-						<img src="img/slide-3.jpg" alt="">
-					</div>
-					<div class="carousel-item-b">
-						<img src="img/slide-1.jpg" alt="">
-					</div>
+						<img src="/uploads/{{property.id}}/640p-{{propertyImage.photoFilePath}}" alt="">
+					</div>	
+					{% endfor %}
 				</div>
 				<div class="row justify-content-between">
 					<div class="col-md-5 col-lg-4">
