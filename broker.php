@@ -233,11 +233,6 @@ $app->POST('/addproperty', function ($request, $response, $args) use ($log) {
             $firstPhoto = FALSE;
         }
     }
-
-    // foreach ($photoFilePath as $filePath) {
-    //     $filePath->moveTo($photoFilePath);
-    // }
-
     $photoNo = 0;
     foreach ($photoPathArray as $photoFilePath) {
         DB::insert('propertyphotos', ['propertyId' => $propertyId, 'ordinalINT' => $photoNo, 'photoFilePath' => $photoFilePath]);

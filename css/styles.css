@@ -446,3 +446,12 @@
 .center-text {
     text-align: center;
 }
+
+.btn-margin {
+    margin-right: 20px;
+}
+
+.btn-top-margin {
+    margin-top: 50px;
+    margin-bottom: 20px;
+}

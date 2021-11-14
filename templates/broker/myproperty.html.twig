@@ -49,10 +49,8 @@
 			<div class="col-sm-12">
 				<div id="property-single-carousel" class="owl-carousel owl-arrow gallery-property">
 					{% for propertyImage in propertyImageList %}
-					<p>{{propertyImage.photoFilePath}}</p>
-					<p>{{propertyImage.photoFilePath}}</p>
 					<div class="carousel-item-b">
-						<img src="/uploads/{{property.id}}/640p-{{propertyImage.photoFilePath}}" alt="">
+						<img src="/uploads/{{property.id}}/640p-{{propertyImage.photoFilePath}}" alt="property image" class="property-image">
 					</div>	
 					{% endfor %}
 				</div>
@@ -144,10 +142,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-12">
+			<div class="d-flex justify-content-center btn-top-margin">
 				<div class="btn-group">
 					<a href="edit/{{property.id}}">
-						<button class="btn btn-a">Edit</button>
+						<button class="btn btn-a btn-margin">Edit</button>
 					</a>
 					<a href="delete/{{ property.id}}">
 						<button class="btn btn-a">Delete</button>
