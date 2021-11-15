@@ -255,20 +255,27 @@ $app->get('/mypropertylist', function ($request, $response, $args) {
 
     $propertyList = DB::query("SELECT * FROM properties WHERE brokerId=%s", $brokerId);
     return $this->view->render($response, 'broker/mypropertylist.html.twig', ['propertyList' => $propertyList]);
-});
+})->setName('mypropertyList');
 
 // GET '/myproperty/propertyID'
 $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
     $brokerId = @$_SESSION['user']['id'];
     if ($_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
-    } 
-    $id = $args['id'];
-    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $id, $brokerId);
-    $log->debug(sprintf("Fetch a property data with id=%s", $id));
+    }
+    // check if the property owns by broker 
+    $propertyId = $args['id'];
+    $retBrokerId = DB::queryFirstField("SELECT brokerId FROM properties WHERE id=%s", $propertyId);
 
-    $propertyImages = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%s ORDER BY ordinalINT ASC" , $id);
-    $log->debug(sprintf("Fetch property images with propertyId=%s", $id));
+    if ($retBrokerId != $brokerId) {
+        return $this->view->render($response, '404_error.html.twig');
+    } 
+
+    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $propertyId, $brokerId);
+    $log->debug(sprintf("Fetch a property data with id=%s", $propertyId));
+
+    $propertyImages = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%s ORDER BY ordinalINT ASC" , $propertyId);
+    $log->debug(sprintf("Fetch property images with propertyId=%s", $propertyId));
 
     if (!$property) { // not found - cause 404 here
         return $this->view->render($response, '404_error.html.twig');
@@ -279,7 +286,7 @@ $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use (
             ['property' => $property, 'propertyImageList' => $propertyImages]
         );
     }
-})->setName('mypropertyEdit');;
+})->setName('mypropertyEdit');
 
 // GET '/myproperty/edit/propertyID'
 $app->get('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
@@ -287,8 +294,14 @@ $app->get('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) 
     if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
-
+    // check if the property owns by broker 
     $propertyId = $args['id'];
+    $retBrokerId = DB::queryFirstField("SELECT brokerId FROM properties WHERE id=%s", $propertyId);
+
+    if ($retBrokerId != $brokerId) {
+        return $this->view->render($response, '404_error.html.twig');
+    } 
+
     $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $propertyId, $brokerId);
     $log->debug(sprintf("Fetch a property data with id=%s", $propertyId));
 
@@ -312,9 +325,13 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
     if (@$_SESSION['user']['role'] !== 'broker') {
         return $response->write('Access Denied');
     } 
+    // check if the property owns by broker 
+    $propertyId = $args['id'];
+    $retBrokerId = DB::queryFirstField("SELECT brokerId FROM properties WHERE id=%s", $propertyId);
 
-    $id = $args['id'];
-
+    if ($retBrokerId != $brokerId) {
+        return $this->view->render($response, '404_error.html.twig');
+    }
     // extract values 
     $price = $request->getParam('price');
     $title = $request->getParam('title');
@@ -387,42 +404,29 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
         'postalCode' => $postalCode
     ];
 
+    echo '<pre>';
+        print_r($errorList);
+        echo '</pre>';
+
     if ($errorList) {
-        return $this->view->render($response, 'broker/myproperty_edit.html.twig', 
-            ['errorList' => $errorList, 'values' => $valueList]
-        );
+        
+        // return $this->view->render($response, 'broker/myproperty_edit.html.twig', 
+        //     ['errorList' => $errorList, 'values' => $valueList]
+        // );
     } 
-    DB::update('properties', $valueList, "id=%i", $id);
+    DB::update('properties', $valueList, "id=%i", $propertyId);
     $log->debug(sprintf("Property with id=%s updated", DB::insertId()));
 
     // redirect to '/myproperty/propertyID' with a parameter (propertyID)
-    return $response->withRedirect($this->router->pathFor('mypropertyEdit', ['id' => $id]));
+    return $response->withRedirect($this->router->pathFor('mypropertyEdit', ['id' => $propertyId]));
 });
 
 // DELETE '/myproperty/propertyID'
 $app->delete('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-    // print_r($request);
-    $brokerId = @$_SESSION['user']['id'];
     if (@$_SESSION['user']['role'] !== 'broker') {
         return $this->view->render($response, '404_error.html.twig');
     } 
-
+    DB::delete('properties', 'id=%s', $args['id']);
+    $log->debug(sprintf("Property with id=%s deleted", DB::insertId()));
+    return $response->withRedirect($this->router->pathFor('mypropertyList'));
 });
-// // POST '/myproperty/delete/propertyID'
-// $app->POST('/myproperty/delete/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-//     $brokerId = @$_SESSION['user']['id'];
-//     if (@$_SESSION['user']['role'] !== 'broker') {
-//         return $response->write('Access Denied');
-//     } 
-//     $propertyId = $args['id'];
-//     // check if the property owns by broker 
-//     $retBrokerId = DB::queryFirstField("SELECT brokerId FROM properties WHERE id=%s", $propertyId);
-
-//     if ($retBrokerId != $brokerId) {
-//         return $this->view->render($response, '404_error.html.twig');
-//     }
-//     // TODO: delete photos
-//     // DELETE FROM `propertyphotos` WHERE `propertyphotos`.`id` = 25"?
-//     DB::delete('properties', 'id=%s', $args['id']);
-//     return $response->write('Property is deleted successfully.');
-// });
