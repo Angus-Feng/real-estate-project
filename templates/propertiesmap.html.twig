@@ -5,13 +5,18 @@
 {% block addHead %}
 <style>
 
+body {
+	overflow: hidden;
+}
+
 .sidemenu {
-	height: 100vh;
+	height: 937px;
 	width: 0;
 	position: fixed;
 	background-color: white;
 	transition: 0.4s;
 	overflow-y: scroll;
+	padding-bottom: 120px;
 }
 
 .sideMenuImage {
@@ -28,8 +33,35 @@
 	height: 200px;
 }
 
+.propertyCardLink {
+	text-decoration: none;
+}
+
 .smImage {
 	height: 130px;
+}
+
+.markerCard > * {
+	text-decoration: none;
+}
+
+.markerImage {
+	display:block;
+    margin:auto;
+}
+
+.fixed-top {
+	position: static;
+}
+
+#SMButton {
+	position: fixed;
+	z-index: 10;
+	width: 50px;
+	height: 50px;
+	margin-top: 90px;
+	background-color: white;
+	transition: 0.4s;
 }
 
 </style>
@@ -54,14 +86,20 @@
 		});
     }
 
-	function openSM() {
-		document.getElementById("mySidemenu").style.width = "18%";
-		document.getElementById("map").style.width = "82%";
-	}
-
-	function closeSM() {
-		document.getElementById("mySidemenu").style.width = "0";
-		document.getElementById("map").style.width = "100%";
+	function toggleSM() {
+		if ($(".sidemenu").css("width") === "0px") {
+			document.getElementById("mySidemenu").style.width = "18%";
+			document.getElementById("map").style.width = "82%";
+			document.getElementById("SMButton").style.marginLeft = "18%";
+			$("#smArrow").removeClass('fa-arrow-right');
+			$("#smArrow").addClass('fa-arrow-left');
+		} else {
+			document.getElementById("mySidemenu").style.width = "0";
+			document.getElementById("map").style.width = "100%";
+			document.getElementById("SMButton").style.marginLeft = "0";
+			$("#smArrow").removeClass('fa-arrow-left');
+			$("#smArrow").addClass('fa-arrow-right');
+		}
 	}
 
 	function loadPropList() {
@@ -74,20 +112,37 @@
 			var province = propertyList[i].province;
 			var bedrooms = propertyList[i].bedrooms;
 			var bathrooms = propertyList[i].bathrooms;
-			$("#mySidemenu").append(`
-				<a href="/properties/${id}">
-					<div class="propertyCard">
-						<img class="smImage" src="../uploads/${id}/thmb-${fileName}" style="height: 130px;">
-						<div class="smPrice">$${price}</div>
-						<div class="smFullAddress">
-						<span class="smStreetAddress">${streetAddress}, </span><span class="smCity">${city}, </span><span class="smProvince">${province}</span>
+			if (fileName === null) {
+				$("#mySidemenu").append(`
+					<a class="propertyCardLink" href="/properties/${id}">
+						<div class="propertyCard">
+							<img class="smImage" src="/images/defaultproperty.jpg" style="height: 130px;">
+							<div class="smPrice">$${price}</div>
+							<div class="smFullAddress">
+							<span class="smStreetAddress">${streetAddress}, </span><span class="smCity">${city}, </span><span class="smProvince">${province}</span>
+							</div>
+							<div class="smBedBath">
+							<span class="smBedrooms">${bedrooms}</span>&nbsp;<i class="fas fa-bed"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="smBathrooms">${bathrooms}</span>&nbsp;<i class="fas fa-bath"></i>
+							</div>
 						</div>
-						<div class="smBedBath">
-						<span class="smBedrooms">${bedrooms}</span>&nbsp;<i class="fas fa-bed"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="smBathrooms">${bathrooms}</span>&nbsp;<i class="fas fa-bath"></i>
+					</a>
+				`);
+			} else {
+				$("#mySidemenu").append(`
+					<a class="propertyCardLink" href="/properties/${id}">
+						<div class="propertyCard">
+							<img class="smImage" src="../uploads/${id}/thmb-${fileName}" style="height: 130px;">
+							<div class="smPrice">$${price}</div>
+							<div class="smFullAddress">
+							<span class="smStreetAddress">${streetAddress}, </span><span class="smCity">${city}, </span><span class="smProvince">${province}</span>
+							</div>
+							<div class="smBedBath">
+							<span class="smBedrooms">${bedrooms}</span>&nbsp;<i class="fas fa-bed"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="smBathrooms">${bathrooms}</span>&nbsp;<i class="fas fa-bath"></i>
+							</div>
 						</div>
-					</div>
-				</a>
-			`);
+					</a>
+				`);
+			}
 		}
 	}
 
@@ -138,30 +193,54 @@
 								var province = propertyListData[counter].province;
 								var bedrooms = propertyListData[counter].bedrooms;
 								var bathrooms = propertyListData[counter].bathrooms;
-								var contentString = `
-									<a href="/properties/${id}">
-										<div class="propertyCard">
-											<img class="smImage" src="../uploads/${id}/thmb-${fileName}" style="height: 130px;">
-											<div class="smPrice">$${price}</div>
-											<div class="smFullAddress">
-											<span class="smStreetAddress">${streetAddress}, </span><span class="smCity">${city}, </span><span class="smProvince">${province}</span>
+								var contentString = "";
+								
+								if (fileName === null) {
+									contentString = `
+										<a href="/properties/${id}" style="text-decoration: none;">
+											<div class="markerCard">
+												<img class="markerImage" src="/images/defaultproperty.jpg" style="height: 130px;">
+												<br>
+												<div class="markerPrice">$${price}</div>
+												<div class="markerFullAddress">
+													<span class="markerStreetAddress">${streetAddress}, </span><span class="markerCity">${city}, </span><span class="markerProvince">${province}</span>
+												</div>
+												<div class="markerBedBath">
+													<span class="markerBedrooms">${bedrooms}</span>&nbsp;<i class="fas fa-bed"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="markerBathrooms">${bathrooms}</span>&nbsp;<i class="fas fa-bath"></i>
+													<br>
+												</div>
 											</div>
-											<div class="smBedBath">
-											<span class="smBedrooms">${bedrooms}</span>&nbsp;<i class="fas fa-bed"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="smBathrooms">${bathrooms}</span>&nbsp;<i class="fas fa-bath"></i>
+										</a>
+									`;
+								} else {
+									contentString = `
+										<a href="/properties/${id}" style="text-decoration: none;">
+											<div class="markerCard">
+												<img class="markerImage" src="../uploads/${id}/thmb-${fileName}" style="height: 130px;">
+												<br>
+												<div class="markerPrice">$${price}</div>
+												<div class="markerFullAddress">
+													<span class="markerStreetAddress">${streetAddress}, </span><span class="markerCity">${city}, </span><span class="markerProvince">${province}</span>
+												</div>
+												<div class="markerBedBath">
+													<span class="markerBedrooms">${bedrooms}</span>&nbsp;<i class="fas fa-bed"></i>&nbsp;&nbsp;&nbsp;&nbsp;<span class="markerBathrooms">${bathrooms}</span>&nbsp;<i class="fas fa-bath"></i>
+													<br>
+												</div>
 											</div>
-										</div>
-									</a>
-								`;
+										</a>
+									`;
+								}
+
 								var infowindow = new google.maps.InfoWindow({
 									content: contentString,
 								});
 
 								marker.addListener("click", () => {
-									if ($(".sidemenu").css("width") === "0px") {
-										openSM();
-									} else {
-										closeSM();
-									}
+									// if ($(".sidemenu").css("width") === "0px") {
+									// 	openSM();
+									// } else {
+									// 	closeSM();
+									// }
 									infowindow.open({
 										anchor: marker,
 										map,
@@ -188,6 +267,7 @@
 
 {% block content %}
 	<div id="mySidemenu" class="sidemenu"></div>
+	<div id="SMButton"><a href="javascript:toggleSM();"><i id="smArrow" class="fas fa-arrow-right smArrow fa-3x"></i></a></div>
 
     <div id="map" style="height: 100vh; width: 100%; float: right; transition: 0.4s;"></div>
 

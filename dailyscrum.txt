@@ -1,3 +1,39 @@
+2021/11/15
+
+Nari
+1. Done / not done since last scrum:
+- apply styles on every page
+- implement index page
+- implement broker list and broker datail pages
+- modify add property jQuery part
+2. To do until next Scrum:
+- fix jumbotron in index page
+- finish navbar with user session
+- fix property edit page not being updated 
+3. Need assistance / figure things out
+- photo update & delete
+
+Chris
+1. Done / not done since last scrum:
+- Finished Admin CSS + fixed some issues (password hashing, etc)
+- Fixed default property photo on map
+2. To do until next Scrum:
+- Work on sidebar CSS
+- Anything that needs to be finished
+3. Need assistance / figure things out
+- Nothing for now
+
+Feng
+1. Done / not done since last scrum:
+- Organized the ppt template
+2. To do until next Scrum:
+- Fill server db with dummy data
+- Finish ppt
+3. Need assistance / figure things out
+- Nothing for now
+
+----------------------------------------------------------------------------------------------
+
 2021/11/13
 
 Nari

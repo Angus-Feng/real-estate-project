@@ -1065,3 +1065,12 @@ $app->post('/admin/pending/{choice:accept|decline}/{id:[0-9]+}', function ($requ
 
     return $this->view->render($response, 'admin/modification_success.html.twig');
 });
+
+// Logout
+$app->get('/admin/logout', function ($request, $response, $args) {
+    if (@$_SESSION['user']['role'] !== 'admin') {
+        return $this->view->render($response, 'error_internal.html.twig');
+    }
+    unset($_SESSION['user']);
+    return $response->withRedirect($this->router->pathFor('index'));
+});
