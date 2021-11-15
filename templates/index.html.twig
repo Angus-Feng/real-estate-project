@@ -183,7 +183,7 @@
             <h2 class="title-a">Latest Properties</h2>
           </div>
           <div class="title-link">
-            <a href="property-grid.html">All Property
+            <a href="/properties">All Property
               <span class="ion-ios-arrow-forward"></span>
             </a>
           </div>
@@ -209,15 +209,18 @@
             <div class="card-overlay-a-content">
               <div class="card-header-a">
                 <h2 class="card-title-a">
-                  <a href="property-single.html">{{property.streeNo}}
-                    <br /> {{property.streetName}}</a>
+                  <a href="property-single.html">
+                    {% if property.appartmentNo %}
+                      {{property.streetAddress}}<br>
+                    {% endif %}
+                    {{property.streetAddress}}</a>
                 </h2>
               </div>
               <div class="card-body-a">
                 <div class="price-box d-flex">
                   <span class="price-a">$ {{property.price}}</span>
                 </div>
-                <a href="#" class="link-a">Click here to view
+                <a href="/properties/{{property.id}}" class="link-a">Click here to view
                   <span class="ion-ios-arrow-forward"></span>
                 </a>
               </div>

@@ -16,8 +16,16 @@ require_once 'property.php';
 // Index page
 $app->get('/', function ($request, $response, $args) use ($log) {
     $numOfItems = 3;
-    $propertyList = DB::query("SELECT * FROM properties LIMIT %i", $numOfItems);
+    $propertyList = DB::query("SELECT * FROM properties ORDER BY id DESC LIMIT %i", $numOfItems);
     $log->debug(sprintf("Fetch %s property data", $numOfItems));
+    
+    // query & add photo file path to each property
+    foreach ($propertyList as &$property) {
+        $property['photoFilePath'] = DB::queryFirstField(
+            "SELECT photoFilePath FROM propertyphotos WHERE propertyId=%s", 
+            $property['id']
+        );
+    }
 
     $brokerList = DB::query("SELECT * FROM users WHERE `role`='broker' LIMIT %i", $numOfItems);
     $log->debug(sprintf("Fetch %s broker data", $numOfItems));
