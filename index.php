@@ -55,6 +55,14 @@ $app->get('/', function ($request, $response, $args) use ($log) {
     );
 })->setName('index');
 
+// Broker list page
+$app->get('/brokers', function ($request, $response, $args) use ($log) {
+    $brokerList = DB::query("SELECT * FROM users WHERE `role`='broker' ORDER BY id");
+    $log->debug(sprintf("Fetch broker data"));
+
+    return $this->view->render($response, 'broker_list.html.twig', ['brokerList' => $brokerList]);
+});
+
 // About page
 $app->get('/about', function ($request, $response, $args) {
     return $this->view->render($response, 'about.html.twig');
