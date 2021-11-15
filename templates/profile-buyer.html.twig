@@ -1,7 +1,7 @@
 <div class='with_sidebar'>
 	<ul class="nav flex-column">
 		<li class="nav-item">
-			<a class="nav-link" href="#" id='changeProf'>View and Change profile</a>
+			<a class="nav-link" href="#" id='changeProf'>Change profile</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link" href="#" id='changePass'>Change password</a>
@@ -13,56 +13,58 @@
 	<section class="view-fav property-grid grid" style="display: none;">
       <div class="viewFav row">
       </div>
-  	</section>
-	<form class='changePass' style="display: none;">
-		<div class="row g-3">
+  </section>
+	<form class='changePass form-a col-md-9' style="display: none;">
+		<div class="row">
 			<div class="err-msg pass_err"></div>
-			<div class="mb-3">
+			<div class="col-md-9 mb-3 mx-auto">
 				<label for="origPw" class="form-label">Current Password</label>
-				<input type="password" name="origPw" class="form-control">
+				<input type="password" name="origPw" class="form-control form-control-lg form-control-a">
 			</div>
-			<div class="mb-3">
+			<div class="col-md-9 mb-3 mx-auto">
 				<label for="newPw" class="form-label">New Password</label>
-				<input type="password" name="newPw" class="form-control">
+				<input type="password" name="newPw" class="form-control form-control-lg form-control-a">
 			</div>
-			<div class="mb-3">
+			<div class="col-md-9 mb-3 mx-auto">
 				<label for="newPwRepeat" class="form-label">Re-enter new password</label>
-				<input type="password" name="newPwRepeat" class="form-control">
+				<input type="password" name="newPwRepeat" class="form-control form-control-lg form-control-a">
 			</div>
-			<button class="btn btn-primary" id="btnChangePass" type="submit">Submit</button>
+			<div class="btn-center">
+				<button class="btn btn-a" id="btnChangePass" type="submit">Submit</button>
+			</div>
 		</div>
 	</form>
-	<form method="post" class='profile'>
-		<div class="row g-3">
-			<div class="mb-3">
+	<form method="post" class='profile form-a col-md-9'>
+		<div class="row g-3 mx-auto">
+			<div class="col-md-10 mb-3">
 				<label for="email" class="form-label">Email</label>
-				<input readonly type="text" class="form-control" name="email" value="{{user.email}}">
+				<input readonly type="text" class="form-control form-control-lg form-control-a" name="email" value="{{user.email}}">
 			</div>
-			<div class="col-sm-6">
+			<div class="col-md-5 mb-3">
 				<label for="firstName" class="form-label">First Name</label>
-				<input type="text" class="form-control" name="firstName" value="{{user.firstName}}">
+				<input type="text" class="form-control form-control-lg form-control-a" name="firstName" value="{{user.firstName}}">
 				<div class="err-msg">{{er.firstName}}</div>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-md-5 mb-3">
 				<label for="lastName" class="form-label">Last Name</label>
-				<input type="text" class="form-control" name="lastName" value="{{user.lastName}}">
+				<input type="text" class="form-control form-control-lg form-control-a" name="lastName" value="{{user.lastName}}">
 				<div class="err-msg">{{er.lastName}}</div>
 			</div>
 			<br>
-			<div class="mb-3">Contact Infomation</div>
-			<div class="col-sm-6">
+			<div class="col-md-10 mb-3">Contact Infomation</div>
+			<div class="col-md-5 mb-3">
 				<label for="phone" class="form-label">Phone number</label>
-				<input type="text" class="form-control" name="phone" value="{{user.phone}}">
+				<input type="text" class="form-control form-control-lg form-control-a" name="phone" value="{{user.phone}}">
 				<div class="err-msg">{{er.phone}}</div>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-md-5 mb-3">
 				<label for="city" class="form-label">City</label>
-				<input type="text" class="form-control" name="city" value="{{user.city}}">
+				<input type="text" class="form-control form-control-lg form-control-a" name="city" value="{{user.city}}">
 				<div class="err-msg">{{er.city}}</div>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-md-5 mb-3">
 				<label for="city" class="form-label">Province</label>
-				<select class="form-select" name="province">
+				<select class="form-select form-control-lg form-control-a" name="province">
 					<option selected>No Preference</option>
 					<option value="AB" {% if user.province is same as ('AB') %} selected="selected" {% endif %}>Alberta</option>
 					<option value="BC" {% if user.province is same as ('BC') %} selected="selected" {% endif %}>British Columbia</option>
@@ -78,28 +80,28 @@
 					<option value="YT" {% if user.province is same as ('YT') %} selected="selected" {% endif %}>Yukon</option>
 				</select>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-md-5 mb-3">
 				<label for="postalCode" class="form-label">Postal Code</label>
-				<input type="text" class="form-control" name="postalCode" value="{{user.postalCode}}">
+				<input type="text" class="form-control form-control-lg form-control-a" name="postalCode" value="{{user.postalCode}}">
 				<div class="err-msg">{{er.postalCode}}</div>
 			</div>
-			<div class="mb-3 form-check">
+			<div class="col-md-10 mb-3 form-check">
 				<input type="checkbox" class="form-check-input" name="becomeBroker">
 				<label class="form-check-label" for="becomeBroker">I'm a broker</label>
 			</div>
-			<div class="mb-3">
+			<div class="col-md-10 mb-3">
 				<label for="licenseNo" class="form-label">license Number</label>
-				<input type="text" name="licenseNo" class="form-control" value="{{user.licenseNo}}" placeholder="AAA000000AAA">
+				<input type="text" name="licenseNo" class="form-control form-control-lg form-control-a" value="{{user.licenseNo}}" placeholder="AAA000000AAA">
 				<div class="err-msg">{{er.licenseNo}}</div>
 			</div>
-			<div class="mb-3">
+			<div class="col-md-10 mb-3">
 				<label for="company" class="form-label">Company name that you work for</label>
-				<input type="text" name="company" class="form-control" value="{{user.company}}">
+				<input type="text" name="company" class="form-control form-control-lg form-control-a" value="{{user.company}}">
 				<div class="err-msg">{{er.company}}</div>
 			</div>
-			<button type="submit" class="btn btn-primary" name="submit">Submit</button>
-
-
+			<div>
+				<button type="submit" class="btn btn-a" name="submit">Submit</button>
+			</div>
 		</div>
 	</form>
 </div>

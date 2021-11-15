@@ -25,6 +25,14 @@
     flex-direction: row;
 }
 
+.with_sidebar .nav-link  {
+    color: #000000;
+}
+
+.with_sidebar .nav-link:hover  {
+    color: #2eca6a;
+}
+
 .flex-column {
     width: 30%;
     margin-right: 5%;
