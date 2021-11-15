@@ -491,3 +491,16 @@
 .uppercase {
     text-transform: uppercase;
 }
+
+a {
+    text-decoration: none;
+}
+
+.card-box-d a:hover {
+    text-decoration: underline;
+}
+
+.photo-submit {
+    padding-bottom: 30px;
+    padding-top: 10px;
+}
