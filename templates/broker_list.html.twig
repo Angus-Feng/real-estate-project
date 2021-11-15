@@ -63,31 +63,31 @@
               {% if broker.photoFilePath %}
                 "/uploads/{{broker.photoFilePath}}"
               {% else %}
-                "images/agent-4.jpg"  
+                "/images/default_broker.jpg"  
               {% endif %}
               alt="broker profile photo" class="img-d img-fluid">
             </div>
             <div class="card-overlay card-overlay-hover">
               <div class="card-header-d">
                 <div class="card-title-d align-self-center">
-                  <h3 class="title-d">
-                    <a href="#" class="link-two">{{broker.firstName}}
+                  <h3 class="title-d capitalize">
+                    <a href="/brokers/{{broker.id}}" class="link-two">{{broker.firstName}}
                       <br> {{broker.lastName}}</a>
                   </h3>
                 </div>
               </div>
               <div class="card-body-d">
                 <div class="info-agents color-a">
-                  <p>
+                  <p class="capitalize">
                     <strong>Company: </strong> {{broker.company}}
                   </p>
-                  <p>
+                  <p class="capitalize">
                     <strong>Title: </strong> {{broker.jobTitle}}
                   </p>
-                  <p>
+                  <p class="capitalize">
                     <strong>Phone: </strong> {{broker.phone}}
                   </p>
-                  <p>
+                  <p class="capitalize">
                     <strong>Email: </strong> {{broker.email}}
                   </p>
                 </div>

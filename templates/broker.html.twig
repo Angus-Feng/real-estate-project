@@ -1,0 +1,174 @@
+{% extends "master.html.twig" %}
+
+{% block title %}Broker - {% endblock %}
+
+{% block addHead %}
+
+{% endblock %}
+
+{% block content %}
+
+<!--/ Intro Single start /-->
+  <section class="intro-single">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-lg-8">
+          <div class="title-single-box">
+            <h1 class="title-single capitalize">{{broker.firstName}} {{broker.lastName}}</h1>
+            <span class="color-text-a capitalize">{{broker.jobTitle}}</span>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <nav aria-label="breadcrumb" class="breadcrumb-box d-flex justify-content-lg-end">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="/">Home</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a href="/brokers">Brokers</a>
+              </li>
+              <li class="breadcrumb-item active capitalize" aria-current="page">
+								{{broker.firstName}} {{broker.lastName}}
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--/ Intro Single End /-->
+
+  <!--/ Broker Info Start /-->
+  <section class="agent-single">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="agent-avatar-box">
+								<img src=
+								{% if broker.photoFilePath %}
+									"/uploads/{{broker.photoFilePath}}"
+								{% else %}
+									"/images/default_broker.jpg"  
+								{% endif %}
+								alt="broker profile photo" class="agent-avatar img-fluid">
+              </div>
+            </div>
+            <div class="col-md-5 section-md-t3">
+              <div class="agent-info-box">
+                <div class="agent-title">
+                  <div class="title-box-d">
+                    <h3 class="title-d capitalize">{{broker.firstName}} {{broker.lastName}}</h3>
+                  </div>
+                </div>
+                <div class="agent-content mb-3">
+                  <div class="info-agents color-a">
+										<p class="capitalize">
+											<strong>Company: </strong>  {{broker.company}}
+										</p>
+										<p class="capitalize">
+											<strong>Title: </strong>  {{broker.jobTitle}}
+										</p>
+										<p class="capitalize">
+											<strong>Phone: </strong>  {{broker.phone}}
+										</p>
+										<p class="capitalize">
+											<strong>Email: </strong>  {{broker.email}}
+										</p>
+									</div>
+                </div>
+                <div class="socials-footer">
+                  <ul class="list-inline">
+                    <li class="list-inline-item">
+                      <a href="#" class="link-one">
+                        <i class="fa fa-facebook" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="#" class="link-one">
+                        <i class="fa fa-twitter" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="#" class="link-one">
+                        <i class="fa fa-instagram" aria-hidden="true"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 section-t8">
+          <div class="title-box-d">
+            <h3 class="title-d">My Properties ({{propCount}})</h3>
+          </div>
+        </div>
+        <div class="row property-grid grid">
+					
+					{% for property in propList %}
+						
+          <div class="col-md-4">
+            <div class="card-box-a card-shadow">
+              <div class="img-box-a">
+								<img src=
+								{% if property.photoFilePath %}
+									"/uploads/{{property.photoFilePath}}"
+								{% else %}
+									"/images/defaultproperty.jpg"  
+								{% endif %}
+								alt="property thumbnail" class="img-a img-fluid">
+              </div>
+              <div class="card-overlay">
+                <div class="card-overlay-a-content">
+                  <div class="card-header-a">
+                    <h2 class="card-title-a">
+                      <a href="#">
+												{% if property.appartmentNo %}
+													{{property.appartmentNo}}<br />
+												{% endif %}
+                        {{property.streetAddress}}</a>
+                    </h2>
+                  </div>
+                  <div class="card-body-a">
+                    <div class="price-box d-flex">
+                      <span class="price-a">$ {{property.price}}</span>
+                    </div>
+                    <a href="/properties/{{property.id}}" class="link-a">Click here to view
+                      <span class="ion-ios-arrow-forward"></span>
+                    </a>
+                  </div>
+                  <div class="card-footer-a">
+                    <ul class="card-info d-flex justify-content-around">
+                      <li>
+                        <h4 class="card-info-title">Lot Area</h4>
+                        <span>{{property.lotArea}}m
+                          <sup>2</sup>
+                        </span>
+                      </li>
+                      <li>
+                        <h4 class="card-info-title">Beds</h4>
+                        <span>{{property.bedrooms}}</span>
+                      </li>
+                      <li>
+                        <h4 class="card-info-title">Baths</h4>
+                        <span>{{property.bathrooms}}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+					{% endfor %}
+          
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--/ Broker Info End /-->
+
+{% endblock %}

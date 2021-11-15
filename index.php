@@ -63,6 +63,37 @@ $app->get('/brokers', function ($request, $response, $args) use ($log) {
     return $this->view->render($response, 'broker_list.html.twig', ['brokerList' => $brokerList]);
 });
 
+// Broker page
+$app->get('/brokers/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+    $brokerId = $args['id'];
+    $broker = DB::queryFirstRow("SELECT * FROM users WHERE id=%s", $brokerId);
+    $log->debug(sprintf("Fetch broker data with id=%s", $brokerId));
+
+    if (!$broker) { // not found - cause 404 here
+        return $this->view->render($response, '404_error.html.twig');
+    } 
+    // fetch properties 
+    $propList = DB::query("SELECT * FROM properties WHERE brokerId=%s", $brokerId);
+    $log->debug(sprintf("Fetch property data with brokerId=%s", $brokerId));
+
+    // add property thumbnail photo path to property
+    $ordinalINT = 0;
+    $propCount = 0;
+    foreach ($propList as &$property) {
+        $property['photoFilePath'] = DB::queryFirstField(
+            "SELECT photoFilePath FROM propertyphotos WHERE propertyId=%s AND ordinalINT=%s", 
+            $property['id'], 
+            $ordinalINT
+        );
+        $propCount++;
+        $log->debug(sprintf("Fetch a property thumbnail path with brokerId=%s", $property['id']));
+    }
+    return $this->view->render(
+        $response, 
+        'broker.html.twig', 
+        ['broker' => $broker, 'propList' => $propList, 'propCount' => $propCount]);
+});
+
 // About page
 $app->get('/about', function ($request, $response, $args) {
     return $this->view->render($response, 'about.html.twig');
