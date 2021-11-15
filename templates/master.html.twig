@@ -148,15 +148,21 @@
 				<li class="nav-item">
 					<a class="nav-link" href="/properties">Property</a>
 				</li>
+			{% if userSession == false %}
 				<li class="nav-item">
 					<a class="nav-link" href="/register">Sign up</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="/login">Login</a>
 				</li>
+			{% else %}
+				<li class="nav-item">
+					<a class="nav-link" href="/logout">Logout</a>
+				</li>	
 				<li class="nav-item">
 					<a class="nav-link" href="/profile">Profile</a>
 				</li>
+			{% endif %}
 				<li class="nav-item">
 					<a class="nav-link" href="/about">About us</a>
 				</li>

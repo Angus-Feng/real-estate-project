@@ -120,6 +120,16 @@ $app->post('/login', function ($request, $response, $args) use ($log) {
     }
 });
 
+$app->get('/logout', function ($request, $response, $args) use ($log) {
+    unset($_SESSION['user']);
+    $log->debug(sprintf(
+        "Logout successful for uid=%d, from %s", 
+        @$_SESSION['user']['id'], 
+        $_SERVER['REMOTE_ADDR'])
+    );
+    return $response->withRedirect($this->router->pathFor('index'));
+});
+
 $app->group('/profile', function (App $app) use ($log) {
 
     $app->get('', function ($request, $response, $args) {

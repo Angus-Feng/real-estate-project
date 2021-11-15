@@ -15,6 +15,12 @@ require_once 'property.php';
 // Define app routes
 // Index page
 $app->get('/', function ($request, $response, $args) use ($log) {
+    echo '<pre>';
+    print_r(@$_SESSION);
+    echo '</pre>';
+    echo '<pre>';
+    print_r(@$_COOKIE);
+    echo '</pre>';
     $ordinalINT = 0;
     // Featured property
     $featuredProp = 5;
