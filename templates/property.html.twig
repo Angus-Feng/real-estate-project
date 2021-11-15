@@ -10,13 +10,13 @@
 		<div class="row">
 			<div class="col-md-12 col-lg-8">
 				<div class="title-single-box">
-					<h1 class="title-single">
+					<h1 class="title-single capitalize">
 						{% if property.appartmentNo %}
 							# {{property.appartmentNo}}
 						{% endif %}
 							{{property.streetAddress}}
 					</h1>
-					<span class="color-text-a">{{property.city}}, {{property.province}} {{property.postalCode}}</span>
+					<span class="color-text-a uppercase">{{property.city}}, {{property.province}} {{property.postalCode}}</span>
 				</div>
 			</div>
 			<div class="col-md-12 col-lg-4">
@@ -28,7 +28,7 @@
 						<li class="breadcrumb-item">
 							<a href="property-grid.html">Properties</a>
 						</li>
-						<li class="breadcrumb-item active" aria-current="page">
+						<li class="breadcrumb-item active capitalize" aria-current="page">
 						{% if property.appartmentNo %}
 							# {{property.appartmentNo}}
 						{% endif %}
@@ -82,7 +82,7 @@
 									</li>
 									<li class="d-flex justify-content-between">
 										<strong>Location:</strong>
-										<span>{{property.city}}, {{property.province}} {{property.postalCode}}</span>
+										<span class="uppercase">{{property.city}}, {{property.province}} {{property.postalCode}}</span>
 									</li>
 									<li class="d-flex justify-content-between">
 										<strong>Property Type:</strong>
@@ -165,38 +165,51 @@
 				<div class="row section-t3">
 					<div class="col-sm-12">
 						<div class="title-box-d">
-							<h3 class="title-d">Contact Agent</h3>
+							<h3 class="title-d">Contact Broker</h3>
 						</div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-6 col-lg-4">
-						<img src="{{broker.photoFilePath}}" alt="" class="img-fluid">
+						<img src=
+						{% if broker.photoFilePath %}
+							"/{{broker.photoFilePath}}"
+						{% else %}
+							"/images/default_broker.jpg"  
+						{% endif %}
+						alt="broker profile photo" class="img-fluid">
 					</div>
 					<div class="col-md-6 col-lg-4">
 						<div class="property-agent">
-							<h4 class="title-agent">{{broker.lastName}} {{broker.lastName}}</h4>
+							<h4 class="title-agent capitalize">{{broker.lastName}} {{broker.lastName}}</h4>
 							<ul class="list-unstyled">
 								<li class="d-flex justify-content-between">
 									<strong>Company:</strong>
-									<span class="color-text-a">{{broker.company}}</span>
+									<span class="color-text-a capitalize">{{broker.company}}</span>
 								</li>
 								<li class="d-flex justify-content-between">
 									<strong>Title:</strong>
-									<span class="color-text-a">{{broker.jobTitle}}</span>
+									<span class="color-text-a capitalize">{{broker.jobTitle}}</span>
 								</li>
 								<li class="d-flex justify-content-between">
 									<strong>Phone:</strong>
-									<span class="color-text-a">{{broker.phone}}</span>
+									<span class="color-text-a capitalize">{{broker.phone}}</span>
 								</li>
 								<li class="d-flex justify-content-between">
 									<strong>Email:</strong>
-									<span class="color-text-a">{{broker.email}}</span>
+									<span class="color-text-a capitalize">{{broker.email}}</span>
 								</li>
+								{% if broker.streetAddress %}
 								<li class="d-flex justify-content-between">
-									<strong>Address:</strong>
-									<span class="color-text-a"></span>
+									<strong>Company Address:</strong>
+									<span class="color-text-a capitalize">
+										{% if broker.appartmentNo %}
+											{{broker.appartmentNo}}
+										{% endif %}
+										{{broker.streetAddress}}, {{broker.city}}, {{broker.province}}  
+									</span>
 								</li>
+								{% endif %}
 							</ul>
 						</div>
 					</div>

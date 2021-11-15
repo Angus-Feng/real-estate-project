@@ -48,7 +48,7 @@
               <div class="agent-avatar-box">
 								<img src=
 								{% if broker.photoFilePath %}
-									"/uploads/{{broker.photoFilePath}}"
+									"/{{broker.photoFilePath}}"
 								{% else %}
 									"/images/default_broker.jpg"  
 								{% endif %}
@@ -76,6 +76,15 @@
 										<p class="capitalize">
 											<strong>Email: </strong>  {{broker.email}}
 										</p>
+										{% if broker.streetAddress %}
+										<p class="capitalize">
+											<strong>Company Address: </strong>  
+											{% if broker.appartmentNo %}
+												{{broker.appartmentNo}}
+											{% endif %}
+											{{broker.streetAddress}}, {{broker.city}}, {{broker.province}}  
+										</p>
+										{% endif %}
 									</div>
                 </div>
                 <div class="socials-footer">

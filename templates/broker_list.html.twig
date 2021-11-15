@@ -61,7 +61,7 @@
             <div class="card-img-d">
               <img src=
               {% if broker.photoFilePath %}
-                "/uploads/{{broker.photoFilePath}}"
+                "/{{broker.photoFilePath}}"
               {% else %}
                 "/images/default_broker.jpg"  
               {% endif %}
