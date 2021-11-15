@@ -206,7 +206,7 @@
         </div>
       </div>
     {% endfor %}
-
+  </section>
 <!--/ Property End /-->
 
 <!--/ Agents Start /-->
@@ -263,14 +263,14 @@
                   <strong>Email: </strong> {{broker.email}}
                 </p>
                 {% if broker.streetAddress %}
-										<p class="capitalize">
-											<strong>Company Address: </strong>  
-											{% if broker.appartmentNo %}
-												{{broker.appartmentNo}}
-											{% endif %}
-											{{broker.streetAddress}}, {{broker.city}}, {{broker.province}}  
-										</p>
-										{% endif %}
+                <p class="capitalize">
+                  <strong>Company Address: </strong>  
+                  {% if broker.appartmentNo %}
+                    {{broker.appartmentNo}}
+                  {% endif %}
+                  {{broker.streetAddress}}, {{broker.city}}, {{broker.province}}  
+                </p>
+                {% endif %}
               </div>
             </div>
             <div class="card-footer-d">
