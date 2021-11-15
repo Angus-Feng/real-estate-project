@@ -167,7 +167,7 @@
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<a class="dropdown-item" href="/profile">Profile</a>
 					{% if userSession['role'] == 'buyer' %}
-						<a class="dropdown-item" href="agents-grid.html">My Favourite</a>
+						<a class="dropdown-item" href="/profile">My Favourite</a>
 					{% elseif userSession['role'] == 'broker' %}
 						<a class="dropdown-item" href="/mypropertylist">My Porperty</a>
 						<a class="dropdown-item" href="/addproperty">Add Property</a>

@@ -307,6 +307,7 @@ $app->group('/profile', function (App $app) use ($log) {
         foreach ($favList as &$property) {
             $photo = DB::queryFirstRow("SELECT photoFilePath FROM propertyphotos WHERE ordinalINT = 0 AND propertyId = %i", $property['id']);
             $property['photoFilePath'] = @$photo['photoFilePath'];
+            $property['price'] = number_format($property['price']);
         }
         $favList = utf8ize($favList);
         $response->getBody()->write(json_encode($favList));

@@ -124,7 +124,7 @@
               <div class="img-box-a">
 								<img src=
 								{% if property.photoFilePath %}
-									"/uploads/{{property.photoFilePath}}"
+									"/uploads/{{property.id}}/thmb-{{property.photoFilePath}}"
 								{% else %}
 									"/images/defaultproperty.jpg"  
 								{% endif %}

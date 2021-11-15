@@ -28,6 +28,7 @@ $app->get('/', function ($request, $response, $args) use ($log) {
             $property['id'], 
             $ordinalINT
         );
+        $property['price'] = number_format($property['price']);
     }
 
     // Latest property
@@ -42,6 +43,7 @@ $app->get('/', function ($request, $response, $args) use ($log) {
             $property['id'], 
             $ordinalINT
         );
+        $property['price'] = number_format($property['price']);
     }
 
     // Brokers
@@ -81,10 +83,11 @@ $app->get('/brokers/{id:[0-9]+}', function ($request, $response, $args) use ($lo
     $propCount = 0;
     foreach ($propList as &$property) {
         $property['photoFilePath'] = DB::queryFirstField(
-            "SELECT photoFilePath FROM propertyphotos WHERE propertyId=%s AND ordinalINT=%s", 
+            "SELECT photoFilePath FROM propertyphotos WHERE propertyId=%s AND ordinalINT=%i", 
             $property['id'], 
             $ordinalINT
         );
+        $property['price'] = number_format($property['price']);
         $propCount++;
         $log->debug(sprintf("Fetch a property thumbnail path with brokerId=%s", $property['id']));
     }

@@ -254,6 +254,11 @@ $app->get('/mypropertylist', function ($request, $response, $args) {
     } 
 
     $propertyList = DB::query("SELECT * FROM properties WHERE brokerId=%s", $brokerId);
+    foreach($propertyList as &$property) {
+        $photo = DB::queryFirstRow("SELECT photoFilePath FROM propertyphotos WHERE ordinalINT = 0 AND propertyId = %i", $property['id']);
+        $property['photoFilePath'] = @$photo['photoFilePath'];
+        $property['price'] = number_format($property['price']);
+    }
     return $this->view->render($response, 'broker/mypropertylist.html.twig', ['propertyList' => $propertyList]);
 });
 
@@ -265,6 +270,7 @@ $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use (
     } 
     $id = $args['id'];
     $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $id, $brokerId);
+    $property['price'] = number_format($property['price']);
     $log->debug(sprintf("Fetch a property data with id=%s", $id));
 
     $propertyImages = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%s ORDER BY ordinalINT ASC" , $id);
