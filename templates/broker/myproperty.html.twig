@@ -147,9 +147,10 @@
 					<a href="edit/{{property.id}}">
 						<button class="btn btn-a btn-margin">Edit</button>
 					</a>
-					<a href="delete/{{ property.id}}">
-						<button class="btn btn-a">Delete</button>
-					</a>
+					<form method="post">
+						{# method override parameter #}
+						<input type="submit" name="_METHOD" value="Delete" class="btn btn-a" />
+					</form>
 				</div>
 			</div>
 		</div>

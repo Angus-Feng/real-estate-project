@@ -399,15 +399,30 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
     return $response->withRedirect($this->router->pathFor('mypropertyEdit', ['id' => $id]));
 });
 
-// GET '/myproperty/delete/propertyID'
-$app->get('/myproperty/delete/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+// DELETE '/myproperty/propertyID'
+$app->delete('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+    // print_r($request);
     $brokerId = @$_SESSION['user']['id'];
     if (@$_SESSION['user']['role'] !== 'broker') {
-        return $response->write('Access Denied');
+        return $this->view->render($response, '404_error.html.twig');
     } 
 
-    // TODO: delete photos
-    DB::delete('properties', 'id=%s', $args['id']);
-    // TODO: delete confirmation popup
-    return $response->write('Property is deleted successfully.');
 });
+// // POST '/myproperty/delete/propertyID'
+// $app->POST('/myproperty/delete/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
+//     $brokerId = @$_SESSION['user']['id'];
+//     if (@$_SESSION['user']['role'] !== 'broker') {
+//         return $response->write('Access Denied');
+//     } 
+//     $propertyId = $args['id'];
+//     // check if the property owns by broker 
+//     $retBrokerId = DB::queryFirstField("SELECT brokerId FROM properties WHERE id=%s", $propertyId);
+
+//     if ($retBrokerId != $brokerId) {
+//         return $this->view->render($response, '404_error.html.twig');
+//     }
+//     // TODO: delete photos
+//     // DELETE FROM `propertyphotos` WHERE `propertyphotos`.`id` = 25"?
+//     DB::delete('properties', 'id=%s', $args['id']);
+//     return $response->write('Property is deleted successfully.');
+// });
