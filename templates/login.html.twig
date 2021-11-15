@@ -4,37 +4,59 @@
 {% endblock %}
 
 {% block content %}
-<!--/ Intro Single star /-->
-  <section class="intro-single">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 col-lg-8">
-          <div class="title-single-box">
-            <h4 class="title-single">Please login with your email and password</h1>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!--/ Intro Single End /-->
-<section class="section-about">
+<!--/ Intro Single start /-->
+<section class="intro-single">
 	<div class="container">
-	<form method="post">
+		<div class="row">
+			<div class="col-md-12 col-lg-8">
+				<div class="title-single-box">
+					<h1 class="title-single">Log In</h1>
+					<span class="color-text-a">Please login with your email and password</span>
+				</div>
+			</div>
+			<div class="col-md-12 col-lg-4">
+				<nav aria-label="breadcrumb" class="breadcrumb-box d-flex justify-content-lg-end">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="/">Home</a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">
+							Log In
+						</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
+	</div>
+</section>
+<!--/ Intro Single End /-->
+
+<section>
+	<div class="container">
+	<form method="post" class="form-a">
 		<div class="row g-3">
-			<div class="err-msg">{{er}}</div>
-			<div class="col-12">
-				<label for="email" class="form-label">Email address</label>
-				<input type="email" name="email" class="form-control" {% if email %}value="{{email}}"{% else %}value="{{data}}"{% endif %}>
+			<div class="col-md-7 mx-auto">
+				<div class="form-group">
+					<div class="err-msg">{{er}}</div>
+						<label for="email" class="form-label">Email address</label>
+						<input type="email" name="email" class="form-control" {% if email %}value="{{email}}"{% else %}value="{{data}}"{% endif %}>
+				</div>
 			</div>
-			<div class="col-12">
-				<label for="password" class="form-label">Password</label>
-				<input type="password" name="password" class="form-control">
+			<div class="col-md-7 mb-3 mx-auto">
+				<div class="form-group">
+					<label for="password" class="form-label">Password</label>
+					<input type="password" name="password" class="form-control">
+				</div>
 			</div>
-			<div class="mb-3 form-check">
-				<input type="checkbox" class="form-check-input" name="rememberMe">
-				<label class="form-check-label" for="rememberMe">Remember Me</label>
+			<div class="col-md-7 mb-3 mx-auto">
+				<div class="form-group form-check">
+					<input type="checkbox" class="form-check-input" name="rememberMe">
+					<label class="form-check-label" for="rememberMe">Remember Me</label>
+				</div>
 			</div>
-			<button type="submit" class="btn btn-primary" name="submit">Submit</button>
+			<div class="btn-center">
+				<button type="submit" class="btn btn-a" name="submit">Submit</button>
+			</div>
 		</div>
 	</form>
 	</div>

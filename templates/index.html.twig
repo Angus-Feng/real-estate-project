@@ -16,7 +16,8 @@
               <div class="col-lg-8">
                 <div class="intro-body">
                   <p class="intro-title-top capitalize">{{featProp.city}}, {{featProp.province}}
-                    <br> <span class="uppercase">{{featProp.postalCode}}</span></p>
+                    <br> <span class="uppercase">{{featProp.postalCode}}</span>
+                  </p>
                   <h1 class="intro-title mb-4">
                     {# <span class="color-b">  #}
                     {% if featProp.appartmentNo %}
@@ -37,7 +38,8 @@
       </div>
     </div>
     {% endfor %}
-
+  </div>
+</div>
 <!--/ Carousel end /-->
 
 <!--/ Services Start /-->
@@ -154,13 +156,13 @@
       <div class="carousel-item-b">
         <div class="card-box-a card-shadow">
           <div class="img-box-a">
-            <img src="
+            <img src=
               {% if property.photoFilePath %}
-                uploads/{{property.id}}/thmb-{{property.photoFilePath}}
+                "uploads/{{property.id}}/thmb-{{property.photoFilePath}}"
               {% else %}
-                images/defaultproperty.jpg
+                "images/defaultproperty.jpg"
               {% endif %}
-            "class="img-a img-fluid" alt="property photo">
+            class="img-a img-fluid" alt="property photo">
           </div>
           <div class="card-overlay">
             <div class="card-overlay-a-content">
@@ -229,31 +231,46 @@
       <div class="col-md-4">
         <div class="card-box-d">
           <div class="card-img-d">
-            <img src="/uploads/{{broker.photoFilePath}}" alt="broker profile image" class="img-d img-fluid">
+            <img src=
+						{% if broker.photoFilePath %}
+							"/{{broker.photoFilePath}}"
+						{% else %}
+							"/images/default_broker.jpg"  
+						{% endif %}
+						alt="broker profile photo" class="img-d img-fluid">
           </div>
           <div class="card-overlay card-overlay-hover">
             <div class="card-header-d">
               <div class="card-title-d align-self-center">
                 <h3 class="title-d">
-                  <a href="agent-single.html" class="link-two">{{broker.firstName}}
+                  <a href="agent-single.html" class="link-two capitalize">{{broker.firstName}}
                     <br> {{broker.lastName}}</a>
                 </h3>
               </div>
             </div>
             <div class="card-body-d">
               <div class="info-agents color-a">
-                <p>
+                <p class="capitalize">
                   <strong>Company: </strong> {{broker.company}}
                 </p>
-                <p>
+                <p class="capitalize">
                   <strong>Title: </strong> {{broker.jobTitle}}
                 </p>
-                <p>
+                <p class="capitalize">
                   <strong>Phone: </strong> {{broker.phone}}
                 </p>
-                <p>
+                <p class="capitalize">
                   <strong>Email: </strong> {{broker.email}}
                 </p>
+                {% if broker.streetAddress %}
+										<p class="capitalize">
+											<strong>Company Address: </strong>  
+											{% if broker.appartmentNo %}
+												{{broker.appartmentNo}}
+											{% endif %}
+											{{broker.streetAddress}}, {{broker.city}}, {{broker.province}}  
+										</p>
+										{% endif %}
               </div>
             </div>
             <div class="card-footer-d">
