@@ -34,9 +34,6 @@ $app->get('/', function ($request, $response, $args) use ($log) {
     $numOfItems = 3;
     $propertyList = DB::query("SELECT * FROM properties ORDER BY id DESC LIMIT %i", $numOfItems);
     $log->debug(sprintf("Fetch %s property data", $numOfItems));
-    echo '<pre>';
-    print_r($featPropList);
-    echo '</pre>';
     
     // query & add photo file path to each property
     foreach ($propertyList as &$property) {

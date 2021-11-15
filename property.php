@@ -21,18 +21,25 @@ $app->get('/properties[/{mapCheck:map}]', function ($request, $response, $args) 
 
 // GET '/properties/propertyID'
 $app->get('/properties/{id:[0-9]+}', function ($request, $response, $args) use ($log) {
-    $id = $args['id'];
-    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s", $id);
-    $log->debug(sprintf("Fetch a property data with id=%s", $id));
+    $propertyId = $args['id'];
+    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s", $propertyId);
+    $log->debug(sprintf("Fetch a property data with id=%s", $propertyId));
 
     $brokerId = $property['brokerId'];
     $broker = DB::queryFirstRow("SELECT * FROM users WHERE id=%s", $brokerId);
-    $log->debug(sprintf("Fetch a broker data with id=%s", $id));
+    $log->debug(sprintf("Fetch a broker data with id=%s", $propertyId));
+
+    $propertyImages = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%s ORDER BY ordinalINT ASC", $propertyId);
+    $log->debug(sprintf("Fetch property photos with propertyId=%s", $propertyId));
 
     if (!$property) { // not found - cause 404 here
-        throw new \Slim\Exception\NotFoundException($request, $response);
+        return $this->view->render($response, '404_error.html.twig');
     } else {
-        return $this->view->render($response, 'property.html.twig', ['property' => $property, 'broker' => $broker]);
+        return $this->view->render(
+            $response, 
+            'property.html.twig', 
+            ['property' => $property, 'broker' => $broker, 'propertyImageList' => $propertyImages]
+        );
     }
 });
 
