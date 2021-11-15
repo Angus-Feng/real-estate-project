@@ -15,22 +15,47 @@ require_once 'property.php';
 // Define app routes
 // Index page
 $app->get('/', function ($request, $response, $args) use ($log) {
+    $ordinalINT = 0;
+    // Featured property
+    $featuredProp = 5;
+    $featPropList = DB::query("SELECT * FROM properties ORDER BY id LIMIT %i", $featuredProp);
+    $log->debug(sprintf("Fetch %s featured property data", $featuredProp));
+
+    // query & add photo file path to each property
+    foreach ($featPropList as &$property) {
+        $property['photoFilePath'] = DB::queryFirstField(
+            "SELECT photoFilePath FROM propertyphotos WHERE propertyId=%s AND ordinalINT=%s", 
+            $property['id'], 
+            $ordinalINT
+        );
+    }
+
+    // Latest property
     $numOfItems = 3;
     $propertyList = DB::query("SELECT * FROM properties ORDER BY id DESC LIMIT %i", $numOfItems);
     $log->debug(sprintf("Fetch %s property data", $numOfItems));
+    echo '<pre>';
+    print_r($featPropList);
+    echo '</pre>';
     
     // query & add photo file path to each property
     foreach ($propertyList as &$property) {
         $property['photoFilePath'] = DB::queryFirstField(
-            "SELECT photoFilePath FROM propertyphotos WHERE propertyId=%s", 
-            $property['id']
+            "SELECT photoFilePath FROM propertyphotos WHERE propertyId=%s AND ordinalINT=%s", 
+            $property['id'], 
+            $ordinalINT
         );
     }
 
+    // Brokers
     $brokerList = DB::query("SELECT * FROM users WHERE `role`='broker' LIMIT %i", $numOfItems);
     $log->debug(sprintf("Fetch %s broker data", $numOfItems));
     
-    return $this->view->render($response, 'index.html.twig', ['propertyList' => $propertyList, 'brokerList' => $brokerList]);
+    return $this->view->render(
+        $response, 
+        'index.html.twig', 
+        ['propertyList' => $propertyList, 'brokerList' => $brokerList, 'featPropList' => $featPropList]
+    );
 })->setName('index');
 
 // About page

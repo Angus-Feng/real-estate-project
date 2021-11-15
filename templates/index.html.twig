@@ -5,9 +5,9 @@
 <!--/ Carousel Start /-->
 <div class="intro intro-carousel">
   <div id="carousel" class="owl-carousel owl-theme">
-    {% for property in propertyList %}
+    {% for featProp in featPropList %}
       
-    <div class="carousel-item-a intro-item bg-image" style="background-image: url(img/slide-1.jpg)">
+    <div class="carousel-item-a intro-item bg-image" style="background-image: url(uploads/{{featProp.id}}orig-{{featProp.photoFilePath}})">
       <div class="overlay overlay-a"></div>
       <div class="intro-content display-table">
         <div class="table-cell">
@@ -15,13 +15,19 @@
             <div class="row">
               <div class="col-lg-8">
                 <div class="intro-body">
-                  <p class="intro-title-top">Doral, Florida
-                    <br> 78345</p>
+                  <p class="intro-title-top capitalize">{{featProp.city}}, {{featProp.province}}
+                    <br> <span class="uppercase">{{featProp.postalCode}}</span></p>
                   <h1 class="intro-title mb-4">
-                    <span class="color-b">204 </span> Mount
-                    <br> Olive Road Two</h1>
+                    {# <span class="color-b">  #}
+                    {% if featProp.appartmentNo %}
+                      {{featProp.appartmentNo}}
+                    {% endif %}
+                    {{featProp.streetAddress}}
+                    {# </span> <br>  #}
+                    {# {{featProp.streetAddress}} #}
+                  </h1>
                   <p class="intro-subtitle intro-price">
-                    <a href="#"><span class="price-a">rent | $ 12.000</span></a>
+                    <a href="#"><span class="price-a capitalize">house | {{featProp.price}}</span></a>
                   </p>
                 </div>
               </div>
@@ -30,57 +36,8 @@
         </div>
       </div>
     </div>
-
     {% endfor %}
 
-    <div class="carousel-item-a intro-item bg-image" style="background-image: url(img/slide-2.jpg)">
-      <div class="overlay overlay-a"></div>
-      <div class="intro-content display-table">
-        <div class="table-cell">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8">
-                <div class="intro-body">
-                  <p class="intro-title-top">Doral, Florida
-                    <br> 78345</p>
-                  <h1 class="intro-title mb-4">
-                    <span class="color-b">204 </span> Rino
-                    <br> Venda Road Five</h1>
-                  <p class="intro-subtitle intro-price">
-                    <a href="#"><span class="price-a">rent | $ 12.000</span></a>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="carousel-item-a intro-item bg-image" style="background-image: url(img/slide-3.jpg)">
-      <div class="overlay overlay-a"></div>
-      <div class="intro-content display-table">
-        <div class="table-cell">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-8">
-                <div class="intro-body">
-                  <p class="intro-title-top">Doral, Florida
-                    <br> 78345</p>
-                  <h1 class="intro-title mb-4">
-                    <span class="color-b">204 </span> Alira
-                    <br> Roan Road One</h1>
-                  <p class="intro-subtitle intro-price">
-                    <a href="#"><span class="price-a">rent | $ 12.000</span></a>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <!--/ Carousel end /-->
 
 <!--/ Services Start /-->
@@ -416,7 +373,7 @@
       <div class="col-md-4">
         <div class="card-box-d">
           <div class="card-img-d">
-            <img src="images/agent-4.jpg" alt="" class="img-d img-fluid">
+            <img src="/uploads/{{broker.photoFilePath}}" alt="broker profile image" class="img-d img-fluid">
           </div>
           <div class="card-overlay card-overlay-hover">
             <div class="card-header-d">
@@ -428,14 +385,19 @@
               </div>
             </div>
             <div class="card-body-d">
-              <p class="content-d color-text-a">
-                {{broker.company}}, {{broker.jobTitle}}
-              </p>
               <div class="info-agents color-a">
                 <p>
-                  <strong>Phone: </strong> {{broker.phone}}</p>
+                  <strong>Company: </strong> {{broker.company}}
+                </p>
                 <p>
-                  <strong>Email: </strong> {{broker.email}}</p>
+                  <strong>Title: </strong> {{broker.jobTitle}}
+                </p>
+                <p>
+                  <strong>Phone: </strong> {{broker.phone}}
+                </p>
+                <p>
+                  <strong>Email: </strong> {{broker.email}}
+                </p>
               </div>
             </div>
             <div class="card-footer-d">

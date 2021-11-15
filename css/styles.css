@@ -476,3 +476,10 @@
     color: #000000;
     position: relative;
 }
+
+.capitalize {
+    text-transform: capitalize;
+}
+.uppercase {
+    text-transform: uppercase;
+}
