@@ -455,3 +455,8 @@
     margin-top: 50px;
     margin-bottom: 20px;
 }
+
+.property-form-group label {
+    padding: 15px 0 5px 0;
+    text-transform: uppercase;
+}
