@@ -63,7 +63,7 @@ $(document).ready(function(){
                     {% for photo in propertyPhotos %}
                         <li id="image_li_{{photo.ordinalINT}}" class="ui-sortable-handle">
                             <a href="javascript:void(0);" style="float:none;" class="image_link">
-                                <img src="../../../uploads/{{propertyId}}/640p-{{photo.photoFilePath}}" alt="">
+                                <img src="/uploads/{{propertyId}}/640p-{{photo.photoFilePath}}" alt="">
                             </a>
                         </li>
                     {% endfor %}

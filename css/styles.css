@@ -460,3 +460,19 @@
     padding: 15px 0 5px 0;
     text-transform: uppercase;
 }
+
+.edit-photo ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+.edit-photo img {
+    width: 260px;
+}
+
+.edit-photo label {
+    padding: 15px 0 5px 0;
+    text-transform: uppercase;
+    color: #000000;
+    position: relative;
+}

@@ -271,7 +271,7 @@ $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use (
     $log->debug(sprintf("Fetch property images with propertyId=%s", $id));
 
     if (!$property) { // not found - cause 404 here
-        throw new \Slim\Exception\NotFoundException($request, $response);
+        return $this->view->render($response, '404_error.html.twig');
     } else {
         return $this->view->render(
             $response, 
@@ -288,14 +288,21 @@ $app->get('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args) 
         return $response->write('Access Denied');
     } 
 
-    $id = $args['id'];
-    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $id, $brokerId);
-    $log->debug(sprintf("Fetch a property data with id=%s", $id));
+    $propertyId = $args['id'];
+    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $propertyId, $brokerId);
+    $log->debug(sprintf("Fetch a property data with id=%s", $propertyId));
 
+    $propertyImages = DB::query("SELECT * FROM propertyphotos WHERE propertyId=%s ORDER BY ordinalINT ASC", $propertyId);
+    $log->debug(sprintf("Fetch property photos with propertyId=%s", $propertyId));
+    
     if (!$property) { // not found - cause 404 here
-        throw new \Slim\Exception\NotFoundException($request, $response);
+        return $this->view->render($response, '404_error.html.twig');
     } else {
-        return $this->view->render($response, 'broker/myproperty_edit.html.twig', ['property' => $property]);
+        return $this->view->render(
+            $response, 
+            'broker/myproperty_edit.html.twig', 
+            ['property' => $property, 'propertyImageList' => $propertyImages]
+        );
     }
 });
 
@@ -321,44 +328,49 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
     $city = $request->getParam('city');
     $province = $request->getParam('province');
     $postalCode = $request->getParam('postalCode');
+    $uploadedPhotos = $request->getUploadedFiles()['propertyImages'];
 
     // validation
     $errorList = [];
     
     if (verifyPrice($price) !== TRUE) {
-        $errorList[] = verifyPrice($title);
+        $errorList['price'] = verifyPrice($price);
     }
     if (verifyTitle($title) !== TRUE) {
-        $errorList[] = verifyTitle($title);
+        $errorList['title'] = verifyTitle($title);
     }
     if (verifyBedrooms($bedrooms) !== TRUE) {
-        $errorList[] = verifyBedrooms($bedrooms);
+        $errorList['bedrooms'] = verifyBedrooms($bedrooms);
     }
     if (verifyBathrooms($bathrooms) !== TRUE) {
-        $errorList[] = verifyBathrooms($bathrooms);
+        $errorList['bathrooms'] = verifyBathrooms($bathrooms);
     }
     if (verifyBuildingYear($buildingYear) !== TRUE) {
-        $errorList[] = verifyBuildingYear($buildingYear);
+        $errorList['buildingYear'] = verifyBuildingYear($buildingYear);
     }
     if (verifyLotArea($lotArea) !== TRUE) {
-        $errorList[] = verifyLotArea($lotArea);
+        $errorList['lotArea'] = verifyLotArea($lotArea);
     }
     if (verifyDescription($description) !== TRUE) {
-        $errorList[] = verifyDescription($description);
+        $errorList['description'] = verifyDescription($description);
     }
-    if (verifyAppartmentNo($appartmentNo) !== TRUE) {
-        $errorList[] = verifyAppartmentNo($appartmentNo);
+    if ($appartmentNo) {
+        if (verifyAppartmentNo($appartmentNo) !== TRUE) {
+            $errorList['appartmentNo'] = verifyAppartmentNo($appartmentNo);
+        }
     }
     if (verifyStreetAddress($streetAddress) !== TRUE) {
-        $errorList[] = verifyStreetAddress($streetAddress);
+        $errorList['streetAddress'] = verifyStreetAddress($streetAddress);
     }
     if (verifyCityName($city) !== TRUE) {
-        $errorList[] = verifyCityName($city);
+        $errorList['city'] = verifyCityName($city);
+    }
+    if (verifyProvince($province) !== TRUE) {
+        $errorList['province'] = verifyProvince($province);
     }
     if (verifyPostalCode($postalCode) !== TRUE) {
-        $errorList[] = verifyPostalCode($postalCode);
+        $errorList['postalCode'] = verifyPostalCode($postalCode);
     }
-    // TODO: user can select a province, otherwise display error message
 
     $valueList = [
         'brokerId' => $brokerId,
@@ -376,14 +388,15 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
     ];
 
     if ($errorList) {
-        return $this->view->render($response, 'broker/mypropertyedit.html.twig', 
-            ['errorList' => $errorList, 'values' => $valueList]);
-    } else {
-        DB::update('properties', $valueList, "id=%i", $id);
-        $log->debug(sprintf("Property with id=%s updated", DB::insertId()));
-        // redirect to '/myproperty/propertyID' with a parameter (propertyID)
-        return $response->withRedirect($this->router->pathFor('mypropertyEdit', ['id' => $id]));
-    }
+        return $this->view->render($response, 'broker/myproperty_edit.html.twig', 
+            ['errorList' => $errorList, 'values' => $valueList]
+        );
+    } 
+    DB::update('properties', $valueList, "id=%i", $id);
+    $log->debug(sprintf("Property with id=%s updated", DB::insertId()));
+
+    // redirect to '/myproperty/propertyID' with a parameter (propertyID)
+    return $response->withRedirect($this->router->pathFor('mypropertyEdit', ['id' => $id]));
 });
 
 // GET '/myproperty/delete/propertyID'

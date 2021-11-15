@@ -1,9 +1,12 @@
 {% extends "master.html.twig" %}
 
+{% block title %}Edit Property{% endblock %}
+
 {% block addHead %}
 	<script>
 		$(document).ready(function() {
 			showProvinces();
+
 		});
 
 		function showProvinces() {
@@ -57,54 +60,76 @@
 <section>
 	<div class="container">
 		<div class="row">
+			{% if propertyImageList %}
+			<div class="edit-photo">
+				<label >Property Images</label>
+				<ul>
+				{% for photo in propertyImageList %}
+					<li>
+						<a>
+							<img src="/uploads/{{property.id}}/orig-{{photo.photoFilePath}}" alt="">
+						</a>
+					</li>
+				{% endfor %}
+				</ul>
+			{% endif %}
+			</div>
 			<form class="form-a property-form-group" method="post" role="form">
 				<div class="row">
 					<div class="col-md-12 mb-3">
 						<div class="form-group">
 							<label for="">Title</label>
 							<input class="form-control form-control-lg form-control-a" type="text" name="title" value="{{ property.title }}" />
+							<div class="validation">{{errorList.title}}</div>
 						</div>
 					</div>
 					<div class="col-md-6 mb-3">
 						<div class="form-group">
 							<label for="">Price</label>
         			<input class="form-control form-control-lg form-control-a" type="number" name="price" step="0.01" value="{{ property.price }}" />
+							<div class="validation">{{errorList.price}}</div>
 						</div>
 					</div>
 					<div class="col-md-3 mb-3">
 						<div class="form-group">
 							<label for="">Bedrooms</label>
 							<input class="form-control form-control-lg form-control-a" type="number" name="bedrooms" value="{{ property.bedrooms }}" />
+							<div class="validation">{{errorList.bedrooms}}</div>
 						</div>
 					</div>
 					<div class="col-md-3 mb-3">
 						<div class="form-group">
 							<label for="">Bathrooms</label>
 							<input class="form-control form-control-lg form-control-a" type="number" name="bathrooms" value="{{ property.bathrooms }}" />
+							<div class="validation">{{errorList.bathrooms}}</div>
 						</div>
 					</div>
 					<div class="col-md-6 mb-3">
 						<div class="form-group">
 							<label for="">Year built</label>
 							<input class="form-control form-control-lg form-control-a" type="number" name="buildingYear" value="{{ property.buildingYear }}" />
+							<div class="validation">{{errorList.buildingYear}}</div>
 						</div>
 					</div>
 					<div class="col-md-6 mb-3">
 						<div class="form-group">
 							<label for="">Lot area (sqft)</label>
 							<input class="form-control form-control-lg form-control-a" type="number" name="lotArea" value="{{ property.lotArea }}" />
+							<div class="validation">{{errorList.lotArea}}</div>
 						</div>
 					</div>
 					<div class="col-md-12 mb-3">
 						<div class="form-group">
 							<label for="">Description</label>
 							<textarea class="form-control" name="description" cols="45" rows="8" name="description" cols="30">{{ property.description }}</textarea>
+							<div class="validation">{{errorList.description}}</div>
 						</div>
 					</div>
 					<div class="col-md-8 mb-3">
 						<div class="form-group">
-							<label for="">Stree address</label>
+							<label for="">Street address</label>
 							<input class="form-control form-control-lg form-control-a" type="text" name="streetAddress" value="{{ property.streetAddress }}" />
+							<div class="validation">{{errorList.streetAddress}}</div>
 						</div>
 					</div>
 					<div class="col-md-4 mb-3">
@@ -117,22 +142,25 @@
 						<div class="form-group">
 							<label for="">City</label>
 							<input class="form-control form-control-lg form-control-a" type="text" name="city" value="{{ property.city }}" />
+							<div class="validation">{{errorList.city}}</div>
 						</div>
 					</div>
 					<div class="col-md-4 mb-3">
 						<div class="form-group">
 							<label for="">Province</label>
 							<select class="form-control form-control-lg form-control-a" name="province" value="{{ property.province }}" id="provinceSelect"></select>
+							<div class="validation">{{errorList.province}}</div>
 						</div>
 					</div>
 					<div class="col-md-4 mb-3">
 						<div class="form-group">
 							<label for="">Postal code</label>
 							<input class="form-control form-control-lg form-control-a" type="text" name="postalCode" value="{{ property.postalCode }}" />
+							<div class="validation">{{errorList.postalCode}}</div>
 						</div>
 					</div>
 					<div class="form-group property-form-group">
-						<label for="">Upload property images</label>
+						<label for="">Upload more images</label>
 						<input class="form-control form-control-lg form-control-a" type="file" name="propertyImages[]" multiple class="form-control-file" />
 					</div>
 					<div class="btn-center">
