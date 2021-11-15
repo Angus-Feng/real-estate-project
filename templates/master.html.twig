@@ -148,6 +148,9 @@
 				<li class="nav-item">
 					<a class="nav-link" href="/properties">Property</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/broker_list">Brokers</a>
+				</li>
 			{% if userSession == false %}
 				<li class="nav-item">
 					<a class="nav-link" href="/register">Sign up</a>
@@ -156,12 +159,23 @@
 					<a class="nav-link" href="/login">Login</a>
 				</li>
 			{% else %}
-				<li class="nav-item">
-					<a class="nav-link" href="/logout">Logout</a>
-				</li>	
-				<li class="nav-item">
-					<a class="nav-link" href="/profile">Profile</a>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false">
+						My Pages
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="/profile">Profile</a>
+					{% if userSession['role'] == 'buyer' %}
+						<a class="dropdown-item" href="agents-grid.html">My Favourite</a>
+					{% elseif userSession['role'] == 'broker' %}
+						<a class="dropdown-item" href="/mypropertylist">My Porperty</a>
+						<a class="dropdown-item" href="/addproperty">Add Property</a>
+					{% endif %}
+						<a class="dropdown-item" href="/logout">Logout</a>
+					</div>
 				</li>
+				
 			{% endif %}
 				<li class="nav-item">
 					<a class="nav-link" href="/about">About us</a>
