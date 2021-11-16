@@ -15,7 +15,7 @@ $(document).ready(function() {
 	$("#step1").click(function (e) {
 		validateDetails(e);
 	});
-
+ 
 	$("#step2").click(function (e) {
 		validateLocation(e);
 	});
