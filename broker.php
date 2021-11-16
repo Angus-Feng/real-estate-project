@@ -428,7 +428,14 @@ $app->delete('/myproperty/{id:[0-9]+}', function ($request, $response, $args) us
     if (@$_SESSION['user']['role'] !== 'broker') {
         return $this->view->render($response, '404_error.html.twig');
     } 
-    DB::delete('properties', 'id=%s', $args['id']);
-    $log->debug(sprintf("Property with id=%s deleted", $args['id']));
+    $propertyId = $args['id'];
+    // delete photos in db
+    DB::delete('propertyphotos', 'propertyId=%d', $propertyId);
+    $log->debug(sprintf("Property photos with propertyId=%s deleted", $propertyId));
+    // delete photos in uploads folder
+    deleteAllPropertyPhotosAndFolder('uploads/' . $propertyId, $propertyId);
+    // delete property
+    DB::delete('properties', 'id=%s', $propertyId);
+    $log->debug(sprintf("Property with id=%s deleted", $propertyId));
     return $response->withRedirect($this->router->pathFor('mypropertyList'));
 });

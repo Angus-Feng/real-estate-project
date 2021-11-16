@@ -131,7 +131,7 @@ body {
 				$("#mySidemenu").append(`
 					<a class="propertyCardLink" href="/properties/${id}">
 						<div class="propertyCard">
-							<img class="smImage" src="../uploads/${id}/thmb-${fileName}" style="height: 130px;">
+							<img class="smImage" src="/uploads/${id}/thmb-${fileName}" style="height: 130px;">
 							<div class="smPrice">$${price}</div>
 							<div class="smFullAddress">
 							<span class="smStreetAddress">${streetAddress}, </span><span class="smCity">${city}, </span><span class="smProvince">${province}</span>
@@ -216,7 +216,7 @@ body {
 									contentString = `
 										<a href="/properties/${id}" style="text-decoration: none;">
 											<div class="markerCard">
-												<img class="markerImage" src="../uploads/${id}/thmb-${fileName}" style="height: 130px;">
+												<img class="markerImage" src="/uploads/${id}/thmb-${fileName}" style="height: 130px;">
 												<br>
 												<div class="markerPrice">$${price}</div>
 												<div class="markerFullAddress">
