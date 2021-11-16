@@ -396,7 +396,7 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
     }
 
     $valueList = [
-        'propertyId' => $propertyId,
+        'id' => $propertyId,
         'brokerId' => $brokerId,
         'price' => $price,
         'title' => $title,
@@ -416,7 +416,7 @@ $app->post('/myproperty/edit/{id:[0-9]+}', function ($request, $response, $args)
             ['errorList' => $errorList, 'values' => $valueList]
         );
     } 
-    DB::update('properties', $valueList, "id=%i", $propertyId);
+    DB::update('properties', $valueList, "id=%s", $propertyId);
     $log->debug(sprintf("Property with id=%s updated", DB::insertId()));
 
     // redirect to '/myproperty/propertyID' with a parameter (propertyID)
