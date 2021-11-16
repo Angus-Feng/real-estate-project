@@ -35,6 +35,7 @@ $app->get('/properties/{id:[0-9]+}', function ($request, $response, $args) use (
     if (!$property) { // not found - cause 404 here
         return $this->view->render($response, '404_error.html.twig');
     } else {
+        $property['price'] = number_format($property['price']);
         return $this->view->render(
             $response, 
             'property.html.twig', 
@@ -61,6 +62,7 @@ $app->get('/ajax/properties', function ($request, $response, $args) {
     foreach($properties as &$property) {
         $photo = DB::queryFirstRow("SELECT photoFilePath FROM propertyphotos WHERE ordinalINT = 0 AND propertyId = %i", $property['id']);
         $property['photoFilePath'] = @$photo['photoFilePath'];
+        $property['price'] = number_format($property['price']);
     }
 
     if (@$_SESSION['user']) {

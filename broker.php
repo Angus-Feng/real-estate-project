@@ -255,6 +255,11 @@ $app->get('/mypropertylist', function ($request, $response, $args) {
     } 
 
     $propertyList = DB::query("SELECT * FROM properties WHERE brokerId=%s", $brokerId);
+    foreach($propertyList as &$property) {
+        $photo = DB::queryFirstRow("SELECT photoFilePath FROM propertyphotos WHERE ordinalINT = 0 AND propertyId = %i", $property['id']);
+        $property['photoFilePath'] = @$photo['photoFilePath'];
+        $property['price'] = number_format($property['price']);
+    }
     return $this->view->render($response, 'broker/mypropertylist.html.twig', ['propertyList' => $propertyList]);
 })->setName('mypropertyList');
 
@@ -271,6 +276,10 @@ $app->get('/myproperty/{id:[0-9]+}', function ($request, $response, $args) use (
     if ($retBrokerId != $brokerId) {
         return $this->view->render($response, '404_error.html.twig');
     } 
+
+    $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $propertyId, $brokerId);
+    $property['price'] = number_format($property['price']);
+    $log->debug(sprintf("Fetch a property data with id=%s", $propertyId));
 
     $property = DB::queryFirstRow("SELECT * FROM properties WHERE id=%s AND brokerId=%s", $propertyId, $brokerId);
     $log->debug(sprintf("Fetch a property data with id=%s", $propertyId));

@@ -183,7 +183,7 @@ body {
 								map,
 								data: propertyListData[counter], 
 								counter: counter
-								// ,icon: image, // TODO?: add an image variable with a custom image here
+								// ,icon: image // You can add a custom image for the markers here
 								});
 								var id = propertyListData[counter].id;
 								var fileName = propertyListData[counter].photoFilePath;
@@ -236,11 +236,6 @@ body {
 								});
 
 								marker.addListener("click", () => {
-									// if ($(".sidemenu").css("width") === "0px") {
-									// 	openSM();
-									// } else {
-									// 	closeSM();
-									// }
 									infowindow.open({
 										anchor: marker,
 										map,
